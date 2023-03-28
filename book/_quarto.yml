@@ -1,0 +1,38 @@
+project:
+  type: book
+  output-dir: _book
+  post-render:
+    - add-extra-files.R
+
+book:
+  title: "Book Title"
+  author: "Koen Hufkens"
+  date: "2023/01/01"
+  page-navigation: true
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - basicr.qmd
+    - ggplot.qmd
+    - references.qmd
+  favicon: "figures/favicon.ico"
+  twitter-card: true
+  search: true
+  repo-url: https://github.com/bluegreen-labs/R_book_template/
+  sharing: [twitter, facebook]
+  navbar:
+    title: ""
+    logo: "https://bluegreenlabs.org/img/logo_text_small.png"
+    background: "#0b2735"
+    search: true
+    right:
+      - text: "Home"
+        file: intro.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: 
+      light: [cosmo, theme-light.scss]
+      dark: [cosmo, theme-dark.scss]
