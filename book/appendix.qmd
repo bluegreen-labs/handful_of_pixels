@@ -1,0 +1,34 @@
+# Appendix
+
+## Setup {#sec-setup}
+
+A common Integrated Development Environment for R is Rstudio by Posit.co. RStudio can be downloaded for free, and provides you with an interface in which a command line terminal, a text editor, a plotting window and file manager are combined. Many other features are also included.
+
+![]()
+
+- RStudio install
+- R packakge requirements
+  - tidyverse
+  - MODISTools
+  - ecmwfr
+  - terra
+  - sf
+  - sp
+
+## Licensing {#sec-license}
+
+::: {.callout-note}
+## License
+
+Please note that this work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+
+![](https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png)
+:::
+
+## Book configuration {#sec-bookinfo}
+
+The book was rendered using the following package configuration:
+
+```{r}
+sessioninfo::session_info()
+```

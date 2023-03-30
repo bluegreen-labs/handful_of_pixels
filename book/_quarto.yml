@@ -5,24 +5,27 @@ project:
     - add-extra-files.R
 
 book:
-  title: "Book Title"
+  title: "A Handfull of Pixels"
+  subtitle: "big science using small data"
   author: "Koen Hufkens"
-  date: "2023/01/01"
+  date: "2023/03/28"
   page-navigation: true
   chapters:
     - index.qmd
     - intro.qmd
     - basicr.qmd
-    - ggplot.qmd
+    - getting_data.qmd
+    - geospatialr.qmd
+    - appendix.qmd
     - references.qmd
   favicon: "figures/favicon.ico"
   twitter-card: true
   search: true
-  repo-url: https://github.com/bluegreen-labs/R_book_template/
+  repo-url: https://github.com/khufkens/handfull_of_pixels/
   sharing: [twitter, facebook]
   navbar:
-    title: ""
-    logo: "https://bluegreenlabs.org/img/logo_text_small.png"
+    title: " "
+    logo: ""
     background: "#0b2735"
     search: true
     right:

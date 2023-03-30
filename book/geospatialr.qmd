@@ -1,0 +1,17 @@
+# Geospatial data in R
+
+data in R
+
+- what are the most common libraries to interface with geospatial data?
+  - terra
+  - sf
+  - stars
+  - (raster)
+  - ncdf4
+  - stacr
+
+- what is their foundation (GDAL)
+- what are the current limitations? (look up description / Twitter thread)
+ - should be in email archive somewhere
+
+## basic operations on geospatial data
