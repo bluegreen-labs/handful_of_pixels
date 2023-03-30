@@ -4,6 +4,9 @@ project:
   post-render:
     - add-extra-files.R
 
+execute:
+  freeze: auto
+
 book:
   title: "A Handfull of Pixels"
   subtitle: "big science using small data"
