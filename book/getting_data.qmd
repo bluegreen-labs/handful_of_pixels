@@ -19,15 +19,15 @@ Scientific literature can also be a valuable source of data products. However, f
 
 Below you find a list of useful data sources:
 
-- ECMWFR Copernicus Data Services (climate data)
-- Copernicus programme
-- Digital Active Archive Centers (DAACs)
-  - ORNL DAAC - providing point based environmental data
-  - LP DAAC
-- Zenodo
-- Dryad
-- Figshare
-- 
+- [ECMWFR Copernicus Data Services](https://cds.climate.copernicus.eu) (climate data)
+- [Copernicus Open Access Hub](https://scihub.copernicus.eu/) (access to the Sentinel remote sensing data)
+- [EOSDIS Digital Active Archive Centers](https://www.earthdata.nasa.gov/eosdis/daacs)  (DAACs)
+- [Integrated Carbon Observation System](https://www.icos-cp.eu/about/icos-in-nutshell) (ICOS)
+- [National Ecosystem Observation Network](https://www.neonscience.org/) (NEON)
+- Scientific data repositories (open data downloads or deposits)
+  - [Zenodo.org](https://zenodo.org)
+  - [Dryad](https://datadryad.org/stash) 
+  - [Figshare](https://figshare.com/) 
 
 This list is not extensive and many other sources exist. However, I will source mostly from these data sources in the book. Some familiarity with the names of these data sources is therefore helpful.
 
