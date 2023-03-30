@@ -30,7 +30,7 @@ book:
     search: true
     right:
       - text: "Home"
-        file: intro.qmd
+        file: index.qmd
 
 bibliography: references.bib
 

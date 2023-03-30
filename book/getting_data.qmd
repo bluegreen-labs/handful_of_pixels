@@ -9,25 +9,33 @@ In general you have to know:
 - how to read in the data once downloaded
 - how to interpret the data (domain knowledge)
 
-## Finding trustworthy data
+## Finding open trustworthy data
 
-Environmental data can be found in a number of locations and a general web search will point you to them if you know the name of a data set you have in mind. If you want to broaden your search into new data products the best sources are often **governmental organizations**. Governments collect and sponsor data acquisition and retention, with various administrations focusing on on particular topics, e.g. remote sensing, forestry, population statistics. For example, if you are looking for satellite remote sensing data it makes sense to look at for example the **European Space Agency (ESA)** data repositories or the United States **National Aeronautics and Space Administration (NASA)**. If you are looking for spatially explicit **population statistics Eurostat** might be a good starting place to start your search. Most states keep inventories of their protected areas as well as detailed forest inventories. Similarly, weather agencies on a state or European level can provide wealth of data. Directing your searches toward state level agencies will land you with reliable sources of data.
+Environmental data can be found in a number of locations and a general web search will point you to them if you know the name of a data set you have in mind. If you want to broaden your search into new data products the best sources are often **governmental organizations**. Governments collect and sponsor data acquisition and retention, with various administrations focusing on on particular topics, e.g. remote sensing, forestry, population statistics. For example, if you are looking for satellite remote sensing data it makes sense to look at for example the **[European Space Agency (ESA)](https://www.esa.int/)** data repositories or the United States **[National Aeronautics and Space Administration (NASA)](https://www.nasa.gov/)**. If you are looking for spatially explicit **population statistics [Eurostat](https://ec.europa.eu/eurostat)** might be a good starting place to start your search. Most states keep inventories of their protected areas as well as detailed forest inventories. Similarly, weather agencies on a state or European level can provide wealth of data. Directing your searches toward state level agencies will land you with reliable sources of data.
 
-Similarly, non-governmental organizations (NGOs), foundations and other non-profit organizations can be a valuable source of information. General street layouts, and location based information on businesses annd other venues can be sourced from Open Street Map (OSM). The World Wild Fund (WWF) has contributed to biodiversity mapping initiatives. In general, non-profits and NGOs are trustworthy but in an age of disinformation and shadow lobbying you should verify if sources are commono within scientific literature.
+Similarly, non-governmental organizations (NGOs), foundations and other non-profit organizations can be a valuable source of information. General street layouts, and **location based information on businesses and other venues** can be sourced from **Open Street Map (OSM)**. The World Wild Fund (WWF) has contributed to biodiversity mapping initiatives. In general, non-profits and NGOs are trustworthy but in an age of disinformation and shadow lobbying you should verify if sources are common within scientific literature.nodo
 
-Scientific literature
+Scientific literature can also be a valuable source of data products. However, finding these data products is often difficult as they are not necessarily centralized in a structured way or they might not even be shared publicly. Centralized repositories do exist. Noteworthy are **Zenodo**, an data repository for research data supported by CERN but holding vast stores of data on a variety of research topics. Similarly **Dryad and Figshare** provide long term storage of published research data.
 
+Below you find a list of useful data sources:
 
+- ECMWFR Copernicus Data Services (climate data)
+- Copernicus programme
+- Digital Active Archive Centers (DAACs)
+  - ORNL DAAC - providing point based environmental data
+  - LP DAAC
+- Zenodo
+- Dryad
+- Figshare
+- 
 
+This list is not extensive and many other sources exist. However, I will source mostly from these data sources in the book. Some familiarity with the names of these data sources is therefore helpful.
 
+## A handfull of pixels
 
 The sections above assume that you have inherited some data from someone, or have data files on disk (in a particular format). Yet, most of the time, gathering data is the first step in any analysis. Depending on where data is hosted you can simply download data through your web browser or use the internal `download.file()` R function to grab data.
 
 Today, many of the data described in previous sections are warehoused in large cloud facilities. These data (and their underlying data formats) are stored in large databases and displayed through various applications. For example, Google Maps displays remote sensing (satellite) raster image data in addition to street level vector based labels. These services allow you to access the underlying (original) data using an API, hence programmatically using code. Mastering the use of these services has become key in gathering research data.
-
-
-## A handfull of pixels
-
 
 
 #### Direct downloads
