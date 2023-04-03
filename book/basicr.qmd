@@ -210,23 +210,80 @@ Note that packages on Github or elsewhere are note reviewed, and might pose secu
 
 ## Tidy data
 
-Throughout the book I will structure data using a tidy data approach. Tidy data is a way of structuring data where every row represents a single sample and every row represents a single variable. The tidy data format is a **long** row orientated format.
+Throughout the book I will structure data using a tidy data approach. Tidy data is a way of structuring data where every row represents a single sample and every row represents a single variable. The tidy data format is a **long** row orientated format. In short, in tidy data:
 
-FIGURE
+- every column is a variable
+- every row is an observation
+- every cell is a single value
 
-This format allows for easier grouped operations. The `dplyr` library is critical in this context as it contains most of the components to manipulate tidy data.
+```{r}
+#| label: fig-tidydata
+#| fig-cap: "Image by Posit Software, PBC (posit.co)"
+#| fig-align: "left"
+#| out-width: "80%"
+knitr::include_graphics("./images/tidy_data.png")
+```
 
-FIGURE
+This format allows for easier grouped operations. As visually illustrated below, filtering data by observation properties is easier when data is rowwise oriented (@fig-filterrows).
 
-### Tidy data manipulations
+```{r}
+#| label: fig-filterrows
+#| fig-cap: "Image by Posit Software, PBC (posit.co)"
+#| fig-align: "left"
+#| out-width: "30%"
 
-Although both long or wide data formats have their advantages and drawbacks, the use of long (row oriented) data allows us to use the `dplyr` library to iterate over data quickly and transparently. Conversions to a long format from a wide (column oriented) format are therefore critical throughout this manual.
+knitr::include_graphics("./images/filter_data.png")
+```
 
-```{r eval = FALSE}
-pivot_longer()
+::: callout-note
+Any other configuration is considered "messy data", but therefore not invalid or "bad". Certain messy data formats might be more memory efficient.
+:::
+
+### Tidy data conversions
+
+Although both long or wide data formats have their advantages and drawbacks, the use of long (row oriented) data allows us to use the `dplyr` library to iterate over data quickly and transparently (see @fig-filterrows). However, large amounts of data are provided as "messy data" which is not rowwise oriented. An understanding of conversions from a wide to a long data format are therefore critical throughout this manual.
+
+To convert the below "messy" data frame listing "cases" by year for three countries to a long format you can use the `pivot_longer()` function from the `tidyr` library. The `tidyr` library contains a set of tools for the conversion to and cleaning of data into a tidy (not messy) data format.
+
+```{r}
+# demo data frame with "cases" for
+# three countries, where the cases
+# are listed by year in a columnn by
+# column basis
+df <- data.frame(
+  country = c("CH","BE","FR"),
+  year_2000 = c(200, 40, 1340),
+  year_2001 = c(21, 56, 5940)
+)
+
+head(df)
+```
+
+
+
+
+```{r}
+tidy_df <- tidyr::pivot_longer(
+  df,
+  cols = starts_with("year"),
+  names_to = "year",
+  values_to = "cases"
+)
 ```
 
 ### Tidy data manipulations
+
+
+```{r}
+#| label: fig-selectcols
+#| fig-cap: "Image by Posit Software, PBC (posit.co)"
+#| fig-align: "left"
+#| out-width: "20%"
+
+knitr::include_graphics("./images/select_data.png")
+```
+
+The `dplyr` library is critical in this context as it contains most of the components to manipulate tidy data.
 
 ### Tidy operations and pipes
 
