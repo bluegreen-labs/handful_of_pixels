@@ -14,11 +14,11 @@ From a very practical and pragmatic point of view a solid workflow requires repr
 
 Structuring your project covers:
 
-- the **organization of your files** (i.e. code, data, manuscripts)
-- file **naming** conventions (how things are named)
-- code documentation (describing what and how you do things)
-- data documentation (describing data sources)
-- version control (logging progress systematically)
+-   the **organization of your files** (i.e. code, data, manuscripts)
+-   file **naming** conventions (how things are named)
+-   code documentation (describing what and how you do things)
+-   data documentation (describing data sources)
+-   version control (logging progress systematically)
 
 When using R the easiest solution to many of these issues is to use an Integrated Development Environment (IDE, e.g. [RStudio](https://posit.co/downloads/) or [VS Code]()), version control to track code changes such as [git](https://git-scm.com/) and its cloud based collaborative components such as [Github](https://github.com) or [Codeberg](https://codeberg.org). The setup of both IDEs is described in @sec-setup.
 
@@ -37,7 +37,7 @@ project/
 
 For those familiar with github I provide a [Github template](https://github.com/bluegreen-labs/R_project_template) which you can use when creating a new project on Github. This provides a populated project structure and removes the overhead of making decisions on how to structure a project.
 
-::: {.callout-note}
+::: callout-note
 ## Note
 
 Pay close attention to the setup of your project as an intuitive and consistent structure greatly enhances your productivity, reproducibility, replicability within a different context and the overall quality of your work. First and foremost, your project structure, the documentation you write, and the clarity of your work are notes to your future self. Be kind to your future self.
@@ -45,9 +45,13 @@ Pay close attention to the setup of your project as an intuitive and consistent 
 
 ## Basic R
 
-Unlike many other frameworks for geocomputation, and in particular graphical geographic information system (GIS) such as ArcGIS and QGIS, geocomputation in R is uniquely code oriented. Some basic knowledge of data types, code structure and execution is therefore required. Within R common data structures are vectors, list objects and data frames and tibbles, which are defined as such:
+Unlike many other frameworks for geocomputation, and in particular graphical geographic information system (GIS) such as ArcGIS and QGIS, geocomputation in R is uniquely code oriented. Some basic knowledge of data types, code structure and execution is therefore required. Below I give a very very short introduction to the most basic principles. For an in depth discussion on all these aspects I refer to the resources mentioned at the top of this section.
 
-```{r eval = FALSE}
+### Data types
+
+Within R common data structures are vectors, list objects and data frames and tibbles, which are defined as such:
+
+```{r }
 # A numeric vector
 v <- c(1,4,5,6)
 
@@ -59,24 +63,93 @@ l <- list(
 
 # A data frame (or structured named lists)
 df <- data.frame(
-  numbers = c(1,3),
-  letters = c("a", "b")
+  numbers = c(1,3,2),
+  letters = c("a", "b","c")
 )
 ```
 
-Data frames in this context represent tabulated data where the content can vary.
+Note that in `R` variables are assigned using the `<-` (left arrow), however you can use `=` as well (which is more in line with for example python). Once assigned these elements are available for recall (from memory) an can be used for computation, or other operations. For example we can print the list using:
 
-### Subsetting and conversions
+```{r}
+print(l)
+```
 
-You can access data in the above data types by referring to them by index, or in some cases by name. For example,  accessing the 2th element in vector `v` can be accomplished by using `v[2]`. Element 'a' in list `l` can be accessed using 
+Data frames in this context represent tabulated data where the content can vary by column.
 
-### Basic math
+```{r}
+print(df)
+```
 
+### Sub-setting and type conversions
 
+You can access data in the above data types by referring to them by index, or in some cases by name. For example, accessing the 2th element in vector `v` can be accomplished by using `v[2]`. Element 'a' in list `l` can be accessed using:
 
-### Functions
+```{r}
+v[2]
+```
 
-::: {.callout-tip}
+Named list or data frame elements can be accessed using their respective names and the dollar sign (\$) notation using the following syntax variable + \$ + element or column, e.g. :
+
+```{r}
+# access a named list element
+l$number_2
+
+# access a data frame column
+df$letters
+```
+
+### Basic math & operations
+
+All variables are available for mathematical operations using built in functions or basic mathematical operators (+, -, \*, /):
+
+```{r}
+# multiplying/dividing the number vector n
+v * 2
+
+# dividing the number vector n
+v / 2
+
+# adding a value to number vector n
+v + 2
+
+# subtracting a value to number vector n
+v - 2
+```
+
+Note that these operations are applied to all elements of a vector (or column of a dataframe) when called without specifying a particular subset. This sweeping computation of a whole set of data is called vectorization and can be used to greatly increase computational speed by limiting the need to loop over individual variables explicitly.
+
+`R` comes with a large library of functions. A function is a pre-assigned operation which is executed on the desired variable. An example of which is the `cumsum()` function which calculates the cumulative sum of consecutive elements in a vector / data frame column.
+
+```{r}
+
+# calculating a cummulative sum of number vector n
+cumsum(v)
+```
+
+### Functions (custom)
+
+In addition to the included functions you can write your own functions in `R`. This allows you to automate certain routine operations particular to your project / setting.
+
+For example, one can define a small function which reports back the last element of a vector:
+
+```{r}
+# defines a function printing
+# the last element of a vector
+last <- function(x) {
+  x[length(x)]
+}
+```
+
+Executing this on our vector `v`, will show the following result:
+
+```{r}
+# apply the defined function
+last(v)
+```
+
+Be mindful of the breath of included functions in `R` or currently available packages. For example, within the `dplyr` package, which provides common data manipulation functionality, there is a function called `last()`. For the use of libraries see @sec-libraries.
+
+::: callout-tip
 ## Exercise sandbox
 
 Below you can use the in browser R session to execute some basic R commands as shown above. Execute the formatted statement by hitting `Run Code` or alter the content and re-run it.
@@ -96,21 +169,48 @@ print(last(v))
 ```
 :::
 
-## Libraries
+## Libraries {#sec-libraries}
 
 Not all software components are included in a basic R installation. Additional components can be installed as packages from official R archives (CRAN), or github. A full list of packages used in the rendering of the book and its examples can be found in @sec-bookinfo, where information on the automated installation of all required packages is provided in @sec-setup.
 
-For example, we can extend the capabilities of base R by installing the `MODISTools` package from the official CRAN archive using: `install.pacakges("MODISTools")`. After a successful installation you can load packages using the `library()` function, as `library("MODISTools")`. Functions as defined within `MODISTools` can then be accessed in scripts or from the command line.
+For example, we can extend the capabilities of base R by installing the `dplyr` package from the official CRAN archive using: `install.pacakges("dplyr")`. `dplyr` provides a set of functions to facilitate common data manipulation challenges. After a successful installation you can load packages using the `library()` function, as `library("dplyr")`. Functions as defined within `dplyr` can then be accessed in scripts or from the command line.
 
-At times it can be useful to use the `::` notation in calling package functions. The `::` notation allows you to call a function without loading the full package using `library()`. For example, `MODISTools::mt_products()` calls the `mt_products()` function regardless of having loaded `MODISTools` with `library()` beforehand.
+```{r warning=FALSE, message=FALSE}
+# load the library
+library(dplyr)
 
-This can be done useful if you only need one particular function, and don't want to load the whole package (as this might have memory/performance implications). Furthermore, the use of `::` makes it explicit what the source package of a particular function is. This can be helpful if packages have functions with the same name, leading to confusion on the source of the function used.
+# show the first element of the vector
+first(v)
+```
 
-For installs from external sources we need the `remotes` package. Installing a package directly from a Github location would then be possible using for example `remotes::install_github("bluegreen-labs/MODISToosl")`. Note that packages on Github or elsewhere are note reviewed, and might pose security risks to your system.
+At times it can be useful to use the `::` notation in calling package functions. The `::` notation allows you to call a function without loading the full package using `library()`. This can be done useful if you only need one particular function, and don't want to load the whole package (as this might have memory/performance implications). Furthermore, the use of `::` makes it explicit what the source package of a particular function is. This can be helpful if packages have functions with the same name, leading to confusion on the source of the function used.
+
+```{r}
+# show the last element of the vector v
+# using the dplyr version of "last"
+# calling the function explicitly
+# avoiding confusion with our own
+# last() function
+dplyr::last(v)
+```
+
+#### External packages (non CRAN) {.unnumbered}
+
+For installs from external sources we need the `remotes` package. Installing a package directly from a Github location would then be possible using for example:
+
+```{r eval = FALSE}
+remotes::install_github("tidyverse/dplyr")
+```
+
+This command loads the latest development version of `dplyr` from its [Github location](https://github.com/tidyverse/dplyr/).
+
+::: callout-warning
+Note that packages on Github or elsewhere are note reviewed, and might pose security risks to your system.
+:::
 
 ## Tidy data
 
-Throughout the book I will structure data using a tidy data approach. Tidy data is a way of structuring data where every row represents a single sample and every row represents a single variable. The tidy data format is a **long** row orientated format. 
+Throughout the book I will structure data using a tidy data approach. Tidy data is a way of structuring data where every row represents a single sample and every row represents a single variable. The tidy data format is a **long** row orientated format.
 
 FIGURE
 
@@ -128,21 +228,17 @@ pivot_longer()
 
 ### Tidy data manipulations
 
-
-
-
 ### Tidy operations and pipes
 
-- what is a pipe?
-- what are common tidy (rowwise) operations?
-  - group_by()
-  - mutate()
-  - summarize()
+-   what is a pipe?
+-   what are common tidy (rowwise) operations?
+    -   group_by()
+    -   mutate()
+    -   summarize()
 
 Look for figures in cheat sheets (link back to them)
 
-
-::: {.callout-important}
+::: callout-important
 ## Exercise
 
 Your result should look like the plot below
@@ -163,14 +259,4 @@ I briefly re-iterate some of the basic principles of geocomputation in R, highli
 
 ### Raster data
 
-
-
 `sf` and `terra`.
-
-
-
-
-
-
-
-
