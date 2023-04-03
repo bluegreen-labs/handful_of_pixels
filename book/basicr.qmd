@@ -221,6 +221,7 @@ Throughout the book I will structure data using a tidy data approach. Tidy data 
 #| fig-cap: "Image by Posit Software, PBC (posit.co)"
 #| fig-align: "left"
 #| out-width: "80%"
+#| echo: FALSE
 knitr::include_graphics("./images/tidy_data.png")
 ```
 
@@ -231,6 +232,7 @@ This format allows for easier grouped operations. As visually illustrated below,
 #| fig-cap: "Image by Posit Software, PBC (posit.co)"
 #| fig-align: "left"
 #| out-width: "30%"
+#| echo: FALSE
 
 knitr::include_graphics("./images/filter_data.png")
 ```
@@ -259,8 +261,7 @@ df <- data.frame(
 head(df)
 ```
 
-
-
+The conversion of the data looks like this, ordering the data with the yearly columns ordered in a single "year" column, the containig data in a column called "cases". Values are taken from columns (cols) which start with "year". Alternatively you could provide and vector with column names or column indices.
 
 ```{r}
 tidy_df <- tidyr::pivot_longer(
@@ -269,51 +270,122 @@ tidy_df <- tidyr::pivot_longer(
   names_to = "year",
   values_to = "cases"
 )
+
+head(tidy_df)
 ```
 
 ### Tidy data manipulations
 
+#### Piping data {.unnumbered}
+
+When using `dplyr` and `tidyr` libraries we can make use of the pipe concept. A pipe is a way to forward the output of one function to the input of the next, stringing together an analysis as you would read a sentence. Throughout this manuscript the native pipe (`|>`) is used. Rewriting the previous `pivot_longer()` operation would yield:
 
 ```{r}
-#| label: fig-selectcols
+tidy_df <- df |>
+  tidyr::pivot_longer(
+  cols = starts_with("year"),
+  names_to = "year",
+  values_to = "cases"
+)
+
+head(tidy_df)
+```
+
+Here the data frame `df` has it's output forwarded (`|>`) to the function `pivot_longer()`, which will process the data according to the parameters specified. Note that the data frame is not explicitly called by the `pivot_longer()` function itself.
+
+#### Filtering data {.unnumbered}
+
+Tidy data is especially convenient when filtering and selecting data. When filtering data you apply criteria rowwise using the `dplyr::filter()` function. For example we can filter out data based upon "year" or "cases" in our `tidy_df`.
+
+```{r}
+# filter data for year_2000
+# with more than 50 cases
+tidy_df |>
+  dplyr::filter(
+    year == "year_2000",
+    cases > 50
+  ) |>
+  print()
+```
+
+Filtering thus reduces the number of rows in your dataset. This can be visually represented as such (@fig-filterdata).
+
+```{r}
+#| label: fig-filterdata
 #| fig-cap: "Image by Posit Software, PBC (posit.co)"
 #| fig-align: "left"
 #| out-width: "20%"
+#| echo: FALSE
+knitr::include_graphics("./images/filter_data.png")
+```
 
+#### Selecting data {.unnumbered}
+
+Selecting data operates on columns instead of rows. You can select columns using the `dplyr::select()` function. For example, when selecting only the country code and cases counted:
+
+```{r}
+# only retain the country code
+# and case numbers
+tidy_df |>
+  dplyr::select(
+    country,
+    cases
+  ) |>
+  print()
+```
+
+The output therefore has the same number of rows, but only outputs the selected columns.
+
+```{r}
+#| label: fig-selectdata
+#| fig-cap: "Image by Posit Software, PBC (posit.co)"
+#| fig-align: "left"
+#| out-width: "20%"
+#| echo: FALSE
 knitr::include_graphics("./images/select_data.png")
 ```
 
-The `dplyr` library is critical in this context as it contains most of the components to manipulate tidy data.
+#### Mutate & summarize {.unnumbered}
 
-### Tidy operations and pipes
-
--   what is a pipe?
--   what are common tidy (rowwise) operations?
-    -   group_by()
-    -   mutate()
-    -   summarize()
-
-Look for figures in cheat sheets (link back to them)
-
-::: callout-important
-## Exercise
-
-Your result should look like the plot below
-:::
-
-::: {.callout-tip collapse="true"}
-## Expected Result
+The tidy logic allows for easy conversions or reduction of column data using the `dplyr::mutate()` and `dplyr::summarize()` functions respectively. For example we can double the case count values using:
 
 ```{r}
-#| echo: false
-tail(mtcars)
+tidy_df |>
+  dplyr::mutate(
+    caces_2x = cases * 2
+  ) |>
+  head()
 ```
-:::
 
-## Geocomputation in R
+Similarly we can calculate the mean case count across all the available data as:
+```{r}
+tidy_df |>
+  dplyr::summarize(
+    mean_cases = mean(cases)
+  ) |>
+  head()
+```
 
-I briefly re-iterate some of the basic principles of geocomputation in R, highlighting two key libraries to read raster and vector data.
+#### Grouped operations {.unnumbered}
 
-### Raster data
+Finally, we can apply the `dplyr::mutate()` and `dplyr::summarize()` functions across groups, defined by an index, using the `dplyr::group_by()` function. For example we can calculate the mean case count per year as follows:
 
-`sf` and `terra`.
+```{r}
+tidy_df |>
+  group_by(year) |>
+  dplyr::summarize(
+    mean_cases = mean(cases)
+  ) |>
+  head()
+```
+
+```{r}
+#| label: fig-groupby
+#| fig-cap: "Image by Posit Software, PBC (posit.co)"
+#| fig-align: "left"
+#| out-width: "20%"
+#| echo: FALSE
+knitr::include_graphics("./images/groupby_summarize.png")
+```
+
+Grouped operations using `dplyr::mutate()` and `dplyr::summarize()` and other functions highlighted cover a substantial fraction of day-to-day data wrangling. With this I conclude this brief overview of data manipulations in `R`.
