@@ -276,15 +276,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#project-management" id="toc-project-management" class="nav-link active" data-scroll-target="#project-management"><span class="toc-section-number">2.1</span>  Project management</a></li>
   <li><a href="#basic-r" id="toc-basic-r" class="nav-link" data-scroll-target="#basic-r"><span class="toc-section-number">2.2</span>  Basic R</a>
   <ul class="collapse">
-  <li><a href="#subsetting-and-conversions" id="toc-subsetting-and-conversions" class="nav-link" data-scroll-target="#subsetting-and-conversions"><span class="toc-section-number">2.2.1</span>  Subsetting and conversions</a></li>
-  <li><a href="#basic-math" id="toc-basic-math" class="nav-link" data-scroll-target="#basic-math"><span class="toc-section-number">2.2.2</span>  Basic math</a></li>
-  <li><a href="#functions" id="toc-functions" class="nav-link" data-scroll-target="#functions"><span class="toc-section-number">2.2.3</span>  Functions</a></li>
+  <li><a href="#data-types" id="toc-data-types" class="nav-link" data-scroll-target="#data-types"><span class="toc-section-number">2.2.1</span>  Data types</a></li>
+  <li><a href="#sub-setting-and-type-conversions" id="toc-sub-setting-and-type-conversions" class="nav-link" data-scroll-target="#sub-setting-and-type-conversions"><span class="toc-section-number">2.2.2</span>  Sub-setting and type conversions</a></li>
+  <li><a href="#basic-math-operations" id="toc-basic-math-operations" class="nav-link" data-scroll-target="#basic-math-operations"><span class="toc-section-number">2.2.3</span>  Basic math &amp; operations</a></li>
+  <li><a href="#functions-custom" id="toc-functions-custom" class="nav-link" data-scroll-target="#functions-custom"><span class="toc-section-number">2.2.4</span>  Functions (custom)</a></li>
   </ul></li>
-  <li><a href="#libraries" id="toc-libraries" class="nav-link" data-scroll-target="#libraries"><span class="toc-section-number">2.3</span>  Libraries</a></li>
+  <li><a href="#sec-libraries" id="toc-sec-libraries" class="nav-link" data-scroll-target="#sec-libraries"><span class="toc-section-number">2.3</span>  Libraries</a></li>
   <li><a href="#tidy-data" id="toc-tidy-data" class="nav-link" data-scroll-target="#tidy-data"><span class="toc-section-number">2.4</span>  Tidy data</a>
   <ul class="collapse">
-  <li><a href="#tidy-data-manipulations" id="toc-tidy-data-manipulations" class="nav-link" data-scroll-target="#tidy-data-manipulations"><span class="toc-section-number">2.4.1</span>  Tidy data manipulations</a></li>
-  <li><a href="#tidy-data-manipulations-1" id="toc-tidy-data-manipulations-1" class="nav-link" data-scroll-target="#tidy-data-manipulations-1"><span class="toc-section-number">2.4.2</span>  Tidy data manipulations</a></li>
+  <li><a href="#tidy-data-conversions" id="toc-tidy-data-conversions" class="nav-link" data-scroll-target="#tidy-data-conversions"><span class="toc-section-number">2.4.1</span>  Tidy data conversions</a></li>
+  <li><a href="#tidy-data-manipulations" id="toc-tidy-data-manipulations" class="nav-link" data-scroll-target="#tidy-data-manipulations"><span class="toc-section-number">2.4.2</span>  Tidy data manipulations</a></li>
   <li><a href="#tidy-operations-and-pipes" id="toc-tidy-operations-and-pipes" class="nav-link" data-scroll-target="#tidy-operations-and-pipes"><span class="toc-section-number">2.4.3</span>  Tidy operations and pipes</a></li>
   </ul></li>
   <li><a href="#geocomputation-in-r" id="toc-geocomputation-in-r" class="nav-link" data-scroll-target="#geocomputation-in-r"><span class="toc-section-number">2.5</span>  Geocomputation in R</a>
@@ -355,7 +356,10 @@ Note
 </section>
 <section id="basic-r" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="basic-r"><span class="header-section-number">2.2</span> Basic R</h2>
-<p>Unlike many other frameworks for geocomputation, and in particular graphical geographic information system (GIS) such as ArcGIS and QGIS, geocomputation in R is uniquely code oriented. Some basic knowledge of data types, code structure and execution is therefore required. Within R common data structures are vectors, list objects and data frames and tibbles, which are defined as such:</p>
+<p>Unlike many other frameworks for geocomputation, and in particular graphical geographic information system (GIS) such as ArcGIS and QGIS, geocomputation in R is uniquely code oriented. Some basic knowledge of data types, code structure and execution is therefore required. Below I give a very very short introduction to the most basic principles. For an in depth discussion on all these aspects I refer to the resources mentioned at the top of this section.</p>
+<section id="data-types" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="data-types"><span class="header-section-number">2.2.1</span> Data types</h3>
+<p>Within R common data structures are vectors, list objects and data frames and tibbles, which are defined as such:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A numeric vector</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>)</span>
@@ -368,20 +372,110 @@ Note
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># A data frame (or structured named lists)</span></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">numbers =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>),</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">letters =</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">numbers =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">2</span>),</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">letters =</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>,<span class="st">"c"</span>)</span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Data frames in this context represent tabulated data where the content can vary.</p>
-<section id="subsetting-and-conversions" class="level3" data-number="2.2.1">
-<h3 data-number="2.2.1" class="anchored" data-anchor-id="subsetting-and-conversions"><span class="header-section-number">2.2.1</span> Subsetting and conversions</h3>
-<p>You can access data in the above data types by referring to them by index, or in some cases by name. For example, accessing the 2th element in vector <code>v</code> can be accomplished by using <code>v[2]</code>. Element ‘a’ in list <code>l</code> can be accessed using</p>
+<p>Note that in <code>R</code> variables are assigned using the <code>&lt;-</code> (left arrow), however you can use <code>=</code> as well (which is more in line with for example python). Once assigned these elements are available for recall (from memory) an can be used for computation, or other operations. For example we can print the list using:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(l)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$element_a
+[1] "a"
+
+$number_2
+[1] 2</code></pre>
+</div>
+</div>
+<p>Data frames in this context represent tabulated data where the content can vary by column.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  numbers letters
+1       1       a
+2       3       b
+3       2       c</code></pre>
+</div>
+</div>
 </section>
-<section id="basic-math" class="level3" data-number="2.2.2">
-<h3 data-number="2.2.2" class="anchored" data-anchor-id="basic-math"><span class="header-section-number">2.2.2</span> Basic math</h3>
+<section id="sub-setting-and-type-conversions" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="sub-setting-and-type-conversions"><span class="header-section-number">2.2.2</span> Sub-setting and type conversions</h3>
+<p>You can access data in the above data types by referring to them by index, or in some cases by name. For example, accessing the 2th element in vector <code>v</code> can be accomplished by using <code>v[2]</code>. Element ‘a’ in list <code>l</code> can be accessed using:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>v[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4</code></pre>
+</div>
+</div>
+<p>Named list or data frame elements can be accessed using their respective names and the dollar sign ($) notation using the following syntax variable + $ + element or column, e.g.&nbsp;:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># access a named list element</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>l<span class="sc">$</span>number_2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># access a data frame column</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>letters</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "a" "b" "c"</code></pre>
+</div>
+</div>
 </section>
-<section id="functions" class="level3" data-number="2.2.3">
-<h3 data-number="2.2.3" class="anchored" data-anchor-id="functions"><span class="header-section-number">2.2.3</span> Functions</h3>
+<section id="basic-math-operations" class="level3" data-number="2.2.3">
+<h3 data-number="2.2.3" class="anchored" data-anchor-id="basic-math-operations"><span class="header-section-number">2.2.3</span> Basic math &amp; operations</h3>
+<p>All variables are available for mathematical operations using built in functions or basic mathematical operators (+, -, *, /):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># multiplying/dividing the number vector n</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>v <span class="sc">*</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  2  8 10 12</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># dividing the number vector n</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>v <span class="sc">/</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5 2.0 2.5 3.0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># adding a value to number vector n</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>v <span class="sc">+</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3 6 7 8</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># subtracting a value to number vector n</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>v <span class="sc">-</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -1  2  3  4</code></pre>
+</div>
+</div>
+<p>Note that these operations are applied to all elements of a vector (or column of a dataframe) when called without specifying a particular subset. This sweeping computation of a whole set of data is called vectorization and can be used to greatly increase computational speed by limiting the need to loop over individual variables explicitly.</p>
+<p><code>R</code> comes with a large library of functions. A function is a pre-assigned operation which is executed on the desired variable. An example of which is the <code>cumsum()</code> function which calculates the cumulative sum of consecutive elements in a vector / data frame column.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculating a cummulative sum of number vector n</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cumsum</span>(v)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  1  5 10 16</code></pre>
+</div>
+</div>
+</section>
+<section id="functions-custom" class="level3" data-number="2.2.4">
+<h3 data-number="2.2.4" class="anchored" data-anchor-id="functions-custom"><span class="header-section-number">2.2.4</span> Functions (custom)</h3>
+<p>In addition to the included functions you can write your own functions in <code>R</code>. This allows you to automate certain routine operations particular to your project / setting.</p>
+<p>For example, one can define a small function which reports back the last element of a vector:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># defines a function printing</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the last element of a vector</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>last <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  x[<span class="fu">length</span>(x)]</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Executing this on our vector <code>v</code>, will show the following result:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># apply the defined function</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">last</span>(v)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6</code></pre>
+</div>
+</div>
+<p>Be mindful of the breath of included functions in <code>R</code> or currently available packages. For example, within the <code>dplyr</code> package, which provides common data manipulation functionality, there is a function called <code>last()</code>. For the use of libraries see <a href="#sec-libraries"><span>Section&nbsp;2.3</span></a>.</p>
 <div class="callout-tip callout callout-style-default callout-captioned">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -484,29 +578,144 @@ print(last(v))`,
 </div>
 </section>
 </section>
-<section id="libraries" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="libraries"><span class="header-section-number">2.3</span> Libraries</h2>
+<section id="sec-libraries" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="sec-libraries"><span class="header-section-number">2.3</span> Libraries</h2>
 <p>Not all software components are included in a basic R installation. Additional components can be installed as packages from official R archives (CRAN), or github. A full list of packages used in the rendering of the book and its examples can be found in <a href="appendix.html#sec-bookinfo"><span>Section&nbsp;5.3</span></a>, where information on the automated installation of all required packages is provided in <a href="appendix.html#sec-setup"><span>Section&nbsp;5.1</span></a>.</p>
-<p>For example, we can extend the capabilities of base R by installing the <code>MODISTools</code> package from the official CRAN archive using: <code>install.pacakges("MODISTools")</code>. After a successful installation you can load packages using the <code>library()</code> function, as <code>library("MODISTools")</code>. Functions as defined within <code>MODISTools</code> can then be accessed in scripts or from the command line.</p>
-<p>At times it can be useful to use the <code>::</code> notation in calling package functions. The <code>::</code> notation allows you to call a function without loading the full package using <code>library()</code>. For example, <code>MODISTools::mt_products()</code> calls the <code>mt_products()</code> function regardless of having loaded <code>MODISTools</code> with <code>library()</code> beforehand.</p>
-<p>This can be done useful if you only need one particular function, and don’t want to load the whole package (as this might have memory/performance implications). Furthermore, the use of <code>::</code> makes it explicit what the source package of a particular function is. This can be helpful if packages have functions with the same name, leading to confusion on the source of the function used.</p>
-<p>For installs from external sources we need the <code>remotes</code> package. Installing a package directly from a Github location would then be possible using for example <code>remotes::install_github("bluegreen-labs/MODISToosl")</code>. Note that packages on Github or elsewhere are note reviewed, and might pose security risks to your system.</p>
+<p>For example, we can extend the capabilities of base R by installing the <code>dplyr</code> package from the official CRAN archive using: <code>install.pacakges("dplyr")</code>. <code>dplyr</code> provides a set of functions to facilitate common data manipulation challenges. After a successful installation you can load packages using the <code>library()</code> function, as <code>library("dplyr")</code>. Functions as defined within <code>dplyr</code> can then be accessed in scripts or from the command line.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load the library</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># show the first element of the vector</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(v)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+<p>At times it can be useful to use the <code>::</code> notation in calling package functions. The <code>::</code> notation allows you to call a function without loading the full package using <code>library()</code>. This can be done useful if you only need one particular function, and don’t want to load the whole package (as this might have memory/performance implications). Furthermore, the use of <code>::</code> makes it explicit what the source package of a particular function is. This can be helpful if packages have functions with the same name, leading to confusion on the source of the function used.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># show the last element of the vector v</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># using the dplyr version of "last"</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co"># calling the function explicitly</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># avoiding confusion with our own</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co"># last() function</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">last</span>(v)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6</code></pre>
+</div>
+</div>
+<section id="external-packages-non-cran" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="external-packages-non-cran">External packages (non CRAN)</h4>
+<p>For installs from external sources we need the <code>remotes</code> package. Installing a package directly from a Github location would then be possible using for example:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"tidyverse/dplyr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This command loads the latest development version of <code>dplyr</code> from its <a href="https://github.com/tidyverse/dplyr/">Github location</a>.</p>
+<div class="callout-warning callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Note that packages on Github or elsewhere are note reviewed, and might pose security risks to your system.</p>
+</div>
+</div>
+</section>
 </section>
 <section id="tidy-data" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="tidy-data"><span class="header-section-number">2.4</span> Tidy data</h2>
-<p>Throughout the book I will structure data using a tidy data approach. Tidy data is a way of structuring data where every row represents a single sample and every row represents a single variable. The tidy data format is a <strong>long</strong> row orientated format.</p>
-<p>FIGURE</p>
-<p>This format allows for easier grouped operations. The <code>dplyr</code> library is critical in this context as it contains most of the components to manipulate tidy data.</p>
-<p>FIGURE</p>
-<section id="tidy-data-manipulations" class="level3" data-number="2.4.1">
-<h3 data-number="2.4.1" class="anchored" data-anchor-id="tidy-data-manipulations"><span class="header-section-number">2.4.1</span> Tidy data manipulations</h3>
-<p>Although both long or wide data formats have their advantages and drawbacks, the use of long (row oriented) data allows us to use the <code>dplyr</code> library to iterate over data quickly and transparently. Conversions to a long format from a wide (column oriented) format are therefore critical throughout this manual.</p>
+<p>Throughout the book I will structure data using a tidy data approach. Tidy data is a way of structuring data where every row represents a single sample and every row represents a single variable. The tidy data format is a <strong>long</strong> row orientated format. In short, in tidy data:</p>
+<ul>
+<li>every column is a variable</li>
+<li>every row is an observation</li>
+<li>every cell is a single value</li>
+</ul>
+<div class="cell" data-layout-align="left">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"./images/tidy_data.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-tidydata" class="quarto-figure quarto-figure-left anchored">
+<figure class="figure">
+<p><img src="./images/tidy_data.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;2.1: Image by Posit Software, PBC (posit.co)</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This format allows for easier grouped operations. As visually illustrated below, filtering data by observation properties is easier when data is rowwise oriented (<a href="#fig-filterrows">Figure&nbsp;<span>2.2</span></a>).</p>
+<div class="cell" data-layout-align="left">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"./images/filter_data.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-filterrows" class="quarto-figure quarto-figure-left anchored">
+<figure class="figure">
+<p><img src="./images/filter_data.png" class="img-fluid figure-img" style="width:30.0%"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;2.2: Image by Posit Software, PBC (posit.co)</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Any other configuration is considered “messy data”, but therefore not invalid or “bad”. Certain messy data formats might be more memory efficient.</p>
+</div>
+</div>
+<section id="tidy-data-conversions" class="level3" data-number="2.4.1">
+<h3 data-number="2.4.1" class="anchored" data-anchor-id="tidy-data-conversions"><span class="header-section-number">2.4.1</span> Tidy data conversions</h3>
+<p>Although both long or wide data formats have their advantages and drawbacks, the use of long (row oriented) data allows us to use the <code>dplyr</code> library to iterate over data quickly and transparently (see <a href="#fig-filterrows">Figure&nbsp;<span>2.2</span></a>). However, large amounts of data are provided as “messy data” which is not rowwise oriented. An understanding of conversions from a wide to a long data format are therefore critical throughout this manual.</p>
+<p>To convert the below “messy” data frame listing “cases” by year for three countries to a long format you can use the <code>pivot_longer()</code> function from the <code>tidyr</code> library. The <code>tidyr</code> library contains a set of tools for the conversion to and cleaning of data into a tidy (not messy) data format.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pivot_longer</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># demo data frame with "cases" for</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="co"># three countries, where the cases</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="co"># are listed by year in a columnn by</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># column basis</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">country =</span> <span class="fu">c</span>(<span class="st">"CH"</span>,<span class="st">"BE"</span>,<span class="st">"FR"</span>),</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">year_2000 =</span> <span class="fu">c</span>(<span class="dv">200</span>, <span class="dv">40</span>, <span class="dv">1340</span>),</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">year_2001 =</span> <span class="fu">c</span>(<span class="dv">21</span>, <span class="dv">56</span>, <span class="dv">5940</span>)</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  country year_2000 year_2001
+1      CH       200        21
+2      BE        40        56
+3      FR      1340      5940</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>tidy_df <span class="ot">&lt;-</span> tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  df,</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"year"</span>),</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">names_to =</span> <span class="st">"year"</span>,</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">values_to =</span> <span class="st">"cases"</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="tidy-data-manipulations-1" class="level3" data-number="2.4.2">
-<h3 data-number="2.4.2" class="anchored" data-anchor-id="tidy-data-manipulations-1"><span class="header-section-number">2.4.2</span> Tidy data manipulations</h3>
+<section id="tidy-data-manipulations" class="level3" data-number="2.4.2">
+<h3 data-number="2.4.2" class="anchored" data-anchor-id="tidy-data-manipulations"><span class="header-section-number">2.4.2</span> Tidy data manipulations</h3>
+<div class="cell" data-layout-align="left">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"./images/select_data.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-selectcols" class="quarto-figure quarto-figure-left anchored">
+<figure class="figure">
+<p><img src="./images/select_data.png" class="img-fluid figure-img" style="width:20.0%"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;2.3: Image by Posit Software, PBC (posit.co)</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The <code>dplyr</code> library is critical in this context as it contains most of the components to manipulate tidy data.</p>
 </section>
 <section id="tidy-operations-and-pipes" class="level3" data-number="2.4.3">
 <h3 data-number="2.4.3" class="anchored" data-anchor-id="tidy-operations-and-pipes"><span class="header-section-number">2.4.3</span> Tidy operations and pipes</h3>
@@ -534,7 +743,7 @@ Exercise
 </div>
 </div>
 <div class="callout-tip callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -543,7 +752,7 @@ Expected Result
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
