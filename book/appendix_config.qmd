@@ -1,0 +1,7 @@
+# Book configuration {#sec-bookinfo}
+
+The book was rendered using the following package configuration:
+
+```{r}
+sessioninfo::session_info()
+```

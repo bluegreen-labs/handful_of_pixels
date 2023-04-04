@@ -149,10 +149,60 @@ last(v)
 
 Be mindful of the breath of included functions in `R` or currently available packages. For example, within the `dplyr` package, which provides common data manipulation functionality, there is a function called `last()`. For the use of libraries see @sec-libraries.
 
+### Reading data
+
+In the above examples I have shown only simple examples relying on internal data. However, different functions exist to read external data into R. The most basic function to read human readable (text) data into R is `read.table()`. Below I use a combination of `write.table()` and `read.table()` to demonstrate how to write human readable (text) data to file, and read the data back in.
+
+
+```{r}
+# create a data frame with demo data
+df_original <- data.frame(
+  col_1 = c("a", "b", "c"),
+  col_2 = c("d", "e", "f"),
+  col_3 = c(1,2,3)
+)
+
+# write table as CSV to disk
+write.table(
+  x = df_original,
+  file = file.path(tempdir(), "your_file.csv"),
+  sep = ",",
+  row.names = FALSE
+)
+
+# Read a CSV file
+df <- read.table(
+  file.path(tempdir(), "your_file.csv"),
+  header = TRUE,
+  sep = ",",
+  stringsAsFactors = FALSE
+)
+```
+
+All digital data which is not represented as text characters can be considered binary data. One of the advantages of binary data is that it is an efficient representation of data, saving space. This comes at the cost of requiring a dedicated software (i.e. libraries), other than a text editor, to manipulate the data.
+
+In geography and environmental sciences particular (geospatial) file formats dominate the field. Some of these file formats relate to the content of the data, some of these formats are legacy formats due to the history of the field itself. Below you find a list some of the most common formats you will encounter. For the use of libraries I refer to @sec-libraries and REFERENCE GEOSPATIAL DATA CHAPTER.
+
+| File format (extension) | Format description                                             | Use case                                                                                                                            | R Library            |
+|---------------|---------------|----------------------------|---------------|
+| \*.csv                  | comma separated tabular data                                 | General purpose flat files with row and column oriented data                                                                        | base R               |
+| \*.txt                  | tabular data with various delimiters                         | General purpose flat files with row and column oriented data                                                                        | base R               |
+| \*.json                 | structured human-readable data                                 | General purpose data format. Often used in web application. Has geospatial extensions (geojson).                                    | jsonlite             |
+| \*.nc                   | [NetCDF data](https://en.wikipedia.org/wiki/NetCDF) array data | Array-oriented data (matrices with \> 2 dimensions). Commonly used to store climate data or model outputs. Alternative to HDF data. | ncdf4, terra, raster |
+| \*.hdf                  | HDF array data                                                 | Array-oriented data (matrices with \> 2 dimensions). Commonly used to store Earth observation data.                          | hdf                  |
+| \*.tiff, \*.geotiff     | Geotiff multi-dimensional raster data (see below)              | Layered (3D) raster (image) data. Commonly used to represent spatial (raster) data.                                                 | terra, raster        |
+| \*.shp                  | Shapefile of vector data (see below)                           | Common vector based geospatial data. Used to describe data which can be captured by location/shape and attribute values.            | sp, sf               |
+
+
 ::: callout-tip
-## Exercise sandbox
+### Exercise sandbox
 
 Below you can use the in browser R session to execute some basic R commands as shown above. Execute the formatted statement by hitting `Run Code` or alter the content and re-run it.
+
+```{r}
+# reading data
+```
+
 
 ```{webr}
 # defines a function printing
@@ -169,11 +219,12 @@ print(last(v))
 ```
 :::
 
-## Libraries {#sec-libraries}
 
-Not all software components are included in a basic R installation. Additional components can be installed as packages from official R archives (CRAN), or github. A full list of packages used in the rendering of the book and its examples can be found in @sec-bookinfo, where information on the automated installation of all required packages is provided in @sec-setup.
+## Libraries / packages {#sec-libraries}
 
-For example, we can extend the capabilities of base R by installing the `dplyr` package from the official CRAN archive using: `install.pacakges("dplyr")`. `dplyr` provides a set of functions to facilitate common data manipulation challenges. After a successful installation you can load packages using the `library()` function, as `library("dplyr")`. Functions as defined within `dplyr` can then be accessed in scripts or from the command line.
+Not all software components are included in a basic R installation. Additional components can be installed as libraries or packages from official R archives (CRAN), or github (see below). A full list of packages used in the rendering of the book and its examples can be found in @sec-bookinfo, where information on the automated installation of all required packages is provided in @sec-setup.
+
+For example, we can extend the capabilities of base R by installing the `dplyr` package from the official CRAN archive using: `install.pacakges("dplyr")`. `dplyr` provides a set of functions to facilitate common data manipulation challenges covered in @sec-tidy-data. After a successful installation you can load packages using the `library()` function, as `library("dplyr")`. Functions as defined within `dplyr` can then be accessed in scripts or from the command line.
 
 ```{r warning=FALSE, message=FALSE}
 # load the library
@@ -208,7 +259,7 @@ This command loads the latest development version of `dplyr` from its [Github lo
 Note that packages on Github or elsewhere are note reviewed, and might pose security risks to your system.
 :::
 
-## Tidy data
+## Tidy data {#sec-tidy-data}
 
 Throughout the book I will structure data using a tidy data approach. Tidy data is a way of structuring data where every row represents a single sample and every row represents a single variable. The tidy data format is a **long** row orientated format. In short, in tidy data:
 
@@ -388,4 +439,4 @@ tidy_df |>
 knitr::include_graphics("./images/groupby_summarize.png")
 ```
 
-Grouped operations using `dplyr::mutate()` and `dplyr::summarize()` and other functions highlighted cover a substantial fraction of day-to-day data wrangling. With this I conclude this brief overview of data manipulations in `R`.
+Grouped operations using `dplyr::mutate()` and `dplyr::summarize()` and other functions highlighted cover a substantial fraction of day-to-day data wrangling.

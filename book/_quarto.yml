@@ -15,12 +15,20 @@ book:
   page-navigation: true
   chapters:
     - index.qmd
-    - intro.qmd
-    - basicr.qmd
-    - getting_data.qmd
-    - geospatialr.qmd
-    - appendix.qmd
+    - part: intro.qmd
+      chapters:
+      - basicr.qmd
+      - getting_data.qmd
+      - geospatialr.qmd
+    - part: "Worked Examples"
+      chapters:
+      - phenology_detection.qmd
+      - land_cover_classification.qmd
     - references.qmd
+  appendices:
+    - appendix_setup.qmd
+    - appendix_licensing.qmd
+    - appendix_config.qmd
   favicon: "figures/favicon.ico"
   twitter-card: true
   search: true
