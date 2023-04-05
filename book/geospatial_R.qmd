@@ -1,0 +1,44 @@
+# Geospatial data in R
+
+A number of libraries (packages) make geo-computational work in R easy. However, the ecosystem has grown rapidly and therefore is continuously shifting. Unlike other processing environments this makes it at times hard to keep track of what to use when. Here I give a quick overview of the basic functionality and their uses cases of all these packages. For a more extensive, deep dive, of all these packages I refer to Nowasad et al.
+
+All libraries mentioned follow the standard raster vector 
+
+## The terra package
+
+The terra package is the successor of the older raster package, but with a simpeler interface. This package deals with both geographic raster and vector data, with the explicit requirement that raster data represent spatially continuous processes on a fixed (rectangular) grid.
+
+Limitations:
+
+- works with pointers to the data (out/in of memory)
+- need to save intermediate results
+
+## The sf package
+
+
+## The stars package
+
+
+
+## Other useful packages
+
+
+
+
+
+
+data in R
+
+- what are the most common libraries to interface with geospatial data?
+  - terra
+  - sf
+  - stars
+  - (raster)
+  - ncdf4
+  - stacr
+
+- what is their foundation (GDAL)
+- what are the current limitations? (look up description / Twitter thread)
+ - should be in email archive somewhere
+
+## basic operations on geospatial data

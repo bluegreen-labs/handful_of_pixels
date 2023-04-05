@@ -17,13 +17,14 @@ book:
     - index.qmd
     - part: intro.qmd
       chapters:
-      - basicr.qmd
-      - getting_data.qmd
-      - geospatialr.qmd
+      - basic_R.qmd
+    - gathering_data.qmd
+    - geospatial_R.qmd
     - part: "Worked Examples"
       chapters:
       - phenology_detection.qmd
       - land_cover_classification.qmd
+      - phenology_modelling.qmd
     - references.qmd
   appendices:
     - appendix_setup.qmd

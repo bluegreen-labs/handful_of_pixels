@@ -2,10 +2,32 @@
 
 ## Introduction
 
+FIX REFERENCES
+
+Land surface phenology is a first order control on the exchange of water and energy between the biosphere and atmosphere, modulated by photosynthesis. As such it is an indicator of climate change. Plant phenology has historically been recorded for many centuries. More recently plant phenology (and its changes) have been recorded by networks of observers, near-surface cameras and not in the least by global satellite monitoring.
+
+All these measurements have provided us with insights in how climate change has altered plant phenology. Overall, climate change moves phenology forward (from spring toward winter) at a rate of 3 days/decade, with rates varying depending on locality and altitude. Consequences are many, such as exposing early blooming or leafing plants to increased frosts risks and carbon losses through an explicit opportunity cost. In short, changes to plant and land surface phenology have a profound effect on both the carbon balance and all (co-) dependent processes. Therefore, it is key that we can quantify how phenology changes in response to year-to-year variability and climate change and global heating.
+
+Remote sensing products provide these insights for almost four decades. Advantages of remote sensing:
+
+- wall to wall
+- consistent / little bias
+
 ## Scope
+
+In this worked example we will cover the following topics.
+
+- downloading the required data (using an API)
+- learning how to quality control and smooth noisy data
+- write a basic threshold based algorithm
+- scale the algorithm spatially
+- provide comparisons with commercial products
+
+Let's get started!
 
 ## Demo
 
+### Getting the required data
 
 ```{r eval = FALSE}
 # Download basic MODIS dataset, this should be pre-downloaded
@@ -119,5 +141,188 @@ saveRDS(
 )
 
 message("all done...")
+```
+
+### Data smoothing / interpollation
+
+```{r eval = FALSE}
+# time series processing
+library(MODISTools)
+library(signal)
+library(dplyr)
+last <- function(x) { return( x[length(x)] ) }
+
+# download data
+# subset <- MODISTools::mt_subset(
+#   product = "MCD15A3H",
+#   lat = 42.536669726040884,
+#   lon = -72.17951595626516,
+#   band = "Lai_500m",
+#   start = "2002-01-01",
+#   end = "2022-12-31",
+#   km_lr = 0,
+#   km_ab = 0,
+#   site_name = "HF",
+#   internal = TRUE,
+#   progress = TRUE
+# )
+
+#saveRDS(subset, file = "data/lai_time_series.rds", compress = "xz")
+
+# generally spatialization of these operations is
+# embarrassingly parallel
+# yes this is a formal term https://en.wikipedia.org/wiki/Embarrassingly_parallel
+# in short every pixel can be run separately
+# without taking others into account.
+# Many spatial operations work in this way
+# especially in remote sensing (some exceptions do apply)
+
+# read in the data
+df <- readRDS("data/lai_time_series.rds")
+
+# What did we not do?
+# - No QA/QC control
+# - only for brevity this is skipped
+# - should ALWAYS be considered!
+
+# scale values appropriately
+df$value <- df$value * as.numeric(df$scale)
+
+# convert dates to proper date formats and
+# convert the date to a single year
+df$date <- as.Date(df$calendar_date)
+df$year <- as.numeric(format(df$date, "%Y"))
+
+# smooth this original input data using a
+# savitski-golay filter
+df$smooth <- signal::sgolayfilt(df$value, p = 3, n = 31)
+
+# expand the time series to a daily time step
+# and merge with the original data
+expanded_df <- dplyr::tibble(
+  date = seq.Date(min(subset$date), max(subset$date), by = 1)
+)
+df <- dplyr::left_join(expanded_df, df)
+
+# finally interpolate the expanded dataset (fill in NA values)
+df$smooth_int <- signal::interp1(1:nrow(df), df$smooth, 1:nrow(df), 'spline')
+
+# quick plot
+plot(df$date, df$value, type = "p", col = "red")
+lines(df$date, df$smooth_int)
+
+phenology <- df |>
+  group_by(year) |>
+  summarize(
+    SOS = date[which(smooth_int > 3)][1],
+    EOS = last(date[which(smooth_int > 3)])
+  )
+
+# plot the phenology dates on the previous plot
+# (update graph)
+plot(df$date, df$value, type = "p", col = "red")
+lines(df$date, df$smooth_int)
+abline(v = phenology$SOS)
+abline(v = phenology$EOS)
+
+# potential issues?
+# - fixed LAI threshold (varies per vegetation type)
+# - does not account for incomplete years
+# - provides absolute dates (not always helpful)
+df$smooth_int_scaled <- scales::rescale(df$smooth_int, to = c(0,1))
+
+phenology <- df |>
+  group_by(year) |>
+  summarize(
+    SOS = date[which(smooth_int_scaled > 0.5)][1],
+    EOS = last(date[which(smooth_int_scaled > 0.5)]),
+    SOS_25 = date[which(smooth_int_scaled > 0.25)][1],
+    EOS_25 = last(date[which(smooth_int_scaled > 0.25)])
+  )
+
+# plot the phenology dates on the previous plot
+# (update graph)
+plot(df$date, df$value, type = "p", col = "red")
+lines(df$date, df$smooth_int)
+abline(v = phenology$SOS, col = "green")
+abline(v = phenology$EOS, col = "red")
+abline(v = phenology$SOS_25, col = "green")
+abline(v = phenology$EOS_25, col = "red")
+```
+
+### Spatial phenology estimates
+
+```{r eval = FALSE}
+# Terra based approach, executing a function across a cube
+
+# time series processing
+library(MODISTools)
+library(signal)
+library(terra)
+library(dplyr)
+last <- function(x) { return( x[length(x)] ) }
+
+# prepare data (tidy way)
+r <- readRDS("data/lai_2012.rds")
+
+# convert values using scale parameter
+r <- r |>
+  filter(
+    band == "Lai_500m"
+  )
+
+r <- mt_to_terra(r)
+
+phenophases <- function(
+    df,
+    return = "SOS",
+    threshold = 0.25
+) {
+
+  # split out useful info
+  value <- as.vector(df)
+  date <- as.Date(names(df))
+
+  # smooth this original input data using a
+  # savitski-golay filter
+  smooth <- signal::sgolayfilt(value, p = 3, n = 31)
+
+  # expand the time series to a daily time step
+  # and merge with the original data
+  date_expanded <- seq.Date(min(date), max(date), by = 1)
+  smooth_int <- rep(NA, length(date_expanded))
+  smooth_int[which(date_expanded %in% date)] <- smooth
+
+  # finally interpolate the expanded dataset (fill in NA values)
+  smooth_int <- signal::interp1(1:length(smooth_int), smooth_int, 1:length(smooth_int), 'spline')
+  smooth_int_scaled <- scales::rescale(smooth_int, to = c(0,1))
+
+  phenophase <- ifelse(
+    return == "SOS",
+    date_expanded[which(smooth_int_scaled > threshold)][1],
+    last(date_expanded[which(smooth_int_scaled > threshold)][1])
+  )
+
+  # convert to doy
+  doy <- as.numeric(format(as.Date(phenophase, origin = "1970-01-01"),"%j"))
+  return(doy)
+}
+
+phenology_map <- app(r, phenophases)
+
+
+pheno <- readRDS("data/phenology_2012.rds")
+pheno <-  pheno |>
+  mutate(
+    value = ifelse(value == 32767, NA, value),
+    value = format(as.Date(value, origin = "1970-01-01"),"%j")
+  )
+
+pheno <- mt_to_terra(pheno)
+plot(pheno)
+
+plot(abs(pheno - phenology_map), breaks = c(0, 10, 25, 50, 75))
 
 ```
+
+### Inference and comparisons to actual products

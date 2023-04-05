@@ -1,3 +1,3 @@
-# R book template
+# A handfull of pixels: doing big science with small data
 
-A quarto project template to use for courses and other documentation separated from the main BlueGreen Labs website
+A set of worked examples in geo-spatial data processing.
