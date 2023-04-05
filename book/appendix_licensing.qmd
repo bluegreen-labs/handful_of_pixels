@@ -1,9 +1,11 @@
 # Licensing {#sec-license}
 
+All rights belong to the referenced right holders. In absence of any explicit reference to right holders (in figure captions or other materials) the rights reside with the author of this manuscript under the below license.
+
 ::: {.callout-note}
 ## License
 
-Please note that this work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+Please note that this work is licensed under a [Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License](https://creativecommons.org/licenses/by-nc-nd/4.0/).
 
 ![](https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png)
 :::

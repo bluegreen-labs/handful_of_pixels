@@ -4,6 +4,11 @@ This book uses the R statistical language in order to demonstrate how to process
 
 In this book I will focus on a set of examples which are rather limited in scope, using just a handfull of pixels.Not only does this allow you to experiment with geospatial data on limited compute infrastructure, it also shows you that true science can be done with relatively modest means. In many ways this logic runs counter to the current practices either moving analysis to the cloud and/or trying to provide wall-to-wall (global) coverage irrespective of the added value to a study.
 
+TO INCLUDE:
+
+- furthermore note that much validation data is still only available as point data (although some of this is changing within the context of the merger of computer vission with remote sensing)
+- it also limits data management (which is also resolved by cloud platforms and bringing compute towards managed datasets)
+
 The goal of this book is therefore not to teach you a particular set of (industry) tools, but rather a balanced combination of both open source (R based) tools and a focus on conceptual development for rapid prototyping of research ideas within R. This book is in many ways an extension of [Geocomputation with R](https://r.geocompx.org/index.html) by Lovelace, Nowosad, Muenchow. For strict geocomputational knowledge I refer to this source. Although the book uses R the methods described are rather environment agnostic and a similar work could be created for the python language. Where possible I will point to such alternatives.
 
 This book **requires prior knowledge** of programming in **R**, **git** and cloud based collaborative tools such as **Github**. However, to refresh some concepts, or for those who want to skip ahead, I will repeat some basic skills at the beginning of the book to get you started.

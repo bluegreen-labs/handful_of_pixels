@@ -1,44 +1,141 @@
 # Geospatial data in R
 
-A number of libraries (packages) make geo-computational work in R easy. However, the ecosystem has grown rapidly and therefore is continuously shifting. Unlike other processing environments this makes it at times hard to keep track of what to use when. Here I give a quick overview of the basic functionality and their uses cases of all these packages. For a more extensive, deep dive, of all these packages I refer to Nowasad et al.
+Geospatial data procesing in `R` follows the standard raster vs. vector data model dichotomy as seen throughout most geographic information systems (GIS). Here raster data represent continuous data on a (fixed) grid, while vector data describe geographic features using points, lines and polygons (shapes). The main difference between both types is their sensitivity to resolution, which is predetermined in the case of raster data, while undetermined using a vector topology. This difference in data models used also determines the advantages and disadvantages of both models, where vector topology is resolution independent data efficient in storage the handling if mathematical (topological) operations can be computationally expensive. On the other hand raster data has a fixed lower limit to its resolution, while often being computationally efficient when modelling.
 
-All libraries mentioned follow the standard raster vector 
 
-## The terra package
+```{r}
+#| label: fig-filterdata
+#| fig-cap: "Image by [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Raster_vector_tikz.svg)"
+#| fig-align: "left"
+#| out-width: "100%"
+#| echo: FALSE
+knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/c/c2/Raster_vector_tikz.svg")
+```
 
-The terra package is the successor of the older raster package, but with a simpeler interface. This package deals with both geographic raster and vector data, with the explicit requirement that raster data represent spatially continuous processes on a fixed (rectangular) grid.
+Most geospatial data handling in `R` happens using lower level GDAL/OGR bindings. The [GDAL/OGR library](https://gdal.org/) is an open source framework for geospatial processing and is used across programming languages and geospatial frameworks or GIS systems (e.g. QGIS).
+
+- what are the current limitations? (look up description / Twitter thread)
+ - should be in email archive somewhere
+
+## The R geospatial ecosystem
+
+A number of libraries (packages) make geo-computational work in R easy. However, the ecosystem has grown rapidly and therefore is continuously shifting. Unlike other processing environments this makes it at times hard to keep track of what to use when. Here I give a quick overview of the basic functionality and their uses cases of all these packages, finally there will be a brief overview of some basic geospatial operations using mostly `terra` and `sf` libraries (see @sec-terra and @sec-sf). For a more extensive, deep dive, of all these packages I refer to Nowasad et al (FIX REF).
+
+### The terra package {#sec-terra}
+
+The `terra` package is the successor of the older `raster` package, but with a simpler interface. This package deals with both geographic raster and vector data, with the explicit requirement that raster data represent spatially continuous processes on a fixed (rectangular) grid.
 
 Limitations:
 
 - works with pointers to the data (out/in of memory)
 - need to save intermediate results
 
-## The sf package
+```{r include = FALSE}
+library(terra)
 
+# read data from file
+r <- terra::rast(here::here("data/demo_data.nc"))
+```
 
-## The stars package
+```{r eval = FALSE}
+# load the library
+library(terra)
 
+# read data from file
+r <- terra::rast("geotiff.tif")
+```
 
+We can inspect the meta data by calling the object, or we can visualize the data by plotting the data:
 
-## Other useful packages
+```{r}
+print(r)
+plot(r)
+print(time(r))
+print(names(r))
+```
 
+Basic math or logical operations can be performed on maps:
+```{r}
+# conversion from Kelvin to C
+r_c <- r - 273.15
+plot(r_c)
+```
 
+Logical operations
+```{r}
+# all locations above freezing
+# as a binary mask
+m <- r_c > 0
+plot(m)
+```
 
+Masking values
+```{r}
+# all locations above freezing
+# as a binary mask
+m <- r_c > 0
+plot(m)
+```
 
+saving data:
 
+```{r eval=FALSE}
+# save data to file
+terra::writeRaster(r_c, "raster_data_celsius.tif")
+```
 
-data in R
+Convert to data frame (long oriented format not a matrix or an array)
+```{r}
+df <- as.data.frame(r, xy = TRUE)
+head(df)
+```
 
-- what are the most common libraries to interface with geospatial data?
-  - terra
-  - sf
-  - stars
-  - (raster)
-  - ncdf4
-  - stacr
+### The sf package {#sec-sf}
 
-- what is their foundation (GDAL)
-- what are the current limitations? (look up description / Twitter thread)
- - should be in email archive somewhere
+[Simple features](https://en.wikipedia.org/wiki/Simple_Features) are an open standard to store and access geographic data. The `sf` [package](https://r-spatial.github.io/sf/) provides a way to represent geospatial vector data as simple features in R. This results in nested data.frames or tibbles which adhere to the "tidy" data paradigm as previously described. They therefore are long oriented and support piped workflows on geometries. This standard reduces complexity and keeps geometry operations simple.
 
-## basic operations on geospatial data
+```{r warning=FALSE, message=FALSE}
+# load library
+library(sf)
+
+# load included shapefile
+nc <- st_read(system.file("shape/nc.shp", package="sf"))
+```
+
+When printing the object you will be provided with an overview, when plotting you see the spatial data.
+
+```{r warning=FALSE}
+print(nc)
+plot(nc)
+```
+
+Union of all features
+```{r}
+u <- st_union(nc)
+plot(u)
+```
+
+### The stars package
+
+Spatiotemporal data often comes in the form of dense arrays, with space and time being array dimensions. Examples include
+
+    socio-economic or demographic data,
+    environmental variables monitored at fixed stations,
+    raster maps
+    time series of satellite images with multiple spectral bands,
+    spatial simulations, and
+    climate or weather model output.
+
+This R package provides classes and methods for reading, manipulating, plotting and writing such data cubes, to the extent that there are proper formats for doing so.
+
+### Other noteworthy packages
+
+Other critical packages are
+
+- ncdf4
+- stacr
+- [sits](https://e-sensing.github.io/sitsbook/)
+
+Note that R (or python for that matter) is infinitely flexible, and many packages exist to address niche problems within the context of geospatial data manipulation. Although often tapping into the power of the GDAL framework these packages are very powerful in their own right but outside the scope of this basic introduction. I refer to the work and packages of Michael Rutter and ... for a list of advanced data wrangling.
+
+## Basic geospatial operations in R
