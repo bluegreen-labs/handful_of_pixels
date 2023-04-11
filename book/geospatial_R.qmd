@@ -1,7 +1,14 @@
 # Geospatial data in R
 
-Geospatial data procesing in `R` follows the standard raster vs. vector data model dichotomy as seen throughout most geographic information systems (GIS). Here raster data represent continuous data on a (fixed) grid, while vector data describe geographic features using points, lines and polygons (shapes). The main difference between both types is their sensitivity to resolution, which is predetermined in the case of raster data, while undetermined using a vector topology. This difference in data models used also determines the advantages and disadvantages of both models, where vector topology is resolution independent data efficient in storage the handling if mathematical (topological) operations can be computationally expensive. On the other hand raster data has a fixed lower limit to its resolution, while often being computationally efficient when modelling.
+```{r include = FALSE}
+library(dplyr)
+library(terra)
 
+# read data from file
+r <- terra::rast(here::here("data/demo_data.nc"))
+```
+
+Geospatial data procesing in `R` follows the standard raster vs. vector data model dichotomy as seen throughout most geographic information systems (GIS). Here, raster data represent continuous data on a (fixed) grid, while vector data describe geographic features using points, lines and polygons (shapes). The main difference between both types is their sensitivity to resolution, which is predetermined in the case of raster data, while undetermined using a vector topology. This difference in data models used also determines the advantages and disadvantages of both models, where vector topology is resolution independent data efficient in storage the handling if mathematical (topological) operations can be computationally expensive. On the other hand raster data has a fixed lower limit to its resolution, while often being computationally efficient when modelling.
 
 ```{r}
 #| label: fig-filterdata
@@ -14,108 +21,8 @@ knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/c/c2/Ras
 
 Most geospatial data handling in `R` happens using lower level GDAL/OGR bindings. The [GDAL/OGR library](https://gdal.org/) is an open source framework for geospatial processing and is used across programming languages and geospatial frameworks or GIS systems (e.g. QGIS).
 
-- what are the current limitations? (look up description / Twitter thread)
- - should be in email archive somewhere
-
 ## The R geospatial ecosystem
 
-A number of libraries (packages) make geo-computational work in R easy. However, the ecosystem has grown rapidly and therefore is continuously shifting. Unlike other processing environments this makes it at times hard to keep track of what to use when. Here I give a quick overview of the basic functionality and their uses cases of all these packages, finally there will be a brief overview of some basic geospatial operations using mostly `terra` and `sf` libraries (see @sec-terra and @sec-sf). For a more extensive, deep dive, of all these packages I refer to Nowasad et al (FIX REF).
-
-### The terra package {#sec-terra}
-
-The `terra` package is the successor of the older `raster` package, but with a simpler interface. This package deals with both geographic raster and vector data, with the explicit requirement that raster data represent spatially continuous processes on a fixed (rectangular) grid.
-
-Limitations:
-
-- works with pointers to the data (out/in of memory)
-- need to save intermediate results
-
-```{r include = FALSE}
-library(terra)
-
-# read data from file
-r <- terra::rast(here::here("data/demo_data.nc"))
-```
-
-```{r eval = FALSE}
-# load the library
-library(terra)
-
-# read data from file
-r <- terra::rast("geotiff.tif")
-```
-
-We can inspect the meta data by calling the object, or we can visualize the data by plotting the data:
-
-```{r}
-print(r)
-plot(r)
-print(time(r))
-print(names(r))
-```
-
-Basic math or logical operations can be performed on maps:
-```{r}
-# conversion from Kelvin to C
-r_c <- r - 273.15
-plot(r_c)
-```
-
-Logical operations
-```{r}
-# all locations above freezing
-# as a binary mask
-m <- r_c > 0
-plot(m)
-```
-
-Masking values
-```{r}
-# all locations above freezing
-# as a binary mask
-m <- r_c > 0
-plot(m)
-```
-
-saving data:
-
-```{r eval=FALSE}
-# save data to file
-terra::writeRaster(r_c, "raster_data_celsius.tif")
-```
-
-Convert to data frame (long oriented format not a matrix or an array)
-```{r}
-df <- as.data.frame(r, xy = TRUE)
-head(df)
-```
-
-### The sf package {#sec-sf}
-
-[Simple features](https://en.wikipedia.org/wiki/Simple_Features) are an open standard to store and access geographic data. The `sf` [package](https://r-spatial.github.io/sf/) provides a way to represent geospatial vector data as simple features in R. This results in nested data.frames or tibbles which adhere to the "tidy" data paradigm as previously described. They therefore are long oriented and support piped workflows on geometries. This standard reduces complexity and keeps geometry operations simple.
-
-```{r warning=FALSE, message=FALSE}
-# load library
-library(sf)
-
-# load included shapefile
-nc <- st_read(system.file("shape/nc.shp", package="sf"))
-```
-
-When printing the object you will be provided with an overview, when plotting you see the spatial data.
-
-```{r warning=FALSE}
-print(nc)
-plot(nc)
-```
-
-Union of all features
-```{r}
-u <- st_union(nc)
-plot(u)
-```
-
-### The stars package
 
 Spatiotemporal data often comes in the form of dense arrays, with space and time being array dimensions. Examples include
 
@@ -128,6 +35,157 @@ Spatiotemporal data often comes in the form of dense arrays, with space and time
 
 This R package provides classes and methods for reading, manipulating, plotting and writing such data cubes, to the extent that there are proper formats for doing so.
 
+
+A number of libraries (packages) make geo-computational work in R easy. However, the ecosystem has grown rapidly and therefore is continuously shifting. Unlike other processing environments this makes it at times hard to keep track of what to use when. Here I give a quick overview of the basic functionality and their uses cases of all these packages, finally there will be a brief overview of some basic geospatial operations using mostly `terra` and `sf` libraries (see @sec-terra and @sec-sf). For a more extensive, deep dive, of all these packages I refer to Nowasad et al. (FIX REF).
+
+### The terra package {#sec-terra}
+
+The `terra` package is the successor of the older `raster` package, but with a simpler interface. This package deals with both geographic raster and vector data, with the explicit requirement that raster data represent spatially continuous processes on a fixed (rectangular) grid.
+
+
+#### Reading and inspecting data {.unnumbered}
+```{r eval = FALSE}
+# load the library
+library(terra)
+
+# read data from file
+r <- terra::rast("demo_data.nc")
+```
+
+We can inspect the meta data by calling the object, or we can visualize the data by plotting the data:
+
+```{r}
+print(r)
+plot(r)
+```
+
+Dedicated functions exist to extract the layer names (`names()`) and the time stamps (`time()`) if there is a time component to the data.
+
+```{r}
+print(time(r))
+print(names(r))
+```
+
+
+#### Basic math {.unnumbered}
+
+Basic math or logical operations can be performed on maps using standard `R` notations. As shown above the data contains temperature data in Kelvin. You can convert this data from Kelvin to Celsius by subtracting 273.15 from all values in the data set.
+```{r}
+# conversion from Kelvin to C
+r_c <- r - 273.15
+plot(r_c)
+```
+
+Logical operations work in the same way. You can create a mask of temperatures above 5C using a simple logical operation.
+```{r}
+# all locations above freezing
+# as a binary mask
+m <- r_c > 5
+plot(m)
+```
+
+You can exclude locations from calculations using masks. This is useful to restrict the region of interest of an analysis or limit edge cases of complex calculations beforehand. As an example you can mask out all values where the binary mask as generated above if `FALSE` (i.e. temperatures lower than 5C).
+```{r}
+# all locations above freezing
+# as a binary mask
+r_m <- terra::mask(r_c, m, maskvalue = FALSE)
+plot(r_m)
+```
+
+#### Writing and exporting data {.unnumbered}
+
+The `terra` library uses pointers when referencing to data (in memory). This means that you can not save the object itself to resume your work later on. Saving the above masked map `r_m` using `saveRDS(r_m, "data.rds")` will only save a pointer to a memory space which will not exist when opening a new session. This is in contrast to for example operations on tabulated data (e.g. JSON, CSV files). As such, you need to save the output of your analysis using a formal geospatial data format using `writeRaster()`. 
+
+To save masked temperature data in Celsius you would use:
+
+```{r eval=FALSE}
+# save data to file
+terra::writeRaster(r_m, "celsius_data_masked.tif")
+```
+
+Alternatively, but for small datasets only, you could convert the geospatial data to a long oriented data frame and save the data using standard methods to save tabulated data. However, you might loose critical meta-data on geographic projections etc. Using this method to save your work is not recommended unless you keep track of all ancillary meta-data separately.
+
+```{r}
+# convert geospatial data to a
+# data frame notation, where the flag
+# xy = TRUE denotes that pixel coordinate
+# details should be exported as well
+df <- as.data.frame(r, xy = TRUE)
+head(df)
+```
+
+### The sf package {#sec-sf}
+
+[Simple features](https://en.wikipedia.org/wiki/Simple_Features) are an open standard to store and access geographic data. The `sf` [package](https://r-spatial.github.io/sf/) provides a way to represent geospatial vector data as simple features in R. This results in nested data.frames or tibbles which adhere to the "tidy" data paradigm as previously described. They therefore are long oriented and support piped workflows on geometries. This standard reduces complexity and keeps geometry operations simple.
+
+#### Reading and inspecting data {.unnumbered}
+
+A lot of GIS vector data comes as [shapefiles](https://en.wikipedia.org/wiki/Shapefile) (.shp extention). An example shapefile is include in the `sf` package, and we can read it using:
+
+```{r warning=FALSE, message=FALSE}
+# load library
+library(sf)
+
+# load included shapefile
+nc <- st_read(system.file("shape/nc.shp", package="sf"))
+```
+
+When printing the object you will be provided with an overview, when plotting the spatial data will be visualized (similar to the raster data above).
+
+```{r warning=FALSE}
+print(nc)
+plot(nc)
+```
+
+You can extract basic information such as the overall bounding box of the vector data using `st_bbox()`.
+
+```{r}
+st_bbox(nc)
+```
+
+The `sf` framework uses a tidy data approach, as such you can use operations upon the list items stored within the larger data set by calculating the bounding box for each geometry.
+```{r}
+nc |> 
+    mutate(
+        bbox = purrr::map(geometry, st_bbox)
+    )
+```
+
+#### Basic vector operations {.unnumbered}
+
+Given the tidy data approach of `sf` data we can use the same logic to filter data. For example, if we only want to retain Camden county from the data set we can use the `filter()` function as shown in @sec-tidy-data.
+
+```{r}
+# subset data using the
+# tidy filter approach
+camden <- nc |>
+    filter(
+        NAME == "Camden"
+    )
+
+# plot Camden county
+plot(camden)
+```
+
+Most common operators vector data are area based logical operations. Such as taking the intersection or union of features.
+
+```{r}
+u <- st_union(nc)
+plot(u)
+```
+
+#### Writing and exporting data {.unnumbered}
+
+Although read in `sf` objects can be saved as internal `R` formats such as `rds` files using `saveRDS()`, for portability between various GIS software packages `sf` can write out a new shapefile using `st_write()`.
+
+```{r eval = FALSE}
+# write the north carolina data
+# to shapefile in the tempdir()
+sf::st_write(nc, file.path(tempdir(), "nc.shp"))
+```
+
+### The stars package
+
 ### Other noteworthy packages
 
 Other critical packages are
@@ -138,4 +196,4 @@ Other critical packages are
 
 Note that R (or python for that matter) is infinitely flexible, and many packages exist to address niche problems within the context of geospatial data manipulation. Although often tapping into the power of the GDAL framework these packages are very powerful in their own right but outside the scope of this basic introduction. I refer to the work and packages of Michael Rutter and ... for a list of advanced data wrangling.
 
-## Basic geospatial operations in R
+Finishing words and links to other resources
