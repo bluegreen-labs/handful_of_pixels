@@ -3,6 +3,17 @@
 ```{r include = FALSE}
 library(dplyr)
 library(terra)
+library(sf)
+
+set.seed(131)
+m = rbind(c(0,0), c(1,0), c(1,1), c(0,1), c(0,0))
+p = st_polygon(list(m))
+n = 100
+l = vector("list", n)
+for (i in 1:n)
+  l[[i]] = p + 10 * runif(2)
+s = st_sfc(l)
+sf <- st_sf(s)
 
 # read data from file
 r <- terra::rast(here::here("data/demo_data.nc"))
@@ -167,12 +178,48 @@ camden <- nc |>
 plot(camden)
 ```
 
-Most common operators vector data are area based logical operations. Such as taking the intersection or union of features.
+Most common operators vector data are area based logical operations. Such as taking the intersection or union of features, which only retains the outline of a polygon. These operations can be executed on features themselves or should be mediated by geometric binary operations which can be used for filtering the original data.
+
+For example the `st_intersection()` function calculates where and how frequent simple features overlap (interesect) with each other.
 
 ```{r}
-u <- st_union(nc)
+# calculate the intersection of all simple features
+i <- st_intersection(sf)
+
+# plot the intersections coloured
+# according to the number of overlaps
+plot(
+ i["n.overlaps"],
+ main = "number of intersections"
+)
+```
+
+The results are again a tidy simple feature which can be sorted or filtered using the standard `filter()` function.
+
+```{r}
+# using the tidy data logic and the
+# filter function we can remove all
+# locations which only intersect with
+# itself (n.overlaps == 1)
+i <- i |>
+    filter(
+        n.overlaps > 1
+    )
+
+plot(
+ i["n.overlaps"],
+ main = "intersections with other features (n>1)"
+)
+```
+
+Other functions allow you to group overlapping features. For example grouping of intersecting features can be done using `st_union()`, which only returns the outermost boundary of a feature.
+
+```{r}
+u <- st_union(i)
 plot(u)
 ```
+
+The `sf` package is relatively complex and for a full understanding of its components I refer to the [package documentation](https://r-spatial.github.io/sf/) and the book by Nowasad et al (REFERENCE).
 
 #### Writing and exporting data {.unnumbered}
 
@@ -186,14 +233,32 @@ sf::st_write(nc, file.path(tempdir(), "nc.shp"))
 
 ### The stars package
 
+The [`stars` package](https://r-spatial.github.io/stars/) is another geospatial `R` package you should take note of. In contrast to `terra` it is specifically tailored to dealing with data cubes. These are arrays of data on which on axis is time.
+
+```{r}
+#| label: fig-datacube
+#| fig-cap: "Image by [Edzer Pebesma](https://r-spatial.github.io/stars/)"
+#| fig-align: "left"
+#| out-width: "100%"
+#| echo: FALSE
+knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/cube1.png")
+```
+
+Unlike the `terra` package the grid should not regular, but can of a different sort such as curvilinear data.
+
+```{r}
+#| label: fig-datagrid
+#| fig-cap: "Image by [Edzer Pebesma](https://r-spatial.github.io/stars/)"
+#| fig-align: "left"
+#| out-width: "100%"
+#| echo: FALSE
+knitr::include_graphics("https://r-spatial.github.io/stars/reference/figures/README-plot2-1.png")
+```
+
+Some other distinctions should be made, such as the fast summarizing of raster data to vector features. However, in most cases, it is best to explore functions within the `terra` package first before considering `stars`.
+
 ### Other noteworthy packages
 
-Other critical packages are
+Other critical packages are [`ncdf4`](https://cirrus.ucsd.edu/~pierce/ncdf/) which will be installed by default, but the included functions allow for the manipulation (reading and writing) of the common netCDF format. The [`rstac` package](https://brazil-data-cube.github.io/rstac/) which provides a convenient way to browse Spatio-Temporal Asset Catalogues (STAC), a format commonly used to organize remote sensing images online. The [`sits` package](https://e-sensing.github.io/sitsbook/) which was created by the Brazilian National Institute for Space Research (INPE) and provides tools for machine learning on data cubes.
 
-- ncdf4
-- stacr
-- [sits](https://e-sensing.github.io/sitsbook/)
-
-Note that R (or python for that matter) is infinitely flexible, and many packages exist to address niche problems within the context of geospatial data manipulation. Although often tapping into the power of the GDAL framework these packages are very powerful in their own right but outside the scope of this basic introduction. I refer to the work and packages of Michael Rutter and ... for a list of advanced data wrangling.
-
-Finishing words and links to other resources
+Note that R (or python for that matter) is infinitely flexible, and many packages exist to address niche problems within the context of geospatial data manipulation. Although often tapping into the power of the GDAL framework these packages are very powerful in their own right but outside the scope of this basic introduction. For more in depth discussion I refer to the list of resources at the end of this book.

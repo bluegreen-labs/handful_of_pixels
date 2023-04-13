@@ -1,17 +1,31 @@
-# Land Surface Phenology
+# Phenology detection
 
 ## Introduction
 
-FIX REFERENCES
+Land surface phenology is a first order control on the exchange of water and energy between the biosphere and atmosphere. ...  As such it is an indicator of climate change. Plant phenology has historically been recorded for many centuries. More recently plant phenology (and its changes) have been recorded by networks of observers, near-surface cameras and not in the least by global satellite monitoring.
 
-Land surface phenology is a first order control on the exchange of water and energy between the biosphere and atmosphere, modulated by photosynthesis. As such it is an indicator of climate change. Plant phenology has historically been recorded for many centuries. More recently plant phenology (and its changes) have been recorded by networks of observers, near-surface cameras and not in the least by global satellite monitoring.
+All these (remote sensing) measurements have provided us with insights in how climate change has altered plant phenology. Overall, climate change moves phenology forward (from spring toward winter) at a rate of 3 days/decade, with rates varying depending on locality and altitude.
 
-All these measurements have provided us with insights in how climate change has altered plant phenology. Overall, climate change moves phenology forward (from spring toward winter) at a rate of 3 days/decade, with rates varying depending on locality and altitude. Consequences are many, such as exposing early blooming or leafing plants to increased frosts risks and carbon losses through an explicit opportunity cost. In short, changes to plant and land surface phenology have a profound effect on both the carbon balance and all (co-) dependent processes. Therefore, it is key that we can quantify how phenology changes in response to year-to-year variability and climate change and global heating.
+Consequences are many, such as exposing early blooming or leafing plants to increased frosts risks and carbon losses through an explicit opportunity cost. In short, changes to plant and land surface phenology have a profound effect on both the carbon balance and all (co-) dependent processes. Therefore, it is key that we can quantify how phenology changes in response to year-to-year variability and climate change and global heating.
 
 Remote sensing products provide these insights for almost four decades. Advantages of remote sensing:
 
+## Land surface phenology
+
+The importance of land surface phenology and remote sensing within this context.
+
 - wall to wall
 - consistent / little bias
+
+## Methods of measuring land surface phenology
+
+- threshold methods
+- curve fitting
+  - first and second derivative
+  - other curve metrics
+
+
+----- 
 
 ## Scope
 
