@@ -1,138 +1,8 @@
-# Phenology detection
+# Phenology algorithms
 
-## Introduction
-
-Land surface phenology is a first order control on the exchange of water and energy between the biosphere and atmosphere. ...  As such it is an indicator of climate change. Plant phenology has historically been recorded for many centuries. More recently plant phenology (and its changes) have been recorded by networks of observers, near-surface cameras and not in the least by global satellite monitoring.
-
-All these (remote sensing) measurements have provided us with insights in how climate change has altered plant phenology. Overall, climate change moves phenology forward (from spring toward winter) at a rate of 3 days/decade, with rates varying depending on locality and altitude.
-
-Consequences are many, such as exposing early blooming or leafing plants to increased frosts risks and carbon losses through an explicit opportunity cost. In short, changes to plant and land surface phenology have a profound effect on both the carbon balance and all (co-) dependent processes. Therefore, it is key that we can quantify how phenology changes in response to year-to-year variability and climate change and global heating.
-
-Remote sensing products provide these insights for almost four decades. Advantages of remote sensing:
-
-## Land surface phenology
-
-The importance of land surface phenology and remote sensing within this context.
-
-- wall to wall
-- consistent / little bias
-
-## Methods of measuring land surface phenology
-
-- threshold methods
-- curve fitting
-  - first and second derivative
-  - other curve metrics
-
-
------ 
-
-## Scope
-
-In this worked example we will cover the following topics.
-
-- downloading the required data (using an API)
-- learning how to quality control and smooth noisy data
-- write a basic threshold based algorithm
-- scale the algorithm spatially
-- provide comparisons with commercial products
-
-Let's get started!
-
-## Demo
-
-### Getting the required data
+### stuff
 
 ```{r eval = FALSE}
-# Download basic MODIS dataset, this should be pre-downloaded
-# as the ORNL DAAC can be horrendously slow.
-#
-# Students should initiate the download but probably will realize
-# that it will take too long, we need to offer a fix if they
-# want to proceed quickly
-
-# load libraries
-library(terra)
-library(geodata)
-
-# download SRTM data
-if (!file.exists("data-raw/srtm_38_03.tif")){
-  geodata::elevation_3s(
-    lat = 46.6756,
-    lon = 7.85480,
-    path = "data-raw/"
-  )
-}
-
-# post processing for lessons
-
-phenology <- readRDS("data/phenology_2012.rds")
-phenology <- phenology |>
-  mutate(
-    value = ifelse(value > 32656, NA, value),
-    value = format(as.Date("1970-01-01") + value, "%j")
-  )
-phenology_raster <- mt_to_terra(phenology, reproject = TRUE)
-
-# crop the dem
-dem <- terra::crop(
-  x = dem,
-  y = phenology_raster
-)
-
-# resample the dem
-dem <- terra::resample(
-  x = dem,
-  y = phenology_raster
-)
-
-
-# load libraries
-library(MODISTools)
-library(terra)
-
-# download and save phenology data
-phenology_2012 <- mt_subset(
-  product = "MCD12Q2",
-  lat = 46.6756,
-  lon = 7.85480,
-  band = "Greenup.Num_Modes_01",
-  start = "2012-01-01",
-  end = "2012-12-31",
-  km_lr = 100,
-  km_ab = 100,
-  site_name = "swiss",
-  internal = TRUE,
-  progress = FALSE
-)
-
-saveRDS(
-  phenology_2012,
-  "data/phenology_2012.rds",
-  compress = "xz"
-)
-
-# download and save land cover data
-land_cover_2012 <- mt_subset(
-  product = "MCD12Q1",
-  lat = 46.6756,
-  lon = 7.85480,
-  band = "LC_Type1",
-  start = "2012-01-01",
-  end = "2012-12-31",
-  km_lr = 100,
-  km_ab = 100,
-  site_name = "swiss",
-  internal = TRUE,
-  progress = FALSE
-)
-
-saveRDS(
-  land_cover_2012,
-  "data/land-cover_2012.rds",
-  compress = "xz"
-)
-
 # download LAI data
 lai_2012 <- mt_subset(
   product = "MCD15A3H",
@@ -153,8 +23,6 @@ saveRDS(
   "data/lai_2012.rds",
   compress = "xz"
 )
-
-message("all done...")
 ```
 
 ### Data smoothing / interpollation

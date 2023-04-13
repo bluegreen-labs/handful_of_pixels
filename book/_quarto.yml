@@ -22,7 +22,8 @@ book:
     - geospatial_R.qmd
     - part: "Worked Examples"
       chapters:
-      - phenology_detection.qmd
+      - phenology_trends.qmd
+      - phenology_algorithms.qmd
       - land_cover_classification.qmd
       - phenology_modelling.qmd
     - references.qmd

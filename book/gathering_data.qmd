@@ -1,4 +1,4 @@
-# Accessing data
+# Accessing data {#sec-accessing-data}
 
 There is a wealth of data available within the context of geography and environmental sciences. However, how to efficiently access these data sources is a skill in its own right. 
 
