@@ -245,7 +245,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./phenology_detection.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Land Surface Phenology</span></a>
+  <a href="./phenology_detection.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Phenology detection</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -595,38 +595,91 @@ all</code></pre>
 <p><img src="geospatial_R_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Most common operators vector data are area based logical operations. Such as taking the intersection or union of features.</p>
+<p>Most common operators vector data are area based logical operations. Such as taking the intersection or union of features, which only retains the outline of a polygon. These operations can be executed on features themselves or should be mediated by geometric binary operations which can be used for filtering the original data.</p>
+<p>For example the <code>st_intersection()</code> function calculates where and how frequent simple features overlap (interesect) with each other.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>u <span class="ot">&lt;-</span> <span class="fu">st_union</span>(nc)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(u)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the intersection of all simple features</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>(sf)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the intersections coloured</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co"># according to the number of overlaps</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a> i[<span class="st">"n.overlaps"</span>],</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a> <span class="at">main =</span> <span class="st">"number of intersections"</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="geospatial_R_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>The results are again a tidy simple feature which can be sorted or filtered using the standard <code>filter()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># using the tidy data logic and the</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># filter function we can remove all</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co"># locations which only intersect with</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># itself (n.overlaps == 1)</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> i <span class="sc">|&gt;</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>        n.overlaps <span class="sc">&gt;</span> <span class="dv">1</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a> i[<span class="st">"n.overlaps"</span>],</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a> <span class="at">main =</span> <span class="st">"intersections with other features (n&gt;1)"</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="geospatial_R_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Other functions allow you to group overlapping features. For example grouping of intersecting features can be done using <code>st_union()</code>, which only returns the outermost boundary of a feature.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>u <span class="ot">&lt;-</span> <span class="fu">st_union</span>(i)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(u)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="geospatial_R_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>The <code>sf</code> package is relatively complex and for a full understanding of its components I refer to the <a href="https://r-spatial.github.io/sf/">package documentation</a> and the book by Nowasad et al (REFERENCE).</p>
 </section>
 <section id="writing-and-exporting-data-1" class="level4 unnumbered">
 <h4 class="unnumbered anchored" data-anchor-id="writing-and-exporting-data-1">Writing and exporting data</h4>
 <p>Although read in <code>sf</code> objects can be saved as internal <code>R</code> formats such as <code>rds</code> files using <code>saveRDS()</code>, for portability between various GIS software packages <code>sf</code> can write out a new shapefile using <code>st_write()</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># write the north carolina data</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># to shapefile in the tempdir()</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>sf<span class="sc">::</span><span class="fu">st_write</span>(nc, <span class="fu">file.path</span>(<span class="fu">tempdir</span>(), <span class="st">"nc.shp"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># write the north carolina data</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co"># to shapefile in the tempdir()</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>sf<span class="sc">::</span><span class="fu">st_write</span>(nc, <span class="fu">file.path</span>(<span class="fu">tempdir</span>(), <span class="st">"nc.shp"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
 <section id="the-stars-package" class="level3" data-number="3.1.3">
 <h3 data-number="3.1.3" class="anchored" data-anchor-id="the-stars-package"><span class="header-section-number">3.1.3</span> The stars package</h3>
+<p>The <a href="https://r-spatial.github.io/stars/"><code>stars</code> package</a> is another geospatial <code>R</code> package you should take note of. In contrast to <code>terra</code> it is specifically tailored to dealing with data cubes. These are arrays of data on which on axis is time.</p>
+<div class="cell" data-layout-align="left">
+<div class="cell-output-display">
+<div id="fig-datacube" class="quarto-figure quarto-figure-left anchored">
+<figure class="figure">
+<p><img src="https://raw.githubusercontent.com/r-spatial/stars/master/images/cube1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;3.2: Image by <a href="https://r-spatial.github.io/stars/">Edzer Pebesma</a></figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Unlike the <code>terra</code> package the grid should not regular, but can of a different sort such as curvilinear data.</p>
+<div class="cell" data-layout-align="left">
+<div class="cell-output-display">
+<div id="fig-datagrid" class="quarto-figure quarto-figure-left anchored">
+<figure class="figure">
+<p><img src="https://r-spatial.github.io/stars/reference/figures/README-plot2-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;3.3: Image by <a href="https://r-spatial.github.io/stars/">Edzer Pebesma</a></figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Some other distinctions should be made, such as the fast summarizing of raster data to vector features. However, in most cases, it is best to explore functions within the <code>terra</code> package first before considering <code>stars</code>.</p>
 </section>
 <section id="other-noteworthy-packages" class="level3" data-number="3.1.4">
 <h3 data-number="3.1.4" class="anchored" data-anchor-id="other-noteworthy-packages"><span class="header-section-number">3.1.4</span> Other noteworthy packages</h3>
-<p>Other critical packages are</p>
-<ul>
-<li>ncdf4</li>
-<li>stacr</li>
-<li><a href="https://e-sensing.github.io/sitsbook/">sits</a></li>
-</ul>
-<p>Note that R (or python for that matter) is infinitely flexible, and many packages exist to address niche problems within the context of geospatial data manipulation. Although often tapping into the power of the GDAL framework these packages are very powerful in their own right but outside the scope of this basic introduction. I refer to the work and packages of Michael Rutter and … for a list of advanced data wrangling.</p>
-<p>Finishing words and links to other resources</p>
+<p>Other critical packages are <a href="https://cirrus.ucsd.edu/~pierce/ncdf/"><code>ncdf4</code></a> which will be installed by default, but the included functions allow for the manipulation (reading and writing) of the common netCDF format. The <a href="https://brazil-data-cube.github.io/rstac/"><code>rstac</code> package</a> which provides a convenient way to browse Spatio-Temporal Asset Catalogues (STAC), a format commonly used to organize remote sensing images online. The <a href="https://e-sensing.github.io/sitsbook/"><code>sits</code> package</a> which was created by the Brazilian National Institute for Space Research (INPE) and provides tools for machine learning on data cubes.</p>
+<p>Note that R (or python for that matter) is infinitely flexible, and many packages exist to address niche problems within the context of geospatial data manipulation. Although often tapping into the power of the GDAL framework these packages are very powerful in their own right but outside the scope of this basic introduction. For more in depth discussion I refer to the list of resources at the end of this book.</p>
 
 
 </section>
@@ -889,7 +942,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
   <div class="nav-page nav-page-next">
       <a href="./phenology_detection.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Land Surface Phenology</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Phenology detection</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

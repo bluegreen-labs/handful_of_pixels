@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>A Handfull of Pixels - 4&nbsp; Land Surface Phenology</title>
+<title>A Handfull of Pixels - 4&nbsp; Phenology detection</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -128,8 +128,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 }</script>
 
 
-<meta name="twitter:title" content="A Handfull of Pixels - 4&nbsp; Land Surface Phenology">
-<meta name="twitter:description" content="FIX REFERENCES">
+<meta name="twitter:title" content="A Handfull of Pixels - 4&nbsp; Phenology detection">
+<meta name="twitter:description" content="Land surface phenology is a first order control on the exchange of water and energy between the biosphere and atmosphere. … As such it is an indicator of climate change.">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -187,7 +187,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </nav>
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Land Surface Phenology</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Phenology detection</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -245,7 +245,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./phenology_detection.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Land Surface Phenology</span></a>
+  <a href="./phenology_detection.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Phenology detection</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -300,13 +300,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="toc-section-number">4.1</span>  Introduction</a></li>
-  <li><a href="#scope" id="toc-scope" class="nav-link" data-scroll-target="#scope"><span class="toc-section-number">4.2</span>  Scope</a></li>
-  <li><a href="#demo" id="toc-demo" class="nav-link" data-scroll-target="#demo"><span class="toc-section-number">4.3</span>  Demo</a>
+  <li><a href="#land-surface-phenology" id="toc-land-surface-phenology" class="nav-link" data-scroll-target="#land-surface-phenology"><span class="toc-section-number">4.2</span>  Land surface phenology</a></li>
+  <li><a href="#methods-of-measuring-land-surface-phenology" id="toc-methods-of-measuring-land-surface-phenology" class="nav-link" data-scroll-target="#methods-of-measuring-land-surface-phenology"><span class="toc-section-number">4.3</span>  Methods of measuring land surface phenology</a></li>
+  <li><a href="#scope" id="toc-scope" class="nav-link" data-scroll-target="#scope"><span class="toc-section-number">4.4</span>  Scope</a></li>
+  <li><a href="#demo" id="toc-demo" class="nav-link" data-scroll-target="#demo"><span class="toc-section-number">4.5</span>  Demo</a>
   <ul class="collapse">
-  <li><a href="#getting-the-required-data" id="toc-getting-the-required-data" class="nav-link" data-scroll-target="#getting-the-required-data"><span class="toc-section-number">4.3.1</span>  Getting the required data</a></li>
-  <li><a href="#data-smoothing-interpollation" id="toc-data-smoothing-interpollation" class="nav-link" data-scroll-target="#data-smoothing-interpollation"><span class="toc-section-number">4.3.2</span>  Data smoothing / interpollation</a></li>
-  <li><a href="#spatial-phenology-estimates" id="toc-spatial-phenology-estimates" class="nav-link" data-scroll-target="#spatial-phenology-estimates"><span class="toc-section-number">4.3.3</span>  Spatial phenology estimates</a></li>
-  <li><a href="#inference-and-comparisons-to-actual-products" id="toc-inference-and-comparisons-to-actual-products" class="nav-link" data-scroll-target="#inference-and-comparisons-to-actual-products"><span class="toc-section-number">4.3.4</span>  Inference and comparisons to actual products</a></li>
+  <li><a href="#getting-the-required-data" id="toc-getting-the-required-data" class="nav-link" data-scroll-target="#getting-the-required-data"><span class="toc-section-number">4.5.1</span>  Getting the required data</a></li>
+  <li><a href="#data-smoothing-interpollation" id="toc-data-smoothing-interpollation" class="nav-link" data-scroll-target="#data-smoothing-interpollation"><span class="toc-section-number">4.5.2</span>  Data smoothing / interpollation</a></li>
+  <li><a href="#spatial-phenology-estimates" id="toc-spatial-phenology-estimates" class="nav-link" data-scroll-target="#spatial-phenology-estimates"><span class="toc-section-number">4.5.3</span>  Spatial phenology estimates</a></li>
+  <li><a href="#inference-and-comparisons-to-actual-products" id="toc-inference-and-comparisons-to-actual-products" class="nav-link" data-scroll-target="#inference-and-comparisons-to-actual-products"><span class="toc-section-number">4.5.4</span>  Inference and comparisons to actual products</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -316,7 +318,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Land Surface Phenology</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Phenology detection</span></h1>
 </div>
 
 
@@ -333,17 +335,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <section id="introduction" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">4.1</span> Introduction</h2>
-<p>FIX REFERENCES</p>
-<p>Land surface phenology is a first order control on the exchange of water and energy between the biosphere and atmosphere, modulated by photosynthesis. As such it is an indicator of climate change. Plant phenology has historically been recorded for many centuries. More recently plant phenology (and its changes) have been recorded by networks of observers, near-surface cameras and not in the least by global satellite monitoring.</p>
-<p>All these measurements have provided us with insights in how climate change has altered plant phenology. Overall, climate change moves phenology forward (from spring toward winter) at a rate of 3 days/decade, with rates varying depending on locality and altitude. Consequences are many, such as exposing early blooming or leafing plants to increased frosts risks and carbon losses through an explicit opportunity cost. In short, changes to plant and land surface phenology have a profound effect on both the carbon balance and all (co-) dependent processes. Therefore, it is key that we can quantify how phenology changes in response to year-to-year variability and climate change and global heating.</p>
+<p>Land surface phenology is a first order control on the exchange of water and energy between the biosphere and atmosphere. … As such it is an indicator of climate change. Plant phenology has historically been recorded for many centuries. More recently plant phenology (and its changes) have been recorded by networks of observers, near-surface cameras and not in the least by global satellite monitoring.</p>
+<p>All these (remote sensing) measurements have provided us with insights in how climate change has altered plant phenology. Overall, climate change moves phenology forward (from spring toward winter) at a rate of 3 days/decade, with rates varying depending on locality and altitude.</p>
+<p>Consequences are many, such as exposing early blooming or leafing plants to increased frosts risks and carbon losses through an explicit opportunity cost. In short, changes to plant and land surface phenology have a profound effect on both the carbon balance and all (co-) dependent processes. Therefore, it is key that we can quantify how phenology changes in response to year-to-year variability and climate change and global heating.</p>
 <p>Remote sensing products provide these insights for almost four decades. Advantages of remote sensing:</p>
+</section>
+<section id="land-surface-phenology" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="land-surface-phenology"><span class="header-section-number">4.2</span> Land surface phenology</h2>
+<p>The importance of land surface phenology and remote sensing within this context.</p>
 <ul>
 <li>wall to wall</li>
 <li>consistent / little bias</li>
 </ul>
 </section>
-<section id="scope" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="scope"><span class="header-section-number">4.2</span> Scope</h2>
+<section id="methods-of-measuring-land-surface-phenology" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="methods-of-measuring-land-surface-phenology"><span class="header-section-number">4.3</span> Methods of measuring land surface phenology</h2>
+<ul>
+<li>threshold methods</li>
+<li>curve fitting
+<ul>
+<li>first and second derivative</li>
+<li>other curve metrics</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="scope" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="scope"><span class="header-section-number">4.4</span> Scope</h2>
 <p>In this worked example we will cover the following topics.</p>
 <ul>
 <li>downloading the required data (using an API)</li>
@@ -354,10 +372,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <p>Let’s get started!</p>
 </section>
-<section id="demo" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="demo"><span class="header-section-number">4.3</span> Demo</h2>
-<section id="getting-the-required-data" class="level3" data-number="4.3.1">
-<h3 data-number="4.3.1" class="anchored" data-anchor-id="getting-the-required-data"><span class="header-section-number">4.3.1</span> Getting the required data</h3>
+<section id="demo" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="demo"><span class="header-section-number">4.5</span> Demo</h2>
+<section id="getting-the-required-data" class="level3" data-number="4.5.1">
+<h3 data-number="4.5.1" class="anchored" data-anchor-id="getting-the-required-data"><span class="header-section-number">4.5.1</span> Getting the required data</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Download basic MODIS dataset, this should be pre-downloaded</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># as the ORNL DAAC can be horrendously slow.</span></span>
@@ -472,8 +490,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">"all done..."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="data-smoothing-interpollation" class="level3" data-number="4.3.2">
-<h3 data-number="4.3.2" class="anchored" data-anchor-id="data-smoothing-interpollation"><span class="header-section-number">4.3.2</span> Data smoothing / interpollation</h3>
+<section id="data-smoothing-interpollation" class="level3" data-number="4.5.2">
+<h3 data-number="4.5.2" class="anchored" data-anchor-id="data-smoothing-interpollation"><span class="header-section-number">4.5.2</span> Data smoothing / interpollation</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># time series processing</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MODISTools)</span>
@@ -579,8 +597,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> phenology<span class="sc">$</span>EOS_25, <span class="at">col =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="spatial-phenology-estimates" class="level3" data-number="4.3.3">
-<h3 data-number="4.3.3" class="anchored" data-anchor-id="spatial-phenology-estimates"><span class="header-section-number">4.3.3</span> Spatial phenology estimates</h3>
+<section id="spatial-phenology-estimates" class="level3" data-number="4.5.3">
+<h3 data-number="4.5.3" class="anchored" data-anchor-id="spatial-phenology-estimates"><span class="header-section-number">4.5.3</span> Spatial phenology estimates</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Terra based approach, executing a function across a cube</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -653,8 +671,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">abs</span>(pheno <span class="sc">-</span> phenology_map), <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">75</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="inference-and-comparisons-to-actual-products" class="level3" data-number="4.3.4">
-<h3 data-number="4.3.4" class="anchored" data-anchor-id="inference-and-comparisons-to-actual-products"><span class="header-section-number">4.3.4</span> Inference and comparisons to actual products</h3>
+<section id="inference-and-comparisons-to-actual-products" class="level3" data-number="4.5.4">
+<h3 data-number="4.5.4" class="anchored" data-anchor-id="inference-and-comparisons-to-actual-products"><span class="header-section-number">4.5.4</span> Inference and comparisons to actual products</h3>
 
 
 </section>
