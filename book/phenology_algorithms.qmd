@@ -1,5 +1,22 @@
 # Phenology algorithms
 
+The example above illustrating Hopkin's law and the explicit temperature sensitivity of vegetation phenology to changes in temperature shows the importance of monitoring these changes within the context of climate change. In the previous example we have used an operational land surface vegetation phenology product.
+
+Many products exist, depending on the remote sensing platform or data used, and cover a wide range of spatial scales. For example the HR-VPP product allows for continuous vegetation monitoring using 10m resolution Sentinel-2 data, while the previous example relies on 500m resolution MODIS data. While MODIS provides a landscape wide measure of vegetation phenology the spatial scale of Sentinel-2 and near real time data allows for fine grained assessments of crop growth.
+
+## Algorithms
+
+Most phenology products rely on a limited set of algorithms, or various iterations of them. Throughout both implementations and scientific literature we can divide the methods used in two categories:
+
+- curve fitting
+- threshold based methods
+
+The curve fitting approach fits a prescribed model structure to the data, by varying a number of parameters. This functional description of the vegetation growth can then be used to derive phenology metrics by considering various inflection points of this function. Common approaches here are to use the first or second derivative of a fitted function (and zero crossings) to determine when large changes in vegetation phenology happen.
+
+FIGURE
+
+The most simple approach around, used with or without explicit curve fitting, is the use of a simple threshold based method. Here, a phenology event is registered if a given VI threshold is exceeded. Although scaling these products for global coverage creating your own algorithm and implementing it on a local or regional scale is fairly simple.
+
 ### stuff
 
 ```{r eval = FALSE}

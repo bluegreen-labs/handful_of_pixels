@@ -246,6 +246,16 @@
       "Hash": "15e9634c0fcd294799e9b2e929ed1b86",
       "Requirements": []
     },
+    "geodata": {
+      "Package": "geodata",
+      "Version": "0.5-3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "5792850d368fbd13316ce47dc2a6c47c",
+      "Requirements": [
+        "terra"
+      ]
+    },
     "glue": {
       "Package": "glue",
       "Version": "1.6.2",
