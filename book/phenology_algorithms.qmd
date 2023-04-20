@@ -15,59 +15,46 @@ The curve fitting approach fits a prescribed model structure to the data, by var
 
 FIGURE
 
-The most simple approach around, used with or without explicit curve fitting, is the use of a simple threshold based method. Here, a phenology event is registered if a given VI threshold is exceeded. Although scaling these products for global coverage creating your own algorithm and implementing it on a local or regional scale is fairly simple.
+The most simple approach around, used with or without explicit curve fitting, is the use of a simple threshold based method. Here, a phenology event is registered if a given vegetation index threshold is exceeded. Although scaling these products for global coverage is challenging creating your own algorithm and implementing it on a local or regional scale is fairly simple. Below I will show you how to calculate phenology for a vegetation index time series, for the region outlined in @sec-phenology-trends .
 
-### stuff
+### Acquiring demo data
+
+To get started we need to download some additional information, in particular vegetation time series. In this example, and to lighten the download requirements, I will use Lear Area Index (LAI) data instead of the more common EVI or NDVI time series used in phenology products.
 
 ```{r eval = FALSE}
-# download LAI data
-lai_2012 <- mt_subset(
+# download data
+df <- MODISTools::mt_subset(
   product = "MCD15A3H",
-  lat = 46.6756,
-  lon = 7.85480,
-  band = c("Lai_500m","FparLai_QC"),
-  start = "2012-01-01",
-  end = "2012-12-31",
-  km_lr = 100,
-  km_ab = 100,
-  site_name = "swiss",
+  lat = 42.536669726040884,
+  lon = -72.17951595626516,
+  band = "Lai_500m",
+  start = "2002-01-01",
+  end = "2022-12-31",
+  km_lr = 0,
+  km_ab = 0,
+  site_name = "HF",
   internal = TRUE,
   progress = TRUE
 )
-
-saveRDS(
-  lai_2012,
-  "data/lai_2012.rds",
-  compress = "xz"
-)
 ```
 
-### Data smoothing / interpollation
+## Data smoothing / interpollation
 
-```{r eval = FALSE}
-# time series processing
-library(MODISTools)
+```{r include = FALSE}
 library(signal)
+library(terra)
 library(dplyr)
-last <- function(x) { return( x[length(x)] ) }
 
-# download data
-# subset <- MODISTools::mt_subset(
-#   product = "MCD15A3H",
-#   lat = 42.536669726040884,
-#   lon = -72.17951595626516,
-#   band = "Lai_500m",
-#   start = "2002-01-01",
-#   end = "2022-12-31",
-#   km_lr = 0,
-#   km_ab = 0,
-#   site_name = "HF",
-#   internal = TRUE,
-#   progress = TRUE
-# )
+# preloading data
+# for fast processing
+phenology <- readRDS(here::here("data/phenology_2012.rds"))
+dem <- terra::rast(here::here("data-raw/srtm_38_03.tif"))
+land_cover <- readRDS(here::here("data/land-cover_2012.rds"))
+df <- readRDS(here::here("data/lai_time_series.rds"))
+```
 
-#saveRDS(subset, file = "data/lai_time_series.rds", compress = "xz")
 
+```{r}
 # generally spatialization of these operations is
 # embarrassingly parallel
 # yes this is a formal term https://en.wikipedia.org/wiki/Embarrassingly_parallel
@@ -75,9 +62,6 @@ last <- function(x) { return( x[length(x)] ) }
 # without taking others into account.
 # Many spatial operations work in this way
 # especially in remote sensing (some exceptions do apply)
-
-# read in the data
-df <- readRDS("data/lai_time_series.rds")
 
 # What did we not do?
 # - No QA/QC control
@@ -225,3 +209,22 @@ plot(abs(pheno - phenology_map), breaks = c(0, 10, 25, 50, 75))
 ```
 
 ### Inference and comparisons to actual products
+
+Too scale the exercise we need to expand the data used from a single time series to a data cube of LAI values. You therefore need to download some additional data, covering the area previously used when detecting phenology trends in @sec-phenology-trends .
+
+```{r eval = FALSE}
+# download LAI data
+lai_2012 <- mt_subset(
+  product = "MCD15A3H",
+  lat = 46.6756,
+  lon = 7.85480,
+  band = c("Lai_500m","FparLai_QC"),
+  start = "2012-01-01",
+  end = "2012-12-31",
+  km_lr = 100,
+  km_ab = 100,
+  site_name = "swiss",
+  internal = TRUE,
+  progress = TRUE
+)
+```

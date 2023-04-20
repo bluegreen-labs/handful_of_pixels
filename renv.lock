@@ -575,6 +575,16 @@
         "units"
       ]
     },
+    "signal": {
+      "Package": "signal",
+      "Version": "0.7-7",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "b8f2ef9022ac085add25ae093754e6b3",
+      "Requirements": [
+        "MASS"
+      ]
+    },
     "sp": {
       "Package": "sp",
       "Version": "1.6-0",
