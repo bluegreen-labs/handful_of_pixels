@@ -47,9 +47,6 @@ library(dplyr)
 
 # preloading data
 # for fast processing
-phenology <- readRDS(here::here("data/phenology_2012.rds"))
-dem <- terra::rast(here::here("data-raw/srtm_38_03.tif"))
-land_cover <- readRDS(here::here("data/land-cover_2012.rds"))
 df <- readRDS(here::here("data/lai_time_series.rds"))
 ```
 
@@ -83,7 +80,7 @@ df$smooth <- signal::sgolayfilt(df$value, p = 3, n = 31)
 # expand the time series to a daily time step
 # and merge with the original data
 expanded_df <- dplyr::tibble(
-  date = seq.Date(min(subset$date), max(subset$date), by = 1)
+  date = seq.Date(min(df$date), max(df$date), by = 1)
 )
 df <- dplyr::left_join(expanded_df, df)
 
