@@ -13,9 +13,16 @@ Most phenology products rely on a limited set of algorithms, or various iteratio
 
 The curve fitting approach fits a prescribed model structure to the data, by varying a number of parameters. This functional description of the vegetation growth can then be used to derive phenology metrics by considering various inflection points of this function. Common approaches here are to use the first or second derivative of a fitted function (and zero crossings) to determine when large changes in vegetation phenology happen.
 
-FIGURE
+```{r}
+#| label: fig-threshold
+#| fig-cap: "Example of a threshold based phenology algorithm, by [Stanimorova et al. 2019](https://www.mdpi.com/2072-4292/11/19/2201/htm)"
+#| fig-align: "left"
+#| out-width: "100%"
+#| echo: FALSE
+knitr::include_graphics("https://www.mdpi.com/remotesensing/remotesensing-11-02201/article_deploy/html/images/remotesensing-11-02201-g002.png")
+```
 
-The most simple approach around, used with or without explicit curve fitting, is the use of a simple threshold based method. Here, a phenology event is registered if a given vegetation index threshold is exceeded. Although scaling these products for global coverage is challenging creating your own algorithm and implementing it on a local or regional scale is fairly simple. Below I will show you how to calculate phenology for a vegetation index time series, for the region outlined in @sec-phenology-trends .
+The most simple approach around, used with or without explicit curve fitting, is the use of a simple threshold based method. Here, a phenology event is registered if a given vegetation index threshold is exceeded (@fig-threshold). Although scaling these products for global coverage is challenging creating your own algorithm and implementing it on a local or regional scale is fairly simple. Below I will show you how to calculate phenology for a vegetation index time series, for the region outlined in @sec-phenology-trends .
 
 ### Acquiring demo data
 
@@ -38,6 +45,10 @@ df <- MODISTools::mt_subset(
 )
 ```
 
+## Data quality control
+
+Many data products have data quality flags, which allow you to screen your data for spurious values. However, in this example I will skip this step as the interpretation/use of these quality control flags is rather complex. The below methodology is therefore a toy example and further developing this algorithm would require taking into account these quality control metrics. Instead a general smoothing of the data will be applied.
+
 ## Data smoothing / interpollation
 
 ```{r include = FALSE}
@@ -50,47 +61,65 @@ library(dplyr)
 df <- readRDS(here::here("data/lai_time_series.rds"))
 ```
 
+We first multiply the data with their required scaling factor, and transform the date values to a formal date format and split out the individual year (form the date).
 
 ```{r}
-# generally spatialization of these operations is
-# embarrassingly parallel
-# yes this is a formal term https://en.wikipedia.org/wiki/Embarrassingly_parallel
-# in short every pixel can be run separately
-# without taking others into account.
-# Many spatial operations work in this way
-# especially in remote sensing (some exceptions do apply)
-
-# What did we not do?
-# - No QA/QC control
-# - only for brevity this is skipped
-# - should ALWAYS be considered!
-
 # scale values appropriately
 df$value <- df$value * as.numeric(df$scale)
 
 # convert dates to proper date formats and
 # convert the date to a single year
-df$date <- as.Date(df$calendar_date)
-df$year <- as.numeric(format(df$date, "%Y"))
+df <- df |>
+  mutate(
+    date = as.Date(calendar_date),
+    year = as.numeric(format(date, "%Y")) 
+  )
+```
+
+Smoothing can be achieved using various algorithms, such as splines, loess regressions. In this case, I will use the savitsky-golay algorithm, a common algorithm used across various vegetation phenology products. Luckily the methodology is already implemented in the `signal` package.
+
+```{r}
+# load the signal library
+library(signal)
 
 # smooth this original input data using a
 # savitski-golay filter
-df$smooth <- signal::sgolayfilt(df$value, p = 3, n = 31)
+df <- df |>
+  mutate(
+    smooth = signal::sgolayfilt(value, p = 3, n = 31)
+  )
+```
 
+Note that the `sgolayfilt()` in `signal` does not allow for NA values to be present to function properly. As such, we operate on the full data set at its original time step. Since data is only provided at a 8-day time interval you would be limited to this time resolution in determining final phenology metrics.
+
+To get estimates close to a daily time step we need to expand the data to a dialy time-step and merge the original smoothed data.
+
+```{r message=FALSE}
 # expand the time series to a daily time step
 # and merge with the original data
 expanded_df <- dplyr::tibble(
   date = seq.Date(min(df$date), max(df$date), by = 1)
 )
-df <- dplyr::left_join(expanded_df, df)
 
+df <- dplyr::left_join(expanded_df, df)
+```
+
+Expanding the 8-day data to a 1-day timestep will result in `NA` values. I will use a simple linear interpolation between smoothed 8-day values to acquire a complete time series without gaps.
+
+```{r}
 # finally interpolate the expanded dataset (fill in NA values)
 df$smooth_int <- signal::interp1(1:nrow(df), df$smooth, 1:nrow(df), 'spline')
 
 # quick plot
 plot(df$date, df$value, type = "p", col = "red")
 lines(df$date, df$smooth_int)
+```
 
+## Phenology estimation
+
+With all data prepared we can use an arbitrary threshold to estimate a transition in LAI values for a given year. In the below example we use a LAI value of 3 to mark if the season has started or ended.
+
+```{r}
 phenology <- df |>
   group_by(year) |>
   summarize(
@@ -104,13 +133,21 @@ plot(df$date, df$value, type = "p", col = "red")
 lines(df$date, df$smooth_int)
 abline(v = phenology$SOS)
 abline(v = phenology$EOS)
+```
 
+Obviously this does not translate well to other locations, when vegetation types and densities vary from place to place. Scaling the time series between 0 and 1 will regularize responses across time series. Rescaling the data to a fixed range between 0 and 1, resolves this issue.
+
+```{r}
 # potential issues?
 # - fixed LAI threshold (varies per vegetation type)
 # - does not account for incomplete years
 # - provides absolute dates (not always helpful)
 df$smooth_int_scaled <- scales::rescale(df$smooth_int, to = c(0,1))
+```
 
+```{r}
+# calculate phenology dates
+# using a 0.5 (50%) threshold
 phenology <- df |>
   group_by(year) |>
   summarize(
@@ -140,10 +177,9 @@ library(MODISTools)
 library(signal)
 library(terra)
 library(dplyr)
-last <- function(x) { return( x[length(x)] ) }
 
 # prepare data (tidy way)
-r <- readRDS("data/lai_2012.rds")
+r <- readRDS(here::here("data/lai_2012.rds"))
 
 # convert values using scale parameter
 r <- r |>
@@ -151,8 +187,11 @@ r <- r |>
     band == "Lai_500m"
   )
 
+# conversion from tidy data to a raster format
 r <- mt_to_terra(r)
+```
 
+```{r eval = FALSE}
 phenophases <- function(
     df,
     return = "SOS",
@@ -187,9 +226,10 @@ phenophases <- function(
   doy <- as.numeric(format(as.Date(phenophase, origin = "1970-01-01"),"%j"))
   return(doy)
 }
+```
 
+```{r eval = FALSE}
 phenology_map <- app(r, phenophases)
-
 
 pheno <- readRDS("data/phenology_2012.rds")
 pheno <-  pheno |>
@@ -202,7 +242,6 @@ pheno <- mt_to_terra(pheno)
 plot(pheno)
 
 plot(abs(pheno - phenology_map), breaks = c(0, 10, 25, 50, 75))
-
 ```
 
 ### Inference and comparisons to actual products
