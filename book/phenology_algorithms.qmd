@@ -113,7 +113,8 @@ Expanding the 8-day data to a 1-day timestep will result in `NA` values. I will 
 # non NA values
 no_na <- which(!is.na(df$smooth))
 
-# finally interpolate the expanded dataset (fill in NA values)
+# finally interpolate the expanded dataset
+# (fill in NA values)
 df$smooth_int <- signal::interp1(
   x = as.numeric(df$date[no_na]),
   y = df$smooth[no_na],
@@ -125,11 +126,20 @@ df$smooth_int <- signal::interp1(
 ```{r}
 #| code-fold: true
 # quick plot
-plot(df$date, df$value, type = "p", col = "red")
+plot(
+  df$date,
+  df$value,
+  type = "p",
+  col = "red",
+    xlim = c(
+    as.Date("2003-01-01"),
+    as.Date("2005-01-01")
+    )
+  )
 lines(df$date, df$smooth_int)
 ```
 
-## Phenology estimation
+## Phenology estimation {#sec-phenology-estimates}
 
 With all data prepared we can use an arbitrary threshold to estimate a transition in LAI values for a given year. In the below example we use a LAI value of 3 to mark if the season has started or ended.
 
@@ -147,10 +157,21 @@ phenology <- df |>
 
 # plot the phenology dates on the previous plot
 # (update graph)
-plot(df$date, df$value, type = "p", col = "red")
-lines(df$date, df$smooth_int)
+plot(
+  df$date,
+  df$value,
+  type = "p",
+  col = "red",
+  xlim = c(
+    as.Date("2003-01-01"),
+    as.Date("2005-01-01")
+    )
+  )
+
+# vertical lines at phenological dates
 abline(v = phenology$SOS)
 abline(v = phenology$EOS)
+
 ```
 
 Obviously this does not translate well to other locations, when vegetation types and densities vary from place to place. Scaling the time series between 0 and 1 will **regularize responses across time series**. Rescaling the data to a fixed range between 0 and 1, resolves this issue.
@@ -163,7 +184,10 @@ Obviously this does not translate well to other locations, when vegetation types
 df <- df |>
   group_by(year) |>
   mutate(
-    smooth_int_scaled = scales::rescale(smooth_int, to = c(0,1))
+    smooth_int_scaled = scales::rescale(
+      smooth_int,
+      to = c(0,1)
+    )
   )
 ```
 
@@ -254,15 +278,17 @@ However, data downloaded using `MODISTools` by default is formated as tidy (row 
 
 ```{r eval = FALSE}
 # conversion from tidy data to a raster format
-r <- mt_to_terra(r)
+r <- MODISTools::mt_to_terra(r)
 ```
 
+Remember the algorithm for a single time series above. To make this collection of steps re-usable we define a function. This allows you to run the routine across several pixels (at once). It is also a requirement for executing computational work on a multi-layer `terra` data cube.
 
+Below I wrap the steps as defined in @sec-phenology-estimates in a single function which takes a data frame as input, a phenological phase and threshold value (0 - 1) as parameters.
 
 ```{r eval = FALSE}
 phenophases <- function(
     df,
-    return = "SOS",
+    return = "start",
     threshold = 0.25
 ) {
 
@@ -280,14 +306,31 @@ phenophases <- function(
   smooth_int <- rep(NA, length(date_expanded))
   smooth_int[which(date_expanded %in% date)] <- smooth
 
-  # finally interpolate the expanded dataset (fill in NA values)
-  smooth_int <- signal::interp1(1:length(smooth_int), smooth_int, 1:length(smooth_int), 'spline')
-  smooth_int_scaled <- scales::rescale(smooth_int, to = c(0,1))
+  # finally interpolate the expanded dataset
+  # (fill in NA values)
+  smooth_int <- signal::interp1(
+    x = 1:length(smooth_int),
+    y = smooth_int,
+    xi = 1:length(smooth_int),
+    'linear'
+  )
+  
+  # rescale values between 0 and 1
+  smooth_int_scaled <- scales::rescale(
+    smooth_int,
+    to = c(0,1)
+  )
 
   phenophase <- ifelse(
-    return == "SOS",
-    date_expanded[which(smooth_int_scaled > threshold)][1],
-    last(date_expanded[which(smooth_int_scaled > threshold)][1])
+    return == "start",
+    date_expanded[
+      which(smooth_int_scaled > threshold)
+      ][1],
+    last(
+      date_expanded[
+        which(smooth_int_scaled > threshold)
+        ][1]
+      )
   )
 
   # convert to doy
@@ -296,22 +339,41 @@ phenophases <- function(
 }
 ```
 
+With the function defined we can now apply this function to all pixels, and along the time axis (layers) of our `terra` raster stack. The `app()` function allows you to do exactly this!
+
 ```{r eval = FALSE}
 phenology_map <- app(r, phenophases)
+```
 
-pheno <- readRDS("data/phenology_2012.rds")
-pheno <-  pheno |>
-  mutate(
-    value = ifelse(value == 32767, NA, value),
-    value = format(as.Date(value, origin = "1970-01-01"),"%j")
+```{r message=FALSE}
+#| code-fold: true
+
+pheno <- readRDS(
+  here::here("data/phenology_2012.rds")
   )
 
-pheno <- mt_to_terra(pheno)
-plot(pheno)
+pheno <-  pheno |>
+  mutate(
+    value = ifelse(
+      value == 32767,
+      NA,
+      value),
+    value = format(
+      as.Date(value, origin = "1970-01-01"),
+      "%j"
+      )
+  )
 
-plot(abs(pheno - phenology_map), breaks = c(0, 10, 25, 50, 75))
+pheno <- MODISTools::mt_to_terra(pheno)
 ```
 
 ### Inference and comparisons to actual products
 
 Too scale the exercise we need to expand the data used from a single time series to a data cube of LAI values. You therefore need to download some additional data, covering the area previously used when detecting phenology trends in @sec-phenology-trends .
+
+```{r message=FALSE}
+#| code-fold: true
+
+plot(pheno)
+plot(abs(pheno - phenology_map), breaks = c(0, 10, 25, 50, 75))
+```
