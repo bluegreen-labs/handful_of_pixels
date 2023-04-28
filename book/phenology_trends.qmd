@@ -44,7 +44,7 @@ geodata::elevation_3s(
 ::: callout-note
 ### Note
 
-You can use the `here` package to make references to paths consistent within an R project. When wrapping a path with `here::here()` you reference the file relative to the main project directory, not the current directory. This is especially helpful when using R markdown or other notebook formats such as Quarto. These notebooks render code relative to their current location.
+You can use the `here` package to make references to paths consistent within an R project. When wrapping a path with `here::here()` you reference the file relative to the main project directory, not the current directory. This is especially helpful when using R markdown or other notebook formats such as Quarto. These notebooks render code relative to their current location (path). Notebooks in sub-directories in a project will therefore not be able to easily access data in other sub-directories. The `here` package resolves this issue.
 :::
 
 In this exercise we'll rely on the MODIS land surface phenology product. This remote sensing based data product quantifies land surface phenology and is a good trade-off between data coverage (global) and precision (on a landscape scale).

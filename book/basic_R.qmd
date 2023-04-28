@@ -40,7 +40,7 @@ For those familiar with github I provide a [Github template](https://github.com/
 ::: callout-note
 ## Note
 
-Pay close attention to the setup of your project as an intuitive and consistent structure greatly enhances your productivity, reproducibility, replicability within a different context and the overall quality of your work. First and foremost, your project structure, the documentation you write, and the clarity of your work are notes to your future self. Be kind to your future self.
+Pay close attention to the setup of your project as an intuitive and consistent structure greatly enhances your productivity, reproducibility, replicability within a different context, and the overall quality of your work. First and foremost, your project structure, the documentation you write, and the clarity of your work, are notes to your future self. Be kind to your future self!
 :::
 
 ## Basic R
@@ -181,7 +181,7 @@ df <- read.table(
 
 All digital data which is not represented as text characters can be considered binary data. One of the advantages of binary data is that it is an efficient representation of data, saving space. This comes at the cost of requiring a dedicated software (i.e. libraries), other than a text editor, to manipulate the data.
 
-In geography and environmental sciences particular (geospatial) file formats dominate the field. Some of these file formats relate to the content of the data, some of these formats are legacy formats due to the history of the field itself. Below you find a list some of the most common formats you will encounter. For the use of libraries I refer to @sec-libraries and REFERENCE GEOSPATIAL DATA CHAPTER.
+In geography and environmental sciences particular (geospatial) file formats dominate the field. Some of these file formats relate to the content of the data, some of these formats are legacy formats due to the history of the field itself. Below you find a list some of the most common formats you will encounter. For the use of (geo-spatial) libraries I refer to @sec-libraries and @sec-geospatial .
 
 | File format (extension) | Format description                                             | Use case                                                                                                                            | R Library            |
 |---------------|---------------|----------------------------|---------------|
@@ -193,11 +193,10 @@ In geography and environmental sciences particular (geospatial) file formats dom
 | \*.tiff, \*.geotiff     | Geotiff multi-dimensional raster data (see below)              | Layered (3D) raster (image) data. Commonly used to represent spatial (raster) data.                                                 | terra, raster        |
 | \*.shp                  | Shapefile of vector data (see below)                           | Common vector based geospatial data. Used to describe data which can be captured by location/shape and attribute values.            | sp, sf               |
 
-
 ::: callout-tip
-### Exercise sandbox
+### R sandbox
 
-Below you can use the in browser R session to execute some basic R commands as shown above. Execute the formatted statement by hitting `Run Code` or alter the content and re-run it.
+Below you can use the in browser base R session to execute some basic R commands as shown above. Execute the formatted statement by hitting `Run Code` or alter the content and re-run it.
 
 ```{r}
 # reading data
@@ -218,7 +217,6 @@ v <- c(1,3,5,7,2)
 print(last(v))
 ```
 :::
-
 
 ## Libraries / packages {#sec-libraries}
 

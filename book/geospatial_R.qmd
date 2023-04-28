@@ -1,4 +1,4 @@
-# Geospatial data in R
+# Geospatial data in R {#sec-geospatial}
 
 ```{r include = FALSE}
 library(dplyr)
@@ -19,10 +19,12 @@ sf <- st_sf(s)
 r <- terra::rast(here::here("data/demo_data.nc"))
 ```
 
-Geospatial data procesing in `R` follows the standard raster vs. vector data model dichotomy as seen throughout most geographic information systems (GIS). Here, raster data represent continuous data on a (fixed) grid, while vector data describe geographic features using points, lines and polygons (shapes). The main difference between both types is their sensitivity to resolution, which is predetermined in the case of raster data, while undetermined using a vector topology. This difference in data models used also determines the advantages and disadvantages of both models, where vector topology is resolution independent data efficient in storage the handling if mathematical (topological) operations can be computationally expensive. On the other hand raster data has a fixed lower limit to its resolution, while often being computationally efficient when modelling.
+Geospatial data procesing in `R` follows the standard raster vs. vector data model dichotomy as seen throughout most geographic information systems (GIS, @fig-datatypes). Here, raster data represent continuous data on a (fixed) grid, while vector data describe geographic features using points, lines and polygons (shapes). The main difference between both types is their sensitivity to resolution, which is predetermined in the case of raster data, while undetermined using a vector topology. 
+
+This difference in data models used also determines the advantages and disadvantages of both models, where vector topology is resolution independent data efficient in storage the handling if mathematical (topological) operations can be computationally expensive. On the other hand raster data has a fixed lower limit to its resolution, while often being computationally efficient when modelling.
 
 ```{r}
-#| label: fig-filterdata
+#| label: fig-datatypes
 #| fig-cap: "Image by [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Raster_vector_tikz.svg)"
 #| fig-align: "left"
 #| out-width: "100%"
@@ -34,20 +36,11 @@ Most geospatial data handling in `R` happens using lower level GDAL/OGR bindings
 
 ## The R geospatial ecosystem
 
+Spatio-temporal data often comes in the form of dense arrays, with space and time being array dimensions. Examples include socio-economic or demographic data, series of satellite images with multiple spectral bands, spatial simulations, and climate or weather model output.
 
-Spatiotemporal data often comes in the form of dense arrays, with space and time being array dimensions. Examples include
+A number of libraries (packages) make the use of this spatio-temporal data, and geo-computational work in R easy. However, the ecosystem has grown rapidly and therefore is continuously shifting. Unlike other processing environments this makes it at times hard to keep track of what or when to use a particular package.
 
-    socio-economic or demographic data,
-    environmental variables monitored at fixed stations,
-    raster maps
-    time series of satellite images with multiple spectral bands,
-    spatial simulations, and
-    climate or weather model output.
-
-This R package provides classes and methods for reading, manipulating, plotting and writing such data cubes, to the extent that there are proper formats for doing so.
-
-
-A number of libraries (packages) make geo-computational work in R easy. However, the ecosystem has grown rapidly and therefore is continuously shifting. Unlike other processing environments this makes it at times hard to keep track of what to use when. Here I give a quick overview of the basic functionality and their uses cases of all these packages, finally there will be a brief overview of some basic geospatial operations using mostly `terra` and `sf` libraries (see @sec-terra and @sec-sf). For a more extensive, deep dive, of all these packages I refer to Nowasad et al. (FIX REF).
+Here, I give a quick overview of the basic functionality and their uses cases of all these packages, finally there will be a brief overview of some basic geospatial operations using `terra` and `sf` libraries (see @sec-terra and @sec-sf). For a more extensive, deep dive, of all these packages I refer to Nowasad et al. (FIX REF).
 
 ### The terra package {#sec-terra}
 
@@ -63,20 +56,24 @@ library(terra)
 r <- terra::rast("demo_data.nc")
 ```
 
-We can inspect the meta data by calling the object, or we can visualize the data by plotting the data:
+We can inspect the meta data by calling the object:
 
 ```{r}
 print(r)
+```
+
+Or you can visualize the data by plotting the data:
+
+```{r}
 plot(r)
 ```
 
-Dedicated functions exist to extract the layer names (`names()`) and the time stamps (`time()`) if there is a time component to the data.
+Dedicated functions exist to extract the layer names (`names()`) and the time stamps (`time()`) if there is a time component to the data. These functions allow you to extract these data and use them in analysis.
 
 ```{r}
-print(time(r))
-print(names(r))
+time(r)
+names(r)
 ```
-
 
 #### Basic math {.unnumbered}
 
@@ -92,6 +89,9 @@ Logical operations work in the same way. You can create a mask of temperatures a
 # all locations above freezing
 # as a binary mask
 m <- r_c > 5
+```
+
+```{r echo=FALSE}
 plot(m)
 ```
 

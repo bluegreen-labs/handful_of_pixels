@@ -86,16 +86,15 @@ MODISTools::mt_bands("MOD11A2") |>
   head()
 ```
 
-Using this information we can now formulate a full query for use with the API.
+Using this information we can now formulate a full query for use with the API. Here, I download a demo dataset specifying a location, a product, a band (subset of the product) and a date range and a geographic area (1 km above/below and left/right). Data is returned internally to the variable `subset`, and the progress bar of the download is not shown.
+
+```{r include=FALSE}
+# load MODIS subset demo data for quick rendering
+subset <- readRDS(here::here("data/modis_demo_data.rds"))
+```
 
 ```{r eval = FALSE}
-# download a demo dataset
-# specifying a location, a product,
-# a band (subset of the product)
-# and a date range and a geographic
-# area (1 km above/below and left/right).
-# Data is returned internally and the
-# progress bar of the download is not shown.
+# Download some data
 subset <- MODISTools::mt_subset(
   product = "MOD11A2",
   lat = 40,
@@ -108,14 +107,12 @@ subset <- MODISTools::mt_subset(
   internal = TRUE,
   progress = FALSE
 )
+
+# print the dowloaded data
+head(subset)
 ```
 
-```{r include=FALSE}
-# load MODIS subset demo data for quick rendering
-subset <- readRDS(here::here("data/modis_demo_data.rds"))
-```
-
-```{r}
+```{r echo=FALSE}
 # print the dowloaded data
 head(subset)
 ```
@@ -124,7 +121,9 @@ A detailed description of all functions of the `MODISTools` R package is beyond 
 
 ##### GET {.unnumbered}
 
-Depending on your data source, you will either need to rely on a dedicated R package to query the API or study the API documentation. The general scheme for using an API follows the use of the `GET()` command of the {httr} R library. You define a query using API parameters, as a named list, and then use a `GET()` statement to download the data from the endpoint (`url`).
+Depending on your data source, you will either need to rely on a dedicated R package to query the API or study the API documentation. The general scheme for using an API follows the use of the `GET()` command of the {httr} R library. 
+
+You define a query using API parameters, as a named list.
 
 ```{r eval=FALSE}
 # formulate a named list query to pass to httr
@@ -132,17 +131,21 @@ query <- list(
   "argument" = "2",
   "another_argument" = "3"
 )
+```
 
+You define the endpoint (`url`) where you want to query your data from.
+
+```{r eval=FALSE}
 # The URL of the API (varies per product / param)
 url <- "https://your.service.endpoint.com"
+```
 
-# download data using the
-# API endpoint and query data
-# status variable will include if
-# the download was successful or not
+Finally, you combine both in a `GET()` statement to download the data from the endpoint (`url`).
+
+```{r eval=FALSE}
 # the write_disk() function captures
 # data if available and writes it to
-# disk
+# disk at location "path"
 status <- httr::GET(
   url = url,
   query = query,
@@ -153,7 +156,7 @@ status <- httr::GET(
 )
 ```
 
-Below, we provide an example of using the `GET` command to download data from the [Regridded Harmonized World Soil Database (v1.2)](https://daac.ornl.gov/cgi-bin/dsviewer.pl?ds_id=1247) as hosted on the Oak Ridge National Laboratory computer infrastructure. In this case we download a subset of a global map of topsoil sand content (`T_SAND`).
+Below, we provide an example of using the `GET` command to download data from the [Regridded Harmonized World Soil Database (v1.2)](https://daac.ornl.gov/cgi-bin/dsviewer.pl?ds_id=1247) as hosted on the Oak Ridge National Laboratory computer infrastructure. In this case we download a subset of a global map of topsoil sand content (`T_SAND`, %).
 
 ```{r eval = TRUE, warning=FALSE, message=FALSE}
 # set API URL endpoint
@@ -182,14 +185,28 @@ status <- httr::GET(
     overwrite = TRUE
   )
 )
+```
+
+Plotting the data downloaded shows a map of the percentage of sand in the topsoil.
+
+```{r message=FALSE}
+#| code-fold: true
 
 # to visualize the data
 # we need to load the {terra}
-# library
+# library - more on geospatial
+# data is presented in the next
+# chapter
 library("terra")
 sand <- terra::rast(file.path(tempdir(), "T_SAND.nc"))
 terra::plot(sand)
 ```
+
+::: callout-note
+## Note
+
+Throughout the book, where possible, I will collapse the code which draws figures. This makes for a better reading experience. If you want to see the underlying code you can click on the "> Code" line to unfold the code chunk. If not code is presented a simple `plot()` function call was used.
+:::
 
 ##### Authentication {.unnumbered}
 
