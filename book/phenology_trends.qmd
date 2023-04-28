@@ -8,37 +8,9 @@ All these (remote sensing) measurements have provided us with insights in how cl
 
 Consequences are many, such as exposing early blooming or leafing plants to increased frosts risks and carbon losses through an explicit opportunity cost. In short, changes to plant and land surface phenology have a profound effect on both the carbon balance and all (co-) dependent processes. Therefore, it is key that we can quantify how phenology changes in response to year-to-year variability and climate change and global heating.
 
-Remote sensing products provide these insights for almost four decades. Advantages of remote sensing:
-
-## Land surface phenology
-
-The importance of land surface phenology and remote sensing within this context.
-
-- wall to wall
-- consistent / little bias
-
-## Methods of measuring land surface phenology
-
-- threshold methods
-- curve fitting
-  - first and second derivative
-  - other curve metrics
-
------ 
-
-## Scope
-
-In this worked example we will cover the following topics.
-
-- downloading the required data (using an API)
-- learning how to quality control and smooth noisy data
-- write a basic threshold based algorithm
-- scale the algorithm spatially
-- provide comparisons with commercial products
+Remote sensing products provide these insights for almost four decades. Remote sensing, and land surface phenology  products they produce have a number of advantages. They provide wall-to-wall coverage, with relative consistency and known (methodological) biases. In this and the following @sec-algorithms I will cover several aspects of developing a small research project using the remote sensing of phenology as it's basis.
 
 Let's get started!
-
-## Land surface phenology ~ topography relations
 
 ```{r include = FALSE}
 library(geodata)

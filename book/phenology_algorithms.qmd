@@ -1,4 +1,4 @@
-# Phenology algorithms
+# Phenology algorithms {#sec-algorithms}
 
 The example above illustrating Hopkin's law and the explicit temperature sensitivity of vegetation phenology to changes in temperature shows the importance of monitoring these changes within the context of climate change. In the previous example we have used an operational land surface vegetation phenology product.
 
@@ -26,7 +26,7 @@ The most simple approach around, used with or without explicit curve fitting, is
 
 ### Acquiring demo data
 
-To get started we need to download some additional information, in particular vegetation time series. In this example, and to lighten the download requirements, I will use Lear Area Index (LAI) data instead of the more common EVI or NDVI time series used in phenology products.
+To get started we need to download some additional information, in particular vegetation time series. In this example, and to lighten the download requirements, I will use Leaf Area Index (LAI) data instead of the more common EVI or NDVI time series used in phenology products.
 
 ```{r eval = FALSE}
 # download data
@@ -73,10 +73,13 @@ df <- df |>
   mutate(
     date = as.Date(calendar_date),
     year = as.numeric(format(date, "%Y")) 
+  ) |>
+  filter(
+    year > 2002
   )
 ```
 
-Smoothing can be achieved using various algorithms, such as splines, loess regressions. In this case, I will use the savitsky-golay algorithm, a common algorithm used across various vegetation phenology products. Luckily the methodology is already implemented in the `signal` package.
+Smoothing can be achieved using various algorithms, such as splines, loess regressions. In this case, I will use the [Savitsky-Golay filter](https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter), a common algorithm used across various vegetation phenology products. Luckily the methodology is already implemented in the `signal` package.
 
 ```{r}
 # load the signal library
@@ -90,9 +93,9 @@ df <- df |>
   )
 ```
 
-Note that the `sgolayfilt()` in `signal` does not allow for NA values to be present to function properly. As such, we operate on the full data set at its original time step. Since data is only provided at a 8-day time interval you would be limited to this time resolution in determining final phenology metrics.
+Note that the `sgolayfilt()` does not allow for NA values to be present to function properly. As such, we operate on the full data set at its original time step. Since data is only provided at a 8-day time interval you would be limited to this time resolution in determining final phenology metrics when using a threshold based approach.
 
-To get estimates close to a daily time step we need to expand the data to a dialy time-step and merge the original smoothed data.
+To get estimates close to a daily time step we need to expand the data to a daily time-step and merge the original smoothed data.
 
 ```{r message=FALSE}
 # expand the time series to a daily time step
@@ -107,9 +110,20 @@ df <- dplyr::left_join(expanded_df, df)
 Expanding the 8-day data to a 1-day timestep will result in `NA` values. I will use a simple linear interpolation between smoothed 8-day values to acquire a complete time series without gaps.
 
 ```{r}
-# finally interpolate the expanded dataset (fill in NA values)
-df$smooth_int <- signal::interp1(1:nrow(df), df$smooth, 1:nrow(df), 'spline')
+# non NA values
+no_na <- which(!is.na(df$smooth))
 
+# finally interpolate the expanded dataset (fill in NA values)
+df$smooth_int <- signal::interp1(
+  x = as.numeric(df$date[no_na]),
+  y = df$smooth[no_na],
+  xi = as.numeric(df$date),
+  method = 'linear'
+)
+```
+
+```{r}
+#| code-fold: true
 # quick plot
 plot(df$date, df$value, type = "p", col = "red")
 lines(df$date, df$smooth_int)
@@ -126,6 +140,10 @@ phenology <- df |>
     SOS = date[which(smooth_int > 3)][1],
     EOS = last(date[which(smooth_int > 3)])
   )
+```
+
+```{r}
+#| code-fold: true
 
 # plot the phenology dates on the previous plot
 # (update graph)
@@ -135,61 +153,111 @@ abline(v = phenology$SOS)
 abline(v = phenology$EOS)
 ```
 
-Obviously this does not translate well to other locations, when vegetation types and densities vary from place to place. Scaling the time series between 0 and 1 will regularize responses across time series. Rescaling the data to a fixed range between 0 and 1, resolves this issue.
+Obviously this does not translate well to other locations, when vegetation types and densities vary from place to place. Scaling the time series between 0 and 1 will **regularize responses across time series**. Rescaling the data to a fixed range between 0 and 1, resolves this issue.
 
 ```{r}
 # potential issues?
 # - fixed LAI threshold (varies per vegetation type)
 # - does not account for incomplete years
 # - provides absolute dates (not always helpful)
-df$smooth_int_scaled <- scales::rescale(df$smooth_int, to = c(0,1))
+df <- df |>
+  group_by(year) |>
+  mutate(
+    smooth_int_scaled = scales::rescale(smooth_int, to = c(0,1))
+  )
 ```
+
+Now we can use a relative amplitude (0 - 1) across locations. This ensures a consistent interpretation of what phenology represents. In case of a threshold of 0.5, this would represent the halfway point between a winter baseline and a summer maximum (leaf development). Commonly, one uses multiple thresholds to characterize different phases of the vegetation development. For example, a low threshold (~0.25) characterizes the start of the growing season, while a higher (~0.85) threshold marks the end of vegetation development toward summer.
+
+As before, we can now apply relative thresholds (of 0.25 and 0.85) to our time series, to mark the start of the season and maximum crown development. We can reverse this logic, and use the same thresholds on the latter part of the seasonal trajectory and calculate the start of leaf senesence (death) and full leaf loss.
 
 ```{r}
 # calculate phenology dates
 # using a 0.5 (50%) threshold
+# SOS: start of season
+# MAX: max canopy development
+# SEN: canopy sensesence
+# EOS: end of season
 phenology <- df |>
   group_by(year) |>
   summarize(
-    SOS = date[which(smooth_int_scaled > 0.5)][1],
-    EOS = last(date[which(smooth_int_scaled > 0.5)]),
-    SOS_25 = date[which(smooth_int_scaled > 0.25)][1],
-    EOS_25 = last(date[which(smooth_int_scaled > 0.25)])
+    SOS = date[which(smooth_int_scaled > 0.25)][1],
+    MAX = date[which(smooth_int_scaled > 0.85)][1],
+    SEN = last(date[which(smooth_int_scaled > 0.85)]),
+    EOS = last(date[which(smooth_int_scaled > 0.25)])[1]
   )
+
+phenology <- phenology |>
+  filter(
+    year > 2002,
+    year < 2005
+  )
+```
+
+Plotting these results for a limited set of years shows how phenology dates for different years and thresholds.
+
+```{r}
+#| code-fold: true
 
 # plot the phenology dates on the previous plot
 # (update graph)
-plot(df$date, df$value, type = "p", col = "red")
+plot(
+  df$date,
+  df$value,
+  type = "p",
+  col = "red",
+  xlim = c(as.Date("2003-01-01"),as.Date("2005-01-01"))
+  )
 lines(df$date, df$smooth_int)
-abline(v = phenology$SOS, col = "green")
-abline(v = phenology$EOS, col = "red")
-abline(v = phenology$SOS_25, col = "green")
-abline(v = phenology$EOS_25, col = "red")
+abline(v = phenology$SOS, col = "lightgreen", lwd = 2)
+abline(v = phenology$MAX, col = "green", lwd = 2)
+abline(v = phenology$SEN, col = "brown", lwd = 2)
+abline(v = phenology$EOS, col = "red", lwd = 2)
 ```
 
 ### Spatial phenology estimates
 
-```{r eval = FALSE}
-# Terra based approach, executing a function across a cube
-
-# time series processing
-library(MODISTools)
-library(signal)
-library(terra)
-library(dplyr)
-
-# prepare data (tidy way)
-r <- readRDS(here::here("data/lai_2012.rds"))
-
-# convert values using scale parameter
-r <- r |>
+```{r include = FALSE}
+# load buffered data, not shown in render
+r <- readRDS(here::here("data/lai_2012.rds")) |>
   filter(
     band == "Lai_500m"
   )
+```
 
+The above example introduced the very basics of how to deal with a simple time series and develop a proof of concept. However, to scale our example spatially you need a way to process data along space and time axis. As introduced earlier, the `terra` package allows you to manipulate 3D data cubes (along latitude,longitude, and time axis).
+
+
+```{r eval = FALSE}
+# Download a larger data cube
+# note that I sample a 100x100 km
+# area around the lat/lon location
+lai_2012 <- MODISTools::mt_subset(
+  product = "MCD15A3H",
+  lat = 46.6756,
+  lon = 7.85480,
+  band = c("Lai_500m"),
+  start = "2012-01-01",
+  end = "2012-12-31",
+  km_lr = 100,
+  km_ab = 100,
+  site_name = "swiss",
+  internal = TRUE,
+  progress = TRUE
+)
+
+# save this data for later use
+# to speed up computation
+```
+
+However, data downloaded using `MODISTools` by default is formated as tidy (row oriented) data. 
+
+```{r eval = FALSE}
 # conversion from tidy data to a raster format
 r <- mt_to_terra(r)
 ```
+
+
 
 ```{r eval = FALSE}
 phenophases <- function(
@@ -247,20 +315,3 @@ plot(abs(pheno - phenology_map), breaks = c(0, 10, 25, 50, 75))
 ### Inference and comparisons to actual products
 
 Too scale the exercise we need to expand the data used from a single time series to a data cube of LAI values. You therefore need to download some additional data, covering the area previously used when detecting phenology trends in @sec-phenology-trends .
-
-```{r eval = FALSE}
-# download LAI data
-lai_2012 <- mt_subset(
-  product = "MCD15A3H",
-  lat = 46.6756,
-  lon = 7.85480,
-  band = c("Lai_500m","FparLai_QC"),
-  start = "2012-01-01",
-  end = "2012-12-31",
-  km_lr = 100,
-  km_ab = 100,
-  site_name = "swiss",
-  internal = TRUE,
-  progress = TRUE
-)
-```
