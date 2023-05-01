@@ -385,14 +385,12 @@ phenology_map <- terra::rast(here::here("data/LAI_phenology.tiff"))
 
 You now have output from our custom algorithm, and the previously downloaded MODIS (MCD12Q2) phenology data product. You can therefore easily compare both outputs.
 
-
 ```{r message=FALSE}
 #| code-fold: true
 #| label: fig-comparison
 #| fig-cap: "Comparison of custom algorithm and MODIS phenology product outputs"
 #| fig-align: "left"
 #| out-width: "100%"
-
 library(ggplot2)
 library(tidyterra)
 library(patchwork)
