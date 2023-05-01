@@ -56,7 +56,7 @@ To gather this data we will use the `MODISTools` package. For an in depth discus
 library(MODISTools)
 
 # download and save phenology data
-phenology_2012 <- MODISTools::mt_subset(
+phenology <- MODISTools::mt_subset(
   product = "MCD12Q2",
   lat = 46.6756,
   lon = 7.85480,

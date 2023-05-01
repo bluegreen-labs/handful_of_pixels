@@ -241,12 +241,9 @@ abline(v = phenology$EOS, col = "red", lwd = 2)
 
 ### Spatial phenology estimates
 
-```{r include = FALSE}
+```{r eval = FALSE}
 # load buffered data, not shown in render
-r <- readRDS(here::here("data/lai_2012.rds")) |>
-  filter(
-    band == "Lai_500m"
-  )
+r <- terra::rast(here::here("data/LAI.tiff"))
 ```
 
 The above example introduced the very basics of how to deal with a simple time series and develop a proof of concept. However, to scale our example spatially you need a way to process data along space and time axis. As introduced earlier, the `terra` package allows you to manipulate 3D data cubes (along latitude,longitude, and time axis).
@@ -293,34 +290,45 @@ phenophases <- function(
 ) {
 
   # split out useful info
-  value <- as.vector(df)
+  value <- as.vector(df) * 0.1
+  
+  # if all values are NA
+  # return NA (missing data error trap)
+  if(all(is.na(value))) {
+    return(NA)
+  }
+  
   date <- as.Date(names(df))
-
+  
   # smooth this original input data using a
   # savitski-golay filter
   smooth <- signal::sgolayfilt(value, p = 3, n = 31)
 
   # expand the time series to a daily time step
   # and merge with the original data
-  date_expanded <- seq.Date(min(date), max(date), by = 1)
+  date_expanded <- seq.Date(min(date, na.rm = TRUE), max(date, na.rm = TRUE), by = 1)
   smooth_int <- rep(NA, length(date_expanded))
   smooth_int[which(date_expanded %in% date)] <- smooth
 
+  # non NA values for interpolation
+  no_na <- which(!is.na(smooth_int))
+  
   # finally interpolate the expanded dataset
   # (fill in NA values)
   smooth_int <- signal::interp1(
-    x = 1:length(smooth_int),
-    y = smooth_int,
+    x = no_na,
+    y = smooth_int[no_na],
     xi = 1:length(smooth_int),
     'linear'
   )
-  
+
   # rescale values between 0 and 1
   smooth_int_scaled <- scales::rescale(
     smooth_int,
     to = c(0,1)
   )
-
+  
+  # thresholding for phenology detection
   phenophase <- ifelse(
     return == "start",
     date_expanded[
@@ -339,20 +347,19 @@ phenophases <- function(
 }
 ```
 
-With the function defined we can now apply this function to all pixels, and along the time axis (layers) of our `terra` raster stack. The `app()` function allows you to do exactly this!
+With the function defined we can now apply this function to all pixels, and along the time axis (layers) of our `terra` raster stack. The `app()` function allows you to do exactly this! You can now apply the above function to the time component (z-axis, i.e. various layers) of the LAI data cube.
 
 ```{r eval = FALSE}
+# apply a function to the z-axis (time / layers) of a data cube
 phenology_map <- app(r, phenophases)
 ```
 
-```{r message=FALSE}
-#| code-fold: true
-
-pheno <- readRDS(
+```{r include=FALSE}
+phenology <- readRDS(
   here::here("data/phenology_2012.rds")
   )
 
-pheno <-  pheno |>
+phenology <-  phenology |>
   mutate(
     value = ifelse(
       value == 32767,
@@ -364,16 +371,35 @@ pheno <-  pheno |>
       )
   )
 
-pheno <- MODISTools::mt_to_terra(pheno)
+phenology_raster <- MODISTools::mt_to_terra(
+  phenology,
+  reproject = TRUE
+  )
 ```
 
 ### Inference and comparisons to actual products
 
+```{r include = FALSE}
+phenology_map <- terra::rast(here::here("data/LAI_phenology.tiff"))
+```
+
 Too scale the exercise we need to expand the data used from a single time series to a data cube of LAI values. You therefore need to download some additional data, covering the area previously used when detecting phenology trends in @sec-phenology-trends .
 
-```{r message=FALSE}
+```{r message=FALSE, eval = FALSE}
 #| code-fold: true
 
-plot(pheno)
-plot(abs(pheno - phenology_map), breaks = c(0, 10, 25, 50, 75))
+# truncate things to first half of the year
+phenology_map[phenology_map > 180] <- NA
+phenology_raster[phenology_raster > 180] <- NA
+
+# plot maps + comparisons
+par(mfrow=c(c(2,2)))
+plot(phenology_map, main = "Custom algorithm", zlim = c(0,180))
+plot(phenology_raster, main = "MCD12Q2 MODIS product", zlim = c(0,180))
+plot(abs(phenology_raster - phenology_map), main = "Absolute error (MODIS vs. custom)")
+
+# add scatterplot
+plot(as.matrix(phenology_map), as.matrix(phenology_raster), xlab = "MODIS", ylab = "custom")
+abline(0,1, col = "red")
+
 ```
