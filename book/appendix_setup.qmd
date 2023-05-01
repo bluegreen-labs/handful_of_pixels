@@ -13,7 +13,3 @@ A common Integrated Development Environment for R is Rstudio by Posit.co. RStudi
   - sf
   - sp
   
-  
-```{r}
-renv::diagnostics()
-```
