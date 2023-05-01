@@ -395,22 +395,30 @@ You now have output from our custom algorithm, and the previously downloaded MOD
 
 library(ggplot2)
 library(tidyterra)
+library(patchwork)
 
 # truncate things to first half of the year
 phenology_map[phenology_map > 180] <- NA
 phenology_raster[phenology_raster > 180] <- NA
 
-ggplot() +
-  geom_spatraster(data=phenology_map)
+p <- ggplot() +
+  geom_spatraster(data=phenology_map) +
+  scale_fill_viridis_c() +
+  labs(
+    title = "Custom algorithm"
+  )
 
-# # plot maps + comparisons
-# par(mfrow=c(c(2,2)))
-# plot(phenology_map, main = "Custom algorithm", zlim = c(0,180))
-# plot(phenology_raster, main = "MCD12Q2 MODIS product", zlim = c(0,180))
-# plot(abs(phenology_raster - phenology_map), main = "Absolute error (MODIS vs. custom)")
-# 
-# # add scatterplot
-# plot(as.matrix(phenology_map), as.matrix(phenology_raster), xlab = "MODIS", ylab = "custom")
-# abline(0,1, col = "red")
+p2 <- ggplot() +
+  geom_spatraster(data=phenology_raster) +
+  scale_fill_viridis_c() +
+  labs(
+    title = "MODIS MCD12Q2 algorithm"
+  )
+
+# p3 <- ggplot() +
+#   geom_spatraster(data=abs(phenology_raster - phenology_map)) +
+#   scale_fill_viridis_c()
+
+p | p2
 
 ```
