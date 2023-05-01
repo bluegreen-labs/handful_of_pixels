@@ -280,13 +280,13 @@ r <- MODISTools::mt_to_terra(r)
 
 Remember the algorithm for a single time series above. To make this collection of steps re-usable we define a function. This allows you to run the routine across several pixels (at once). It is also a requirement for executing computational work on a multi-layer `terra` data cube.
 
-Below I wrap the steps as defined in @sec-phenology-estimates in a single function which takes a data frame as input, a phenological phase and threshold value (0 - 1) as parameters.
+Below I wrap the steps as defined in @sec-phenology-estimates in a single function which takes a data frame as input, a phenological phase and threshold value (0 - 1) as parameters. For this example we set the parameter to 0.5, or half the seasonal amplitude.
 
 ```{r eval = FALSE}
 phenophases <- function(
     df,
     return = "start",
-    threshold = 0.25
+    threshold = 0.5
 ) {
 
   # split out useful info
@@ -383,10 +383,16 @@ phenology_raster <- MODISTools::mt_to_terra(
 phenology_map <- terra::rast(here::here("data/LAI_phenology.tiff"))
 ```
 
-Too scale the exercise we need to expand the data used from a single time series to a data cube of LAI values. You therefore need to download some additional data, covering the area previously used when detecting phenology trends in @sec-phenology-trends .
+You now have output from our custom algorithm, and the previously downloaded MODIS (MCD12Q2) phenology data product. You can therefore easily compare both outputs.
+
 
 ```{r message=FALSE, eval = FALSE}
 #| code-fold: true
+#| label: fig-comparison
+#| fig-cap: "Comparison of custom algorithm and MODIS phenology product outputs"
+#| fig-align: "left"
+#| out-width: "100%"
+#| echo: FALSE
 
 # truncate things to first half of the year
 phenology_map[phenology_map > 180] <- NA
