@@ -534,6 +534,17 @@
         "askpass"
       ]
     },
+    "patchwork": {
+      "Package": "patchwork",
+      "Version": "1.1.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "63b611e9d909a9ed057639d9c3b77152",
+      "Requirements": [
+        "ggplot2",
+        "gtable"
+      ]
+    },
     "pillar": {
       "Package": "pillar",
       "Version": "1.9.0",
