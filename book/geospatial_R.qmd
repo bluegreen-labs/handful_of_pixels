@@ -2,6 +2,8 @@
 
 ```{r include = FALSE}
 library(dplyr)
+library(tidyterra)
+library(ggplot2)
 library(terra)
 library(sf)
 
@@ -66,6 +68,12 @@ Or you can visualize the data by plotting the data:
 
 ```{r}
 plot(r)
+```
+
+
+```{r}
+ggplot() +
+  tidyterra::geom_spatraster(data = r)
 ```
 
 Dedicated functions exist to extract the layer names (`names()`) and the time stamps (`time()`) if there is a time component to the data. These functions allow you to extract these data and use them in analysis.
