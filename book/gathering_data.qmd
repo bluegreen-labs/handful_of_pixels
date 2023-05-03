@@ -191,15 +191,25 @@ Plotting the data downloaded shows a map of the percentage of sand in the topsoi
 
 ```{r message=FALSE}
 #| code-fold: true
+#| label: fig-sand-perc
+#| fig-cap: "Soil sand percentage (%)"
+#| fig-align: "center"
+#| out-width: "100%"
+#| fig-width: 5
 
-# to visualize the data
-# we need to load the {terra}
-# library - more on geospatial
-# data is presented in the next
-# chapter
+# libraries
 library("terra")
+library("ggplot2")
+library("tidyterra")
+
 sand <- terra::rast(file.path(tempdir(), "T_SAND.nc"))
-terra::plot(sand)
+ggplot() +
+  tidyterra::geom_spatraster(data = sand) +
+  scale_fill_viridis_c(
+    na.value = NA,
+    name = "sand (%)"
+    ) +
+  theme_bw()
 ```
 
 ::: callout-note

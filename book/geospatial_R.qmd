@@ -64,16 +64,27 @@ We can inspect the meta data by calling the object:
 print(r)
 ```
 
-Or you can visualize the data by plotting the data:
+Or you can visualize the data by plotting the data (e.g. using `plot()`).
 
-```{r}
-plot(r)
-```
+```{r message=FALSE, warning=FALSE}
+#| code-fold: true
+#| label: fig-demo-nc
+#| fig-cap: "Temperature in Kelvin (K)"
+#| fig-align: "center"
+#| out-width: "100%"
+#| fig-width: 5
+#| fig-height: 4
 
-
-```{r}
 ggplot() +
-  tidyterra::geom_spatraster(data = r)
+  tidyterra::geom_spatraster(data = r) +
+  scale_fill_viridis_c(
+    na.value = NA,
+    name = "Temperature (K) \n"
+    ) +
+  theme_bw() +
+  theme(
+    legend.position = "bottom"
+    )
 ```
 
 Dedicated functions exist to extract the layer names (`names()`) and the time stamps (`time()`) if there is a time component to the data. These functions allow you to extract these data and use them in analysis.
@@ -89,7 +100,27 @@ Basic math or logical operations can be performed on maps using standard `R` not
 ```{r}
 # conversion from Kelvin to C
 r_c <- r - 273.15
-plot(r_c)
+```
+
+```{r message=FALSE, warning=FALSE}
+#| code-fold: true
+#| label: fig-demo-nc-C
+#| fig-cap: "Temperature in Celsius (C) as calculated from the original values in Kelvin"
+#| fig-align: "center"
+#| out-width: "100%"
+#| fig-width: 5
+#| fig-height: 4
+
+ggplot() +
+  tidyterra::geom_spatraster(data = r_c) +
+  scale_fill_viridis_c(
+    na.value = NA,
+    name = "Temperature (C) \n"
+    ) +
+  theme_bw() +
+  theme(
+    legend.position = "bottom"
+    )
 ```
 
 Logical operations work in the same way. You can create a mask of temperatures above 5C using a simple logical operation.
@@ -99,8 +130,24 @@ Logical operations work in the same way. You can create a mask of temperatures a
 m <- r_c > 5
 ```
 
-```{r echo=FALSE}
-plot(m)
+```{r message=FALSE, warning=FALSE}
+#| code-fold: true
+#| label: fig-demo-mask
+#| fig-cap: "Mask, defining positions where temperatures are larger than 5C"
+#| fig-align: "center"
+#| out-width: "100%"
+#| fig-width: 5
+#| fig-height: 4
+
+ggplot() +
+  tidyterra::geom_spatraster(data = m) +
+  scale_fill_viridis_d(
+    name = "Mask \n"
+    ) +
+  theme_bw() +
+  theme(
+    legend.position = "bottom"
+    )
 ```
 
 You can exclude locations from calculations using masks. This is useful to restrict the region of interest of an analysis or limit edge cases of complex calculations beforehand. As an example you can mask out all values where the binary mask as generated above if `FALSE` (i.e. temperatures lower than 5C).
@@ -108,7 +155,27 @@ You can exclude locations from calculations using masks. This is useful to restr
 # all locations above freezing
 # as a binary mask
 r_m <- terra::mask(r_c, m, maskvalue = FALSE)
-plot(r_m)
+```
+
+```{r message=FALSE, warning=FALSE}
+#| code-fold: true
+#| label: fig-demo-mask-C
+#| fig-cap: "Temperature in Celsius (C), with values lower than 5 C masked."
+#| fig-align: "center"
+#| out-width: "100%"
+#| fig-width: 5
+#| fig-height: 4
+
+ggplot() +
+  tidyterra::geom_spatraster(data = r_m) +
+  scale_fill_viridis_c(
+    na.value = NA,
+    name = "Temperature (C) \n"
+    ) +
+  theme_bw() +
+  theme(
+    legend.position = "bottom"
+    )
 ```
 
 #### Writing and exporting data {.unnumbered}
@@ -146,13 +213,23 @@ A lot of GIS vector data comes as [shapefiles](https://en.wikipedia.org/wiki/Sha
 library(sf)
 
 # load included shapefile
-nc <- st_read(system.file("shape/nc.shp", package="sf"))
+nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
 ```
 
-When printing the object you will be provided with an overview, when plotting the spatial data will be visualized (similar to the raster data above).
+When printing the object you will be provided with an overview, when plotting the spatial data (using `plot()`) will be visualized (similar to the raster data above).
 
 ```{r warning=FALSE}
 print(nc)
+```
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+#| label: fig-shapefile
+#| fig-cap: "Various layers of the shapefile"
+#| fig-align: "center"
+#| out-width: "100%"
+#| fig-width: 5
+#| fig-height: 4
+
 plot(nc)
 ```
 
@@ -166,7 +243,7 @@ The `sf` framework uses a tidy data approach, as such you can use operations upo
 ```{r}
 nc |> 
     mutate(
-        bbox = purrr::map(geometry, st_bbox)
+        bbox = purrr::map(geometry, sf::st_bbox)
     )
 ```
 
@@ -181,8 +258,16 @@ camden <- nc |>
     filter(
         NAME == "Camden"
     )
+```
 
-# plot Camden county
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+#| label: fig-camden
+#| fig-cap: "Camden county, as filtered from the larger dataset"
+#| fig-align: "center"
+#| out-width: "100%"
+#| fig-width: 5
+#| fig-height: 4
+
 plot(camden)
 ```
 
@@ -192,7 +277,7 @@ For example the `st_intersection()` function calculates where and how frequent s
 
 ```{r}
 # calculate the intersection of all simple features
-i <- st_intersection(sf)
+i <- sf::st_intersection(sf)
 
 # plot the intersections coloured
 # according to the number of overlaps
