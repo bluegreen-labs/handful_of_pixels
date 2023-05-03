@@ -55,6 +55,7 @@ Many data products have data quality flags, which allow you to screen your data 
 library(signal)
 library(terra)
 library(dplyr)
+library(ggplot2)
 
 # preloading data
 # for fast processing
@@ -104,7 +105,17 @@ expanded_df <- dplyr::tibble(
   date = seq.Date(min(df$date), max(df$date), by = 1)
 )
 
+# join the expanded series with the
+# original data
 df <- dplyr::left_join(expanded_df, df)
+
+# back fill the year column for later
+# processing
+df <- df |>
+  mutate(
+    year = as.numeric(format(date, "%Y"))
+  )
+
 ```
 
 Expanding the 8-day data to a 1-day timestep will result in `NA` values. I will use a simple linear interpolation between smoothed 8-day values to acquire a complete time series without gaps.
@@ -123,27 +134,59 @@ df$smooth_int <- signal::interp1(
 )
 ```
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 #| code-fold: true
-# quick plot
-plot(
-  df$date,
-  df$value,
-  type = "p",
-  col = "red",
-    xlim = c(
-    as.Date("2003-01-01"),
-    as.Date("2005-01-01")
+#| label: fig-smooth
+#| fig-cap: "Smoothed LAI values as a black line, with original values as red circles"
+#| fig-align: "center"
+#| out-width: "100%"
+#| fig-width: 6
+#| fig-height: 2
+ggplot(df) +
+  geom_point(
+    aes(
+      date,
+      value
+    ),
+    colour = "red"
+  ) +
+  geom_line(
+    aes(
+      date,
+      smooth_int
     )
-  )
-lines(df$date, df$smooth_int)
+  ) +
+  labs(
+    x = "",
+    y = "LAI"
+  ) +
+  xlim(
+    c(
+    as.Date("2003-01-01"),
+    as.Date("2005-12-31")
+    )
+  ) +
+  theme_bw()
 ```
 
 ## Phenology estimation {#sec-phenology-estimates}
 
-With all data prepared we can use an arbitrary threshold to estimate a transition in LAI values for a given year. In the below example we use a LAI value of 3 to mark if the season has started or ended.
+With all data prepared we can use an arbitrary threshold to estimate a transition in LAI values for a given year. In the below example we use a LAI value of 3 to mark if the season has started or ended. To show the response to heterogeneous time series, I halved the values for the year 2004
 
 ```{r}
+# half the values for 2004
+# to introduce heterogeneity
+df <- df |>
+  mutate(
+    smooth_int = ifelse(
+      year == 2004,
+      smooth_int/2,
+      smooth_int
+    )
+  )
+
+# calculate phenology dates on
+# the smoothed time series
 phenology <- df |>
   group_by(year) |>
   summarize(
@@ -152,29 +195,56 @@ phenology <- df |>
   )
 ```
 
-```{r}
+
+```{r warning=FALSE, message=FALSE}
 #| code-fold: true
+#| label: fig-smooth-phen
+#| fig-cap: "Calculated phenology dates using a fixed LAI threshold value, where the year 2004 smoothed values are artificially lowered. Smoothed LAI values as a black line, with original values as red circles. Vertical lines indicate the date when the yearly amplitude threshold of an LAI of 3 is exceeded. The dashed horizontal line illustrates that the lowered smoothed response does not meet any threshold requirement and shows no phenology response."
+#| fig-align: "center"
+#| out-width: "100%"
+#| fig-width: 6
+#| fig-height: 2
 
-# plot the phenology dates on the previous plot
-# (update graph)
-plot(
-  df$date,
-  df$value,
-  type = "p",
-  col = "red",
-  xlim = c(
-    as.Date("2003-01-01"),
-    as.Date("2005-01-01")
+ggplot(df) +
+  geom_point(
+    aes(
+      date,
+      value
+    ),
+    colour = "red"
+  ) +
+  geom_line(
+    aes(
+      date,
+      smooth_int
     )
-  )
-
-# vertical lines at phenological dates
-abline(v = phenology$SOS)
-abline(v = phenology$EOS)
-
+  ) +
+  labs(
+    x = "",
+    y = "LAI"
+  ) +
+  xlim(
+    c(
+    as.Date("2003-01-01"),
+    as.Date("2005-12-31")
+    )
+  ) +
+  geom_hline(
+    aes(yintercept = 3),
+    lty = 2
+  ) +
+  geom_vline(
+    data = phenology,
+    aes(xintercept = EOS)
+  ) +
+  geom_vline(
+    data = phenology,
+    aes(xintercept = SOS)
+  ) +
+  theme_bw()
 ```
 
-Obviously this does not translate well to other locations, when vegetation types and densities vary from place to place. Scaling the time series between 0 and 1 will **regularize responses across time series**. Rescaling the data to a fixed range between 0 and 1, resolves this issue.
+Obviously this does not translate well to other locations, when vegetation types and densities vary from place to place. This is illustrated in @fig-smooth-phen, using an artificially lowered signal in the year 2004, were years not meeting the absolute threshold will not produce accurate phenology estimates. Scaling the time series between 0 and 1 will **regularize responses across time series** and years and resolves this issue.
 
 ```{r}
 # potential issues?
@@ -197,11 +267,10 @@ As before, we can now apply relative thresholds (of 0.25 and 0.85) to our time s
 
 ```{r}
 # calculate phenology dates
-# using a 0.5 (50%) threshold
-# SOS: start of season
-# MAX: max canopy development
-# SEN: canopy sensesence
-# EOS: end of season
+# SOS: start of season (25%, start)
+# MAX: max canopy development (85%, start)
+# SEN: canopy sensesence (85%, end)
+# EOS: end of season (25%, end)
 phenology <- df |>
   group_by(year) |>
   summarize(
@@ -210,38 +279,69 @@ phenology <- df |>
     SEN = last(date[which(smooth_int_scaled > 0.85)]),
     EOS = last(date[which(smooth_int_scaled > 0.25)])[1]
   )
-
-phenology <- phenology |>
-  filter(
-    year > 2002,
-    year < 2005
-  )
 ```
 
-Plotting these results for a limited set of years shows how phenology dates for different years and thresholds.
+Plotting these results for a limited set of years shows how phenology dates for different years and phenology metrics (thresholds). Note that using the scaled (yearly) data estimates for the year 2004 are accurate, in contrast to previous results as shown in @fig-smooth-phen.
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 #| code-fold: true
+#| label: fig-smooth-phen-scaled
+#| fig-cap: "Calculated phenology dates using a fixed LAI threshold value, where the year 2004 smoothed values are artificially lowered. Smoothed LAI values as a black line, with original values as red circles. Vertical lines indicate the date when the yearly relative amplitude thresholds are exceeded. Light green indicates the start-of-season (SOS), dark green maximum canopy development (MAX), brown the start of senesence (SEN) and grey the end of season (EOS)."
+#| fig-align: "center"
+#| out-width: "100%"
+#| fig-width: 6
+#| fig-height: 2
 
-# plot the phenology dates on the previous plot
-# (update graph)
-plot(
-  df$date,
-  df$value,
-  type = "p",
-  col = "red",
-  xlim = c(as.Date("2003-01-01"),as.Date("2005-01-01"))
-  )
-lines(df$date, df$smooth_int)
-abline(v = phenology$SOS, col = "lightgreen", lwd = 2)
-abline(v = phenology$MAX, col = "green", lwd = 2)
-abline(v = phenology$SEN, col = "brown", lwd = 2)
-abline(v = phenology$EOS, col = "red", lwd = 2)
+ggplot(df) +
+  geom_point(
+    aes(
+      date,
+      value
+    ),
+    colour = "red"
+  ) +
+  geom_line(
+    aes(
+      date,
+      smooth_int
+    )
+  ) +
+  labs(
+    x = "",
+    y = "LAI"
+  ) +
+  xlim(
+    c(
+    as.Date("2003-01-01"),
+    as.Date("2005-12-31")
+    )
+  ) +
+  geom_vline(
+    data = phenology,
+    aes(xintercept = SOS),
+    colour = "lightgreen"
+  ) +
+  geom_vline(
+    data = phenology,
+    aes(xintercept = MAX),
+    colour = "darkgreen"
+  ) +
+  geom_vline(
+    data = phenology,
+    aes(xintercept = SEN),
+    colour = "brown"
+  ) +
+  geom_vline(
+    data = phenology,
+    aes(xintercept = EOS),
+    colour = "grey"
+  ) +
+  theme_bw()
 ```
 
 ### Spatial phenology estimates
 
-```{r eval = FALSE}
+```{r include=FALSE}
 # load buffered data, not shown in render
 r <- terra::rast(here::here("data/LAI.tiff"))
 ```
@@ -271,14 +371,14 @@ lai_2012 <- MODISTools::mt_subset(
 # to speed up computation
 ```
 
-However, data downloaded using `MODISTools` by default is formated as tidy (row oriented) data. 
+However, data downloaded using `MODISTools` by default is formated as tidy (row oriented) data. We use the `mt_to_terra()` function to convert this tidy data to a `terra` raster object.
 
 ```{r eval = FALSE}
 # conversion from tidy data to a raster format
-r <- MODISTools::mt_to_terra(r)
+r <- MODISTools::mt_to_terra(lai_2012)
 ```
 
-Remember the algorithm for a single time series above. To make this collection of steps re-usable we define a function. This allows you to run the routine across several pixels (at once). It is also a requirement for executing computational work on a multi-layer `terra` data cube.
+Remember the algorithm for a single time series above. To make this collection of steps re-usable within the context of a multi-layer `terra` raster object (or data cube) you need to define a function. This allows you to run the routine across several pixels (at once).
 
 Below I wrap the steps as defined in @sec-phenology-estimates in a single function which takes a data frame as input, a phenological phase and threshold value (0 - 1) as parameters. For this example we set the parameter to 0.5, or half the seasonal amplitude.
 
@@ -388,9 +488,11 @@ You now have output from our custom algorithm, and the previously downloaded MOD
 ```{r message=FALSE}
 #| code-fold: true
 #| label: fig-comparison
-#| fig-cap: "Comparison of custom algorithm and MODIS phenology product outputs"
+#| fig-cap: "Comparison of custom algorithm (a) and MODIS phenology product (b) outputs"
 #| fig-align: "left"
 #| out-width: "100%"
+#| fig-width: 11
+#| figh-height: 5
 library(ggplot2)
 library(tidyterra)
 library(patchwork)
@@ -399,24 +501,35 @@ library(patchwork)
 phenology_map[phenology_map > 180] <- NA
 phenology_raster[phenology_raster > 180] <- NA
 
+# rename to sort the legends properly
+names(phenology_map) <- "value"
+names(phenology_raster) <- "value"
+
 p <- ggplot() +
   geom_spatraster(data=phenology_map) +
-  scale_fill_viridis_c() +
+  scale_fill_viridis_c(na.value = NA) +
   labs(
     title = "Custom algorithm"
-  )
+  ) +
+  theme_bw()
 
 p2 <- ggplot() +
-  geom_spatraster(data=phenology_raster) +
-  scale_fill_viridis_c() +
+  geom_spatraster(
+    data=phenology_raster,
+    show.legend = FALSE
+    ) +
+  scale_fill_viridis_c(na.value = NA) +
   labs(
     title = "MODIS MCD12Q2 algorithm"
-  )
+  ) +
+  theme_bw()
 
-# p3 <- ggplot() +
-#   geom_spatraster(data=abs(phenology_raster - phenology_map)) +
-#   scale_fill_viridis_c()
-
-p | p2
-
+# compositing
+p + p2 + 
+  plot_layout(nrow = 1, guides = "collect") + 
+  plot_annotation(
+    tag_levels = "a",
+    tag_prefix = "(",
+    tag_suffix = ")"
+    )
 ```

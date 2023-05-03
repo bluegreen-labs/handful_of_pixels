@@ -1,7 +1,5 @@
 ---
 engine: knitr
-filters:
-  - webr
 ---
 
 # Crash course R
@@ -192,31 +190,6 @@ In geography and environmental sciences particular (geospatial) file formats dom
 | \*.hdf                  | HDF array data                                                 | Array-oriented data (matrices with \> 2 dimensions). Commonly used to store Earth observation data.                          | hdf                  |
 | \*.tiff, \*.geotiff     | Geotiff multi-dimensional raster data (see below)              | Layered (3D) raster (image) data. Commonly used to represent spatial (raster) data.                                                 | terra, raster        |
 | \*.shp                  | Shapefile of vector data (see below)                           | Common vector based geospatial data. Used to describe data which can be captured by location/shape and attribute values.            | sp, sf               |
-
-::: callout-tip
-### R sandbox
-
-Below you can use the in browser base R session to execute some basic R commands as shown above. Execute the formatted statement by hitting `Run Code` or alter the content and re-run it.
-
-```{r}
-# reading data
-```
-
-
-```{webr}
-# defines a function printing
-# the last element of a vector
-last <- function(x) {
-  x[length(x)]
-}
-
-# define a demo vector
-v <- c(1,3,5,7,2)
-
-# apply the defined function
-print(last(v))
-```
-:::
 
 ## Libraries / packages {#sec-libraries}
 
