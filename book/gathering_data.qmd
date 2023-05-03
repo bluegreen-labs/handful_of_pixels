@@ -201,7 +201,6 @@ Plotting the data downloaded shows a map of the percentage of sand in the topsoi
 library(terra)
 library(ggplot2)
 library(tidyterra)
-library(viridisLite)
 
 sand <- terra::rast(file.path(tempdir(), "T_SAND.nc"))
 ggplot() +
