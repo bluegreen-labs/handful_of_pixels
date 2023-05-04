@@ -1,22 +1,40 @@
 ## Course work
 
+Format:
 
-### The physics of phenology
+Will be an R markdown file as well as a rendered (HTML) output.
+
+Will demo / document the R markdown setup.
+
+I will grade on the implementation of the code, as well as the interpretation / critical assessment.
+
+Most components can be lifted from the book chapters, but have to be implemented correctly. The process matters.
+
+You might encounter "problems" you need to overcome, but all of them can be found in either the chapters or remote sensing product documentation and or common sense (basic physical geography knowledge).
+
+### 1. The physics of phenology
 
 - Convert the established relationship between altitude and phenology to one which includes temperature
   - i.e. provide an estimate on how many days phenology changes per degrees Celsius change.
 
-### Temporal / Spatial anomalies
+### 2.Temporal / Spatial anomalies
 
 For a location centered on the Adirondacks in the Eastern US calculate:
 
-- Start of season phenology for thresholds of respectively 25 and 85% amplitude for years 2001 - 2010
-- Only consider deciduous broadleaf or mixed forest pixels
-- calculate a long term mean and standard deviation for the period 2001 - 2009 in the green-up time (time between 25% - 85% amplitude)
-- calculate the difference between the long term mean and 2010
-  - how different are the results from the previous decade, and could you explain differences if any?
+Location center: lat / lon (  43.5 / -74.5)
+Gather data for all pixels in 100km around this location.
 
-### Scaling, from pixels to the globe (just more pixels)
+- Only consider deciduous broadleaf or mixed forest pixels (use a downloaded land cover product, IGBP classes)
+ - filter all data accordingly
+- calculate a long term mean and standard deviation for the period 2001 - 2009 in the green-up time and canopy maturity phenology metrics
+- calculate locations with an early greenup for 2010 (mean - 1 sd) and locations with late maturity (mean + 1 sd)
+- calculate all locations with early greenup but late maxima
+- describe what this trend means - what can be the underlying reason for this trend
+- download a DEM (30s resolution is good enough)
+ - crop and resample as needed (motivate choices)
+ - plot (as a boxplot) trends according to DEM altitude (describe what you see - speculate on the origin of this pattern)
+
+### 3. Scaling, from pixels to the globe (just more pixels)
 
 Download data here:
 https://lpdaac.usgs.gov/products/mod13c1v006/
@@ -35,7 +53,6 @@ r <- rast(files,  subds = "\"CMG 0.05 Deg 16 days EVI\"")
   - where does it fail?
   - how does it fail?
   - can you address it?
-
 
 - Intercept (0 m) is 54: few leaf-out events before DOY 54
 - change of 0.04 days per meter increase in altitude (or 4 days per 100m)
