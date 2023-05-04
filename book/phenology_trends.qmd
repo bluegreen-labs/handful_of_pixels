@@ -4,13 +4,24 @@
 
 Land surface phenology is a first order control on the exchange of water and energy between the biosphere and atmosphere. ...  As such it is an indicator of climate change. Plant phenology has historically been recorded for many centuries. More recently plant phenology (and its changes) have been recorded by networks of observers, near-surface cameras and not in the least by global satellite monitoring.
 
+```{r}
+#| label: fig-canopy-change
+#| fig-cap: "Canopy change between winter and spring/summer"
+#| fig-align: "center"
+#| out-width: "100%"
+#| echo: FALSE
+knitr::include_graphics("./images/canopy_change.jpg")
+```
+
 All these (remote sensing) measurements have provided us with insights in how climate change has altered plant phenology. Overall, climate change moves phenology forward (from spring toward winter) at a rate of 3 days/decade, with rates varying depending on locality and altitude.
 
 Consequences are many, such as exposing early blooming or leafing plants to increased frosts risks and carbon losses through an explicit opportunity cost. In short, changes to plant and land surface phenology have a profound effect on both the carbon balance and all (co-) dependent processes. Therefore, it is key that we can quantify how phenology changes in response to year-to-year variability and climate change and global heating.
 
-Remote sensing products provide these insights for almost four decades. Remote sensing, and land surface phenology  products they produce have a number of advantages. They provide wall-to-wall coverage, with relative consistency and known (methodological) biases. In this and the following @sec-algorithms I will cover several aspects of developing a small research project using the remote sensing of phenology as it's basis.
+Remote sensing products provide these insights for almost four decades. Remote sensing, and land surface phenology  products they produce have a number of advantages. They provide wall-to-wall coverage, with relative consistency and known (methodological) biases. I will cover several aspects of developing a small research project using the remote sensing of phenology as it's basis, using small data sets (a handfull of pixels). 
 
-Let's get started!
+In @sec-phenology-trends (this chapter) I will highlight how to detect landscape wide trends in phenology and how they relate to physical geography. This knowledge can then be used to infer some broad, cross-cutting, properties of vegetation phenology. In @sec-algorithms I will demonstrate how you can detect phenology from vegetation time series yourself, using a simple algorithm.
+
+Now, let's get started!
 
 ```{r include = FALSE}
 library(geodata)
@@ -39,10 +50,19 @@ library(geodata)
 geodata::elevation_3s(
     lat = 46.6756,
     lon = 7.85480,
-    path = here::here("data-raw/")
+    path = tempdir()
   )
-```
 
+# read the downloaded data
+# use file.path() to combine
+# a directory path with a filename
+dem <- terra::rast(
+  file.path(
+    tempdir(),
+    "srtm_38_03.tif"
+    )
+)
+```
 
 ::: callout-note
 ### Note
