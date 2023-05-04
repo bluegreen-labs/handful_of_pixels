@@ -200,7 +200,7 @@ With all data processed we can explore some of the trends in phenology in relati
 
 ```{r warning = FALSE}
 #| code-fold: true
-#| label: fig-dem-phenology
+#| label: fig-phenology-dem
 #| fig-cap: "Panel plot showing both the Digital Elevation Model data (a) and the MODIS phenology data (b)."
 #| fig-align: "center"
 #| out-width: "100%"
