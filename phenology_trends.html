@@ -101,7 +101,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <meta name="twitter:title" content="A Handfull of Pixels - 4&nbsp; Phenology trends">
 <meta name="twitter:description" content="">
-<meta name="twitter:image" content="phenology_trends_files/figure-html/fig-phenology-modis-1.png">
+<meta name="twitter:image" content="./images/canopy_change.jpg">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -320,10 +320,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="introduction" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">4.1</span> Introduction</h2>
 <p>Land surface phenology is a first order control on the exchange of water and energy between the biosphere and atmosphere. … As such it is an indicator of climate change. Plant phenology has historically been recorded for many centuries. More recently plant phenology (and its changes) have been recorded by networks of observers, near-surface cameras and not in the least by global satellite monitoring.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-canopy-change" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="./images/canopy_change.jpg" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption class="figure-caption">Figure&nbsp;4.1: Canopy change between winter and spring/summer</figcaption>
+</figure>
+</div>
+</div>
+</div>
 <p>All these (remote sensing) measurements have provided us with insights in how climate change has altered plant phenology. Overall, climate change moves phenology forward (from spring toward winter) at a rate of 3 days/decade, with rates varying depending on locality and altitude.</p>
 <p>Consequences are many, such as exposing early blooming or leafing plants to increased frosts risks and carbon losses through an explicit opportunity cost. In short, changes to plant and land surface phenology have a profound effect on both the carbon balance and all (co-) dependent processes. Therefore, it is key that we can quantify how phenology changes in response to year-to-year variability and climate change and global heating.</p>
-<p>Remote sensing products provide these insights for almost four decades. Remote sensing, and land surface phenology products they produce have a number of advantages. They provide wall-to-wall coverage, with relative consistency and known (methodological) biases. In this and the following <a href="phenology_algorithms.html"><span>Chapter&nbsp;5</span></a> I will cover several aspects of developing a small research project using the remote sensing of phenology as it’s basis.</p>
-<p>Let’s get started!</p>
+<p>Remote sensing products provide these insights for almost four decades. Remote sensing, and land surface phenology products they produce have a number of advantages. They provide wall-to-wall coverage, with relative consistency and known (methodological) biases. I will cover several aspects of developing a small research project using the remote sensing of phenology as it’s basis, using small data sets (a handfull of pixels).</p>
+<p>In <a href="#sec-phenology-trends"><span>Chapter&nbsp;4</span></a> (this chapter) I will highlight how to detect landscape wide trends in phenology and how they relate to physical geography. This knowledge can then be used to infer some broad, cross-cutting, properties of vegetation phenology. In <a href="phenology_algorithms.html"><span>Chapter&nbsp;5</span></a> I will demonstrate how you can detect phenology from vegetation time series yourself, using a simple algorithm.</p>
+<p>Now, let’s get started!</p>
 </section>
 <section id="getting-the-required-data" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="getting-the-required-data"><span class="header-section-number">4.2</span> Getting the required data</h2>
@@ -336,8 +347,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>geodata<span class="sc">::</span><span class="fu">elevation_3s</span>(</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">lat =</span> <span class="fl">46.6756</span>,</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">lon =</span> <span class="fl">7.85480</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">path =</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data-raw/"</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">path =</span> <span class="fu">tempdir</span>()</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># read the downloaded data</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># use file.path() to combine</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># a directory path with a filename</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>dem <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">file.path</span>(</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tempdir</span>(),</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"srtm_38_03.tif"</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -435,7 +456,7 @@ Exercise: know what you use / download
 <div id="fig-phenology-modis" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="phenology_trends_files/figure-html/fig-phenology-modis-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;4.1: MODIS land surface phenology (as DOY for 2012)</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;4.2: MODIS land surface phenology (as DOY for 2012)</figcaption>
 </figure>
 </div>
 </div>
@@ -527,7 +548,7 @@ Exercise: know what you use / download
 <div id="fig-phenology-dem" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="phenology_trends_files/figure-html/fig-phenology-dem-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;4.2: Panel plot showing both the Digital Elevation Model data (a) and the MODIS phenology data (b).</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;4.3: Panel plot showing both the Digital Elevation Model data (a) and the MODIS phenology data (b).</figcaption>
 </figure>
 </div>
 </div>
@@ -569,7 +590,7 @@ Exercise: know what you use / download
 <div id="fig-dem-phenology-scatterplot" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="phenology_trends_files/figure-html/fig-dem-phenology-scatterplot-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;4.3: Scatterplot of MODIS phenology values (as day-of-year, DOY) in function of altitude (m). The white dashed line is a linear regression fit to all available data.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;4.4: Scatterplot of MODIS phenology values (as day-of-year, DOY) in function of altitude (m). The white dashed line is a linear regression fit to all available data.</figcaption>
 </figure>
 </div>
 </div>
