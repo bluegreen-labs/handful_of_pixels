@@ -16,6 +16,9 @@ Let's get started!
 library(geodata)
 library(terra)
 library(dplyr)
+library(ggplot2)
+library(patchwork)
+library(hexbin)
 
 # preloading data
 # for fast processing
@@ -111,11 +114,24 @@ phenology_raster <- MODISTools::mt_to_terra(
   phenology,
   reproject = TRUE
 )
+```
+```{r message = FALSE, warning=FALSE}
+#| code-fold: true
+#| label: fig-phenology-modis
+#| fig-cap: "MODIS land surface phenology (as DOY for 2012)"
+#| fig-align: "center"
+#| out-width: "100%"
+#| fig-width: 5
+#| fig-height: 3
 
-terra::plot(
-  phenology_raster,
-  main = "MODIS land surface phenology (as DOY for 2012)"
-)
+ggplot() +
+  tidyterra::geom_spatraster(data = phenology_raster) +
+  scale_fill_viridis_c(
+    na.value = NA,
+    name = "DOY"
+    ) +
+  theme_bw()
+
 ```
 
 We can now compare both data sets in a spatially explicit way, e.g. compute overlap, reproject or resample data. For example, to limit computational time it is often wise to restrict the region of interest to an overlapping section between both data sets. This allows data to be as large as required but as small as possible. We therefore crop the DEM data to correspond to the size of the coverage of the MODIS phenology data.
@@ -183,59 +199,104 @@ land_cover_raster <- MODISTools::mt_to_terra(
 With all data processed we can explore some of the trends in phenology in relation to topography. Plotting the data side by side already provides some insight into expected trends.
 
 ```{r warning = FALSE}
+#| code-fold: true
 #| label: fig-dem-phenology
-#| fig-cap: "DEM / phenology"
-#| fig-align: "left"
+#| fig-cap: "Panel plot showing both the Digital Elevation Model data (a) and the MODIS phenology data (b)."
+#| fig-align: "center"
 #| out-width: "100%"
-#| echo: TRUE
+#| fig-width: 5
+#| fig-height: 6
 
-# plot the DEM
-plot(
-  dem,
-  main = "DEM in (m above sea level)"
-)
+p <- ggplot() +
+  tidyterra::geom_spatraster(data = dem) +
+  scale_fill_viridis_c(
+    na.value = NA,
+    name = "altitude (m)"
+    ) +
+  theme_bw()
 
-# plot the start of season dates
-plot(
-  phenology_raster,
-  main = "MODIS land surface phenology (as DOY for 2012)"
-  )
+p2 <- ggplot() +
+  tidyterra::geom_spatraster(data = phenology_raster) +
+  scale_fill_viridis_c(
+    na.value = NA,
+    name = "DOY"
+    ) +
+  theme_bw()
+
+# compositing
+p + p2 + 
+  plot_layout(ncol = 1) + 
+  plot_annotation(
+    tag_levels = "a",
+    tag_prefix = "(",
+    tag_suffix = ")"
+    )
 ```
-
-::: callout-tip
-### Exercise
-
-What are the patterns you see when comparing the above two maps?
-
-:::
 
 We can plot the relation between topography and the start of the season (phenology) across the scene (where data is available). Plotting this non-spatially will show a clear relation between topography (altitude) and the start of the season. With an increasing altitude we see the start of the season being delayed. The effect is mild below 1000m and increases above this.
 
-```{r warning = FALSE}
-# plotting altitude vs the start of the season
-plot(dem, phenology_raster)
+```{r warning = FALSE, message= FALSE}
+#| code-fold: true
+#| label: fig-dem-phenology-scatterplot
+#| fig-cap: "Scatterplot of MODIS phenology values (as day-of-year, DOY) in function of  altitude (m). The white dashed line is a linear regression fit to all available data."
+#| fig-align: "center"
+#| out-width: "100%"
+#| fig-width: 5
+#| fig-height: 3
+
+# convert to data frame and merge
+dem_df <- as.vector(dem)
+phenology_df <- as.vector(phenology_raster)
+sct_df <- data.frame(
+  altitude = dem_df,
+  doy = phenology_df
+  )
+
+ggplot(
+  data = sct_df,
+      aes(
+      altitude,
+      doy
+    )
+  ) +
+  geom_hex() +
+  scale_fill_viridis_c() +
+  geom_smooth(
+    method = "lm",
+    se = FALSE,
+    colour = "white",
+    lty = 2
+  ) +
+  labs(
+    x = "altitude (m)",
+    y = "MODIS vegetation greenup (DOY)"
+  ) +
+  theme_bw()
+
 ```
 
-::: callout-tip
-### Exercise
+::: {.callout-note collapse=true}
 
-Aside from the spatial representations as shown above, how is this pattern connected to the physical geography? Consider this broadly without taking into account vegetation type.
+### Note 
 
-:::
+The fit linear regression above has the following parameters.
 
 ```{r label="stats-rate-of-change"}
-fit <- lm(as.matrix(phenology_raster) ~ as.matrix(dem))
+# fit a linear regression to the data of the figure above
+# (for the pre-processing see the collapsed code of the figure)
+fit <- lm(doy ~ altitude, data = sct_df)
 print(summary(fit))
 ```
+:::
 
-::: callout-tip
+::: {.callout-tip}
 ### Exercise
 
-Interpret the results of the above fit model.
+Interpret the results of the above fit model (see full model results in the collapsed note above).
 
 - What does the intercept indicate?
 - How can you interpret the slope?
-- Convert the established relationship to one which includes temperature as a covariate.
+- Convert the established relationship with altitude, to one with temperature
   - How would you go about this?
 
 :::
