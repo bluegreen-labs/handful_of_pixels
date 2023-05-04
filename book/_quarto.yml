@@ -1,8 +1,6 @@
 project:
   type: book
   output-dir: _book
-  post-render:
-    - add-extra-files.R
 
 execute:
   freeze: auto
