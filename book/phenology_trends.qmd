@@ -214,7 +214,7 @@ land_cover_raster <- MODISTools::mt_to_terra(
 )
 ```
 
-## Phenology trends
+## Phenology trends {#sec-regression}
 
 With all data processed we can explore some of the trends in phenology in relation to topography. Plotting the data side by side already provides some insight into expected trends.
 
@@ -307,16 +307,4 @@ The fit linear regression above has the following parameters.
 fit <- lm(doy ~ altitude, data = sct_df)
 print(summary(fit))
 ```
-:::
-
-::: {.callout-tip}
-### Exercise
-
-Interpret the results of the above fit model (see full model results in the collapsed note above).
-
-- What does the intercept indicate?
-- How can you interpret the slope?
-- Convert the established relationship with altitude, to one with temperature
-  - How would you go about this?
-
 :::

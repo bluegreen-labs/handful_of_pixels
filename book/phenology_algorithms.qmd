@@ -339,7 +339,7 @@ ggplot(df) +
   theme_bw()
 ```
 
-### Spatial phenology estimates
+### Spatial phenology estimates {#sec-spatial-scaling}
 
 ```{r include=FALSE}
 # load buffered data, not shown in render

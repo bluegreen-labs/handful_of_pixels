@@ -1,4 +1,4 @@
-# Crash course R
+# Crash course R {#sec-basic-r}
 
 This chapter will briefly summarize some of the principles which will be used throughout the book. In particular, I outline some of the best practices in managing projects and the basic data manipulations using the tidy data principles. For a thourough introduction to data science in R I refer to [R for data science](https://r4ds.had.co.nz/) by Hadley & Grolemund, while open data science practices and reproducible project management I refer to [Reproducibility with R](https://eliocamp.github.io/reproducibility-with-r/) by Campitelli & Corrales. For an in depth discussion of geocomputational concepts I refer to [Geocomputation with R](https://r.geocompx.org/index.html) by Lovelace, Nowosad, Muenchow.
 
@@ -407,3 +407,18 @@ knitr::include_graphics("./images/groupby_summarize.png")
 ```
 
 Grouped operations using `dplyr::mutate()` and `dplyr::summarize()` and other functions highlighted cover a substantial fraction of day-to-day data wrangling.
+
+## Reporting using R markdown {#sec-rmarkdown}
+
+What is R markdown.
+
+#### Create a new R markdown file
+
+How to create a new project + screenshots
+
+#### Writing and coding in R markdown
+
+- references to resources
+
+#### Render your project
+

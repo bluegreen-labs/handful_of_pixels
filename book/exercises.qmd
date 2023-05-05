@@ -1,0 +1,67 @@
+# Exercises {#sec-exercises}
+
+## Phenology trends and algorithms
+
+These exercises cover all materials up to Chapter 5. A proper understanding of these chapters is required to complete these exercises. Exercises are at times formulated in long form, not simple bullet points, in order to partially mimic formal descriptions as you would find in a methods section of an academic journal or a reference manual.
+
+### Physical geography and phenology
+
+Interpret the results of @sec-regression and the fit model as shown in the collapsed note at the end of the section.
+
+- What does the intercept indicate?
+- How can you interpret the slope?
+- Convert the established relationship with altitude, to one with temperature
+  - How would you go about this?
+
+### Temporal and spatial anomalies
+
+For a location near the Adirondacks in the North-Eastern United States (@fig-leaflet-adirondacks) gather phenology data on both the greenup and maximum canopy development of a location centered on 43.5$^\circ$N and 74.5$^\circ$W. Gather data for all pixels in 100 km around this location for years 2001 to 2010. Similarly, download land cover data for the year 2010 for the same spatial extent, and only consider IGBP broadleaf and mixed forest classes in you analysis.
+
+For the years 2001 - 2009 calculate the long term mean (LTM) and standard deviation (SD) of the phenology metrics. Calculate location with an early greenup for 2010 (< LTM - 1 SD) and locations with late maturity (> LTM + 1 SD).
+
+Describe the observed patterns and speculate about the underlying reason for this trend. In addition, download a digital elevation map for the United States (30s resolution), and compare differences in altitude (e.g. a boxplot) across locations where you do or do not see any patterns in phenology.
+ 
+```{r echo=FALSE}
+#| label: fig-leaflet-adirondacks
+#| fig-cap: "The location of the Adirondack mountains in the North-Eastern United States"
+#| fig-align: "center"
+#| out-width: "100%"
+#| fig-width: 5
+#| fig-height: 3
+
+library(leaflet)
+leaflet() |>
+  setView(
+    lng = -74.5,
+    lat = 43.5,
+    zoom = 06
+    ) |>
+  addTiles() |>
+  addMarkers(
+    lng=-74.5,
+    lat=43.5,
+    popup="Adirondacks"
+    )
+```
+
+::: {.callout-note}
+## Note
+
+Use details in @sec-accessing-data, @sec-geospatial and @sec-phenology-trends to answer these questions, by considering all data products and methods mentioned. Additional meta-data will need to be consulted online to provide context or data conversion instructions in some cases. Where necessary consult [the relevant scientific literature](https://scholar.google.com/).
+
+:::
+
+### Scaling the calculation of phenology metrics
+
+In this exercise you will be required to download external data manually. First you will have to sign up for a [NASA EarthData login](https://www.earthdata.nasa.gov/) to access the required data. The NASA EarthData login provides access to a wide range of data products.
+
+Once signed in, [download the data MCD13C1 product](https://lpdaac.usgs.gov/products/mod13c1v006/) for the year 2022. The MCD13C1 product provides vegetation indices (VI), such as the Enhanced Vegetation Index (EVI) and Normalized Difference Vegetation Index (NDVI) data products on a down-sample climate model grid (CMG, at 0.05$^\circ$ or ~5km resolution). This down-sampled data product reduces the volume of data to download and process, but should allow you to explore broad continental scale patterns when calculating vegetation (or land surface) phenology metrics.
+
+With all data downloaded, apply the algorithm as outlined in @sec-spatial-scaling using a start of season greenup signal of 25% the seasonal EVI amplitude. Assess the performance of the algorithm across the globe and discuss it's consistency. Where does it fail? How does it fail? If possible, address any issues by altering the original algorithm. Plot the global phenology maps, and it's various iterations in your discussions. Where necessary, inspect point locations to explore potential issues.
+
+::: {.callout-note}
+## Note
+
+All information for this exercise can be found in @sec-geospatial and @sec-algorithms. As before, additional meta-data will need to be consulted online to provide context or data conversion instructions in some cases.
+
+:::
