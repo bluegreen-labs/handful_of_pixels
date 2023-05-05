@@ -213,6 +213,12 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./exercises.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Exercises</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -252,7 +258,13 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#formal-course-work" id="toc-formal-course-work" class="nav-link active" data-scroll-target="#formal-course-work">Formal course work</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -275,16 +287,19 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 <p>This book uses the R statistical language in order to demonstrate how to process geospatial data. For many this might seem an odd choice but contrary to common believes R does provide solid geospatial frameworks. These frameworks provide all the tools you need for small and larger geospatial projects.</p>
-<p>In this book I will focus on a set of examples which are rather limited in scope, using just a handfull of pixels.Not only does this allow you to experiment with geospatial data on limited compute infrastructure, it also shows you that true science can be done with relatively modest means. In many ways this logic runs counter to the current practices either moving analysis to the cloud and/or trying to provide wall-to-wall (global) coverage irrespective of the added value to a study.</p>
-<p>TO INCLUDE:</p>
-<ul>
-<li>furthermore note that much validation data is still only available as point data (although some of this is changing within the context of the merger of computer vission with remote sensing)</li>
-<li>it also limits data management (which is also resolved by cloud platforms and bringing compute towards managed datasets)</li>
-</ul>
+<p>I will focus on a set of examples which are rather limited in scope, using just a handfull of pixels.Not only does this allow you to experiment with geospatial data on limited compute infrastructure, it also shows you that true science can be done with relatively modest means. In many ways this logic runs counter to the current practices either moving analysis to the cloud and/or trying to provide high resolution wall-to-wall (global) coverage irrespective of the added value to a study.</p>
+<p>In addition, most validation data is provided as point scale data (through either surveys or other field work). In effect, much research always starts with considering a handfull of point scale data, before upscaling. Obviously, working at a smaller spatial scale allows you to limit data management, leverage more limited compute infrastructure and experiment with methodological approaches.</p>
 <p>The goal of this book is therefore not to teach you a particular set of (industry) tools, but rather a balanced combination of both open source (R based) tools and a focus on conceptual development for rapid prototyping of research ideas within R. This book is in many ways an extension of <a href="https://r.geocompx.org/index.html">Geocomputation with R</a> by Lovelace, Nowosad, Muenchow. For strict geocomputational knowledge I refer to this source. Although the book uses R the methods described are rather environment agnostic and a similar work could be created for the python language. Where possible I will point to such alternatives.</p>
 <p>This book <strong>requires prior knowledge</strong> of programming in <strong>R</strong>, <strong>git</strong> and cloud based collaborative tools such as <strong>Github</strong>. However, to refresh some concepts, or for those who want to skip ahead, I will repeat some basic skills at the beginning of the book to get you started.</p>
+<p>All exercises are based upon material as discussed in the book <a href="https://khufkens.github.io/handfull_of_pixels/">“A Handfull of Pixels: big science using small data”</a>. The exercises are taught at Master’s level and require more advanced knowledge of the R statistical environment. A brief crash course is given in <a href="basic_R.html"><span>Chapter&nbsp;1</span></a> . You should be able to complete all exercises in <a href="exercises.html"><span>Chapter&nbsp;8</span></a> easily, when reading the required book chapters, external data documentation (as mentioned/linked to), or basic physical geography knowledge.</p>
+<section id="formal-course-work" class="level2">
+<h2 class="anchored" data-anchor-id="formal-course-work">Formal course work</h2>
+<p>When reading this book as formal course work the requested format for handing in the exercises as listed in <a href="exercises.html"><span>Chapter&nbsp;8</span></a> is a single R markdown file (see <a href="basic_R.html#sec-rmarkdown"><span>Section&nbsp;1.5</span></a>), including its rendered html file. Different exercise chapters should be divided by the subtitles used in <a href="exercises.html"><span>Chapter&nbsp;8</span></a>.</p>
+<p>I will grade on the implementation of the code, as well as its critical assessment, and or trouble shooting. If you were stuck, document how you got unstuck in these assignments. If you are still stuck, list what efforts you made to get unstuck (and what failed results they yielded and how this informed your further reasoning).</p>
+<p>Document thought patterns extensively in between code blocks. Mention (cite) resources you consulted, packages used, etc. You will have to find the original source if you consult external resources, ChatGPT (or similar large language model chat services) are <strong>not</strong> a valid reference.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

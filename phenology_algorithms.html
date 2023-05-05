@@ -248,6 +248,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./exercises.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Exercises</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -299,7 +305,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#data-smoothing-interpollation" id="toc-data-smoothing-interpollation" class="nav-link" data-scroll-target="#data-smoothing-interpollation"><span class="header-section-number">5.3</span> Data smoothing / interpollation</a></li>
   <li><a href="#sec-phenology-estimates" id="toc-sec-phenology-estimates" class="nav-link" data-scroll-target="#sec-phenology-estimates"><span class="header-section-number">5.4</span> Phenology estimation</a>
   <ul class="collapse">
-  <li><a href="#spatial-phenology-estimates" id="toc-spatial-phenology-estimates" class="nav-link" data-scroll-target="#spatial-phenology-estimates"><span class="header-section-number">5.4.1</span> Spatial phenology estimates</a></li>
+  <li><a href="#sec-spatial-scaling" id="toc-sec-spatial-scaling" class="nav-link" data-scroll-target="#sec-spatial-scaling"><span class="header-section-number">5.4.1</span> Spatial phenology estimates</a></li>
   <li><a href="#inference-and-comparisons-to-actual-products" id="toc-inference-and-comparisons-to-actual-products" class="nav-link" data-scroll-target="#inference-and-comparisons-to-actual-products"><span class="header-section-number">5.4.2</span> Inference and comparisons to actual products</a></li>
   </ul></li>
   </ul>
@@ -639,8 +645,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<section id="spatial-phenology-estimates" class="level3" data-number="5.4.1">
-<h3 data-number="5.4.1" class="anchored" data-anchor-id="spatial-phenology-estimates"><span class="header-section-number">5.4.1</span> Spatial phenology estimates</h3>
+<section id="sec-spatial-scaling" class="level3" data-number="5.4.1">
+<h3 data-number="5.4.1" class="anchored" data-anchor-id="sec-spatial-scaling"><span class="header-section-number">5.4.1</span> Spatial phenology estimates</h3>
 <p>The above example introduced the very basics of how to deal with a simple time series and develop a proof of concept. However, to scale our example spatially you need a way to process data along space and time axis. As introduced earlier, the <code>terra</code> package allows you to manipulate 3D data cubes (along latitude,longitude, and time axis).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Download a larger data cube</span></span>
