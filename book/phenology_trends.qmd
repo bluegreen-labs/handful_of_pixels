@@ -15,11 +15,11 @@ knitr::include_graphics("./images/canopy_change.jpg")
 
 All these (remote sensing) measurements have provided us with insights in how climate change has altered plant phenology. Overall, climate change moves phenology forward (from spring toward winter) at a rate of 3 days/decade, with rates varying depending on locality and altitude.
 
-Consequences are many, such as exposing early blooming or leafing plants to increased frosts risks and carbon losses through an explicit opportunity cost. In short, changes to plant and land surface phenology have a profound effect on both the carbon balance and all (co-) dependent processes. Therefore, it is key that we can quantify how phenology changes in response to year-to-year variability and climate change and global heating.
+Consequences are many, such as exposing early blooming or leafing plants to increased frosts risks and carbon losses through an explicit opportunity cost. In short, changes to plant and land surface phenology have a profound effect on both the carbon balance and all (co-) dependent processes. Therefore, it is key that we can quantify how phenology changes in response to year-to-year variability, climate change and global heating.
 
 Remote sensing products provide these insights for almost four decades. Remote sensing, and land surface phenology  products they produce have a number of advantages. They provide wall-to-wall coverage, with relative consistency and known (methodological) biases. I will cover several aspects of developing a small research project using the remote sensing of phenology as it's basis, using small data sets (a handfull of pixels). 
 
-In @sec-phenology-trends (this chapter) I will highlight how to detect landscape wide trends in phenology and how they relate to physical geography. This knowledge can then be used to infer some broad, cross-cutting, properties of vegetation phenology. In @sec-algorithms I will demonstrate how you can detect phenology from vegetation time series yourself, using a simple algorithm.
+In this chapter (@sec-phenology-trends) I will highlight how to detect landscape wide trends in phenology and how they relate to physical geography. This knowledge can then be used to infer some broad, cross-cutting, properties of vegetation phenology. In @sec-algorithms I will demonstrate how you can detect phenology from vegetation time series yourself, using a simple algorithm, and scale this regionally and globally.
 
 Now, let's get started!
 
@@ -40,7 +40,7 @@ land_cover <- readRDS(here::here("data/land-cover_2012.rds"))
 
 ## Getting the required data
 
-We want to download topographic data to quantify the influence of topography on phenology. Various sources can be found online but the easiest is to use the geodata package which provides a way to access Shuttle Radar Topography Mission (SRTM) elevation data easily.
+Our first forays into phenology research will require both topography and phenology data. If we want to download topographic data to quantify the influence of topography on phenology. Various sources can be found online but the easiest is to use the geodata package which provides a way to access Shuttle Radar Topography Mission (SRTM) elevation data easily.
 
 ```{r eval = FALSE}
 # load libraries
@@ -64,15 +64,9 @@ dem <- terra::rast(
 )
 ```
 
-::: callout-note
-### Note
+In this exercise I will rely on the MODIS land surface phenology product. This remote sensing based data product quantifies land surface phenology and is a good trade-off between data coverage (global) and precision (on a landscape scale).
 
-You can use the `here` package to make references to paths consistent within an R project. When wrapping a path with `here::here()` you reference the file relative to the main project directory, not the current directory. This is especially helpful when using R markdown or other notebook formats such as Quarto. These notebooks render code relative to their current location (path). Notebooks in sub-directories in a project will therefore not be able to easily access data in other sub-directories. The `here` package resolves this issue.
-:::
-
-In this exercise we'll rely on the MODIS land surface phenology product. This remote sensing based data product quantifies land surface phenology and is a good trade-off between data coverage (global) and precision (on a landscape scale).
-
-To gather this data we will use the `MODISTools` package. For an in depth discussion on gathering data using APIs and this API in particular I refer to @sec-accessing-data.
+To gather this data I will use the `MODISTools` package. For an in depth discussion on gathering data using APIs and this API in particular I refer to @sec-accessing-data.
 
 ```{r eval = FALSE}
 # load libraries
@@ -295,7 +289,7 @@ ggplot(
 
 ```
 
-::: {.callout-note collapse=true}
+::: {.callout-note}
 
 ### Note 
 

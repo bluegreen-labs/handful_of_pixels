@@ -4,9 +4,9 @@ title-block-banner: true
 
 # Preface {.unnumbered}
 
-In this free book I will focus on a set of examples which are rather limited in spatial scope, using just a hand full of pixels. In contrast to what the cloud computing revolution promised, many ideas start out from site or localized studies. The focus of this book on using just a hand full of pixels is therefore deliberate. This allows data to be as large as required, but as small as possible.
+In this free book I will focus on a set of examples which are rather limited in spatial scope, using just a handfull of pixels. In contrast to what the cloud computing revolution promised, many ideas start out from site or localized studies. The focus of this book on using just a handfull of pixels is therefore deliberate. This allows data to be as large as required, but as small as possible.
 
-Not only does this allow you to experiment with geospatial data on limited compute infrastructure, it also shows you that true science can be done with relatively modest means. Here you will learn to do big science with little data.
+Not only does this allow you to experiment with geo-spatial data on limited compute infrastructure, it also shows you that true science can be done with relatively modest means. You will learn to do big science with little data.
 
 This book is proudly GPT free, mistakes are my own.
 

@@ -273,44 +273,64 @@ plot(camden)
 
 Most common operators vector data are area based logical operations. Such as taking the intersection or union of features, which only retains the outline of a polygon. These operations can be executed on features themselves or should be mediated by geometric binary operations which can be used for filtering the original data.
 
-For example the `st_intersection()` function calculates where and how frequent simple features overlap (interesect) with each other.
+For example the `st_intersection()` function calculates where and how frequent simple features overlap (interesect) with each other.The results are again a tidy simple feature which can be sorted or filtered using the standard `filter()` function.
 
 ```{r}
 # calculate the intersection of all simple features
 i <- sf::st_intersection(sf)
 
-# plot the intersections coloured
-# according to the number of overlaps
-plot(
- i["n.overlaps"],
- main = "number of intersections"
-)
-```
-
-The results are again a tidy simple feature which can be sorted or filtered using the standard `filter()` function.
-
-```{r}
-# using the tidy data logic and the
-# filter function we can remove all
-# locations which only intersect with
-# itself (n.overlaps == 1)
+# filter out polygons with more than 1 overlap
+# with 1 being a self overlap
 i <- i |>
     filter(
         n.overlaps > 1
     )
+```
 
-plot(
- i["n.overlaps"],
- main = "intersections with other features (n>1)"
-)
+```{r}
+#| code-fold: true
+#| label: fig-intersection-nc
+#| fig-cap: "A plot with all intetersecting vectors polygons, with the number of overlaps as a coloured index"
+#| fig-align: "center"
+#| out-width: "100%"
+#| fig-width: 5
+#| fig-height: 4
+
+ggplot() +
+  geom_sf(
+    data = i["n.overlaps"],
+    aes(
+      fill = n.overlaps
+    )
+  ) +
+  scale_fill_viridis_c(
+    name = "overlaps"
+  ) +
+  theme_bw()
 ```
 
 Other functions allow you to group overlapping features. For example grouping of intersecting features can be done using `st_union()`, which only returns the outermost boundary of a feature.
 
 ```{r}
 u <- st_union(i)
-plot(u)
 ```
+
+```{r}
+#| code-fold: true
+#| label: fig-union-nc
+#| fig-cap: "A plot with all intetersecting vectors polygons aggregated by st_union()"
+#| fig-align: "center"
+#| out-width: "100%"
+#| fig-width: 5
+#| fig-height: 4
+
+ggplot() +
+  geom_sf(
+    data = u
+  ) +
+  theme_bw()
+```
+
 
 The `sf` package is relatively complex and for a full understanding of its components I refer to the [package documentation](https://r-spatial.github.io/sf/) and the book by Nowasad et al (REFERENCE).
 
@@ -330,18 +350,18 @@ The [`stars` package](https://r-spatial.github.io/stars/) is another geospatial 
 
 ```{r}
 #| label: fig-datacube
-#| fig-cap: "Image by [Edzer Pebesma](https://r-spatial.github.io/stars/)"
+#| fig-cap: "Data cube representation by [Edzer Pebesma](https://r-spatial.github.io/stars/)"
 #| fig-align: "left"
 #| out-width: "100%"
 #| echo: FALSE
 knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/cube1.png")
 ```
 
-Unlike the `terra` package the grid should not regular, but can of a different sort such as curvilinear data.
+Unlike the `terra` package the grid should not regular, but can of a different sort such as curvi-linear data (@fig-datagrid).
 
 ```{r}
 #| label: fig-datagrid
-#| fig-cap: "Image by [Edzer Pebesma](https://r-spatial.github.io/stars/)"
+#| fig-cap: "Various non-regular grid representations of raster data, handled by the {stars} package. Image by [Edzer Pebesma](https://r-spatial.github.io/stars/)"
 #| fig-align: "left"
 #| out-width: "100%"
 #| echo: FALSE

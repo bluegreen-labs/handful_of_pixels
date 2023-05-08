@@ -410,15 +410,43 @@ Grouped operations using `dplyr::mutate()` and `dplyr::summarize()` and other fu
 
 ## Reporting using R markdown {#sec-rmarkdown}
 
-What is R markdown.
+R markdown is a dynamic notebook format which allows you to mix written text (reporting) and code results. Often notebooks are used for demonstration purposes, showing the code used alternating with full text descriptions. For those familiar.
 
-#### Create a new R markdown file
+A new R markdown file can be created using RStudio menu item:
 
-How to create a new project + screenshots
+File > New File > R markdown
+
+The default settings will create an html output file. You can specify all other settings.
+
+```{r}
+#| label: fig-new-rmarkdown
+#| fig-cap: "Image by the University of Vermont"
+#| fig-align: "left"
+#| out-width: "100%"
+#| echo: FALSE
+knitr::include_graphics("https://www.uvm.edu/~tdonovan/RforFledglings/figure/08_newfile.PNG")
+```
 
 #### Writing and coding in R markdown
 
-- references to resources
+All markdown files have a header which specifies the output format (html if following the above instructions).
+
+```{r}
+#| label: fig-rmarkdown-file
+#| fig-cap: "Image by Posit Software, PBC (posit.co)"
+#| fig-align: "left"
+#| out-width: "100%"
+#| echo: FALSE
+knitr::include_graphics("https://d33wubrfki0l68.cloudfront.net/aa8ef57652bb9b7d6aa18f6c38b6b45a510a8960/1d9d3/lesson-images/how-1-file.png")
+```
+
+You can write text using markdown formatting, and executable code which should be contained within code chunks, starting with "```{r}" in the above image (@fig-rmarkdown-file).
+
+::: callout-note
+### Note
+
+You can use the `here` package to make references to paths consistent within an R project. When wrapping a path with `here::here()` you reference the file relative to the main project directory, not the current directory. This is especially helpful when using R markdown or other notebook formats such as Quarto. These notebooks render code relative to their current location (path). Notebooks in sub-directories in a project will therefore not be able to easily access data in other sub-directories. The `here` package resolves this issue.
+:::
 
 #### Render your project
 
