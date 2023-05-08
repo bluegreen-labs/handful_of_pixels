@@ -232,24 +232,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Phenology algorithms</span></span></a>
   </div>
 </li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./land_cover_classification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Land-Cover classification</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./phenology_modelling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Phenology modelling</span></span></a>
-  </div>
-</li>
       </ul>
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./exercises.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Exercises</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Exercises</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -337,14 +325,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>All these (remote sensing) measurements have provided us with insights in how climate change has altered plant phenology. Overall, climate change moves phenology forward (from spring toward winter) at a rate of 3 days/decade, with rates varying depending on locality and altitude.</p>
-<p>Consequences are many, such as exposing early blooming or leafing plants to increased frosts risks and carbon losses through an explicit opportunity cost. In short, changes to plant and land surface phenology have a profound effect on both the carbon balance and all (co-) dependent processes. Therefore, it is key that we can quantify how phenology changes in response to year-to-year variability and climate change and global heating.</p>
+<p>Consequences are many, such as exposing early blooming or leafing plants to increased frosts risks and carbon losses through an explicit opportunity cost. In short, changes to plant and land surface phenology have a profound effect on both the carbon balance and all (co-) dependent processes. Therefore, it is key that we can quantify how phenology changes in response to year-to-year variability, climate change and global heating.</p>
 <p>Remote sensing products provide these insights for almost four decades. Remote sensing, and land surface phenology products they produce have a number of advantages. They provide wall-to-wall coverage, with relative consistency and known (methodological) biases. I will cover several aspects of developing a small research project using the remote sensing of phenology as it’s basis, using small data sets (a handfull of pixels).</p>
-<p>In <a href="#sec-phenology-trends"><span>Chapter&nbsp;4</span></a> (this chapter) I will highlight how to detect landscape wide trends in phenology and how they relate to physical geography. This knowledge can then be used to infer some broad, cross-cutting, properties of vegetation phenology. In <a href="phenology_algorithms.html"><span>Chapter&nbsp;5</span></a> I will demonstrate how you can detect phenology from vegetation time series yourself, using a simple algorithm.</p>
+<p>In this chapter (<a href="#sec-phenology-trends"><span>Chapter&nbsp;4</span></a>) I will highlight how to detect landscape wide trends in phenology and how they relate to physical geography. This knowledge can then be used to infer some broad, cross-cutting, properties of vegetation phenology. In <a href="phenology_algorithms.html"><span>Chapter&nbsp;5</span></a> I will demonstrate how you can detect phenology from vegetation time series yourself, using a simple algorithm, and scale this regionally and globally.</p>
 <p>Now, let’s get started!</p>
 </section>
 <section id="getting-the-required-data" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="getting-the-required-data"><span class="header-section-number">4.2</span> Getting the required data</h2>
-<p>We want to download topographic data to quantify the influence of topography on phenology. Various sources can be found online but the easiest is to use the geodata package which provides a way to access Shuttle Radar Topography Mission (SRTM) elevation data easily.</p>
+<p>Our first forays into phenology research will require both topography and phenology data. If we want to download topographic data to quantify the influence of topography on phenology. Various sources can be found online but the easiest is to use the geodata package which provides a way to access Shuttle Radar Topography Mission (SRTM) elevation data easily.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load libraries</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(geodata)</span>
@@ -366,21 +354,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>You can use the <code>here</code> package to make references to paths consistent within an R project. When wrapping a path with <code>here::here()</code> you reference the file relative to the main project directory, not the current directory. This is especially helpful when using R markdown or other notebook formats such as Quarto. These notebooks render code relative to their current location (path). Notebooks in sub-directories in a project will therefore not be able to easily access data in other sub-directories. The <code>here</code> package resolves this issue.</p>
-</div>
-</div>
-<p>In this exercise we’ll rely on the MODIS land surface phenology product. This remote sensing based data product quantifies land surface phenology and is a good trade-off between data coverage (global) and precision (on a landscape scale).</p>
-<p>To gather this data we will use the <code>MODISTools</code> package. For an in depth discussion on gathering data using APIs and this API in particular I refer to <a href="gathering_data.html"><span>Chapter&nbsp;2</span></a>.</p>
+<p>In this exercise I will rely on the MODIS land surface phenology product. This remote sensing based data product quantifies land surface phenology and is a good trade-off between data coverage (global) and precision (on a landscape scale).</p>
+<p>To gather this data I will use the <code>MODISTools</code> package. For an in depth discussion on gathering data using APIs and this API in particular I refer to <a href="gathering_data.html"><span>Chapter&nbsp;2</span></a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load libraries</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MODISTools)</span>
@@ -602,16 +577,14 @@ Exercise: know what you use / download
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 Note
 </div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>The fit linear regression above has the following parameters.</p>
 <div class="cell">
@@ -639,7 +612,6 @@ Residual standard error: 15.74 on 145522 degrees of freedom
   (44020 observations deleted due to missingness)
 Multiple R-squared:  0.6651,    Adjusted R-squared:  0.6651 
 F-statistic: 2.89e+05 on 1 and 145522 DF,  p-value: &lt; 2.2e-16</code></pre>
-</div>
 </div>
 </div>
 </div>

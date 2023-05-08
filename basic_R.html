@@ -232,24 +232,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Phenology algorithms</span></span></a>
   </div>
 </li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./land_cover_classification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Land-Cover classification</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./phenology_modelling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Phenology modelling</span></span></a>
-  </div>
-</li>
       </ul>
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./exercises.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Exercises</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Exercises</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -885,19 +873,50 @@ Note
 </section>
 <section id="sec-rmarkdown" class="level2" data-number="1.5">
 <h2 data-number="1.5" class="anchored" data-anchor-id="sec-rmarkdown"><span class="header-section-number">1.5</span> Reporting using R markdown</h2>
-<p>What is R markdown.</p>
-<section id="create-a-new-r-markdown-file" class="level4" data-number="1.5.0.1">
-<h4 data-number="1.5.0.1" class="anchored" data-anchor-id="create-a-new-r-markdown-file"><span class="header-section-number">1.5.0.1</span> Create a new R markdown file</h4>
-<p>How to create a new project + screenshots</p>
+<p>R markdown is a dynamic notebook format which allows you to mix written text (reporting) and code results. Often notebooks are used for demonstration purposes, showing the code used alternating with full text descriptions. For those familiar.</p>
+<p>A new R markdown file can be created using RStudio menu item:</p>
+<p>File &gt; New File &gt; R markdown</p>
+<p>The default settings will create an html output file. You can specify all other settings.</p>
+<div class="cell" data-layout-align="left">
+<div class="cell-output-display">
+<div id="fig-new-rmarkdown" class="quarto-figure quarto-figure-left anchored">
+<figure class="figure">
+<p><img src="https://www.uvm.edu/~tdonovan/RforFledglings/figure/08_newfile.PNG" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption class="figure-caption">Figure&nbsp;1.6: Image by the University of Vermont</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<section id="writing-and-coding-in-r-markdown" class="level4" data-number="1.5.0.1">
+<h4 data-number="1.5.0.1" class="anchored" data-anchor-id="writing-and-coding-in-r-markdown"><span class="header-section-number">1.5.0.1</span> Writing and coding in R markdown</h4>
+<p>All markdown files have a header which specifies the output format (html if following the above instructions).</p>
+<div class="cell" data-layout-align="left">
+<div class="cell-output-display">
+<div id="fig-rmarkdown-file" class="quarto-figure quarto-figure-left anchored">
+<figure class="figure">
+<p><img src="https://d33wubrfki0l68.cloudfront.net/aa8ef57652bb9b7d6aa18f6c38b6b45a510a8960/1d9d3/lesson-images/how-1-file.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption class="figure-caption">Figure&nbsp;1.7: Image by Posit Software, PBC (posit.co)</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>You can write text using markdown formatting, and executable code which should be contained within code chunks, starting with “```{r}” in the above image (<a href="#fig-rmarkdown-file">Figure&nbsp;<span>1.7</span></a>).</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You can use the <code>here</code> package to make references to paths consistent within an R project. When wrapping a path with <code>here::here()</code> you reference the file relative to the main project directory, not the current directory. This is especially helpful when using R markdown or other notebook formats such as Quarto. These notebooks render code relative to their current location (path). Notebooks in sub-directories in a project will therefore not be able to easily access data in other sub-directories. The <code>here</code> package resolves this issue.</p>
+</div>
+</div>
 </section>
-<section id="writing-and-coding-in-r-markdown" class="level4" data-number="1.5.0.2">
-<h4 data-number="1.5.0.2" class="anchored" data-anchor-id="writing-and-coding-in-r-markdown"><span class="header-section-number">1.5.0.2</span> Writing and coding in R markdown</h4>
-<ul>
-<li>references to resources</li>
-</ul>
-</section>
-<section id="render-your-project" class="level4" data-number="1.5.0.3">
-<h4 data-number="1.5.0.3" class="anchored" data-anchor-id="render-your-project"><span class="header-section-number">1.5.0.3</span> Render your project</h4>
+<section id="render-your-project" class="level4" data-number="1.5.0.2">
+<h4 data-number="1.5.0.2" class="anchored" data-anchor-id="render-your-project"><span class="header-section-number">1.5.0.2</span> Render your project</h4>
 
 
 </section>
