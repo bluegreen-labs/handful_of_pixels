@@ -2,7 +2,7 @@
 
 ## Phenology trends and algorithms
 
-These exercises cover all materials up to Chapter 5. A proper understanding of these chapters is required to complete these exercises. Exercises are at times formulated in long form, not simple bullet points, in order to partially mimic formal descriptions as you would find in a methods section of an academic journal or a reference manual.
+These exercises cover all materials up to @sec-algorithms. A proper understanding of these chapters is required to complete these exercises. Exercises are at times formulated in long form, not simple bullet points, in order to partially mimic formal descriptions as you would find in a methods section of an academic journal, or a reference manual.
 
 ### Physical geography and phenology
 
@@ -15,11 +15,11 @@ Interpret the results of @sec-regression and the fit model as shown in the colla
 
 ### Temporal and spatial anomalies
 
-For a location near the Adirondacks in the North-Eastern United States (@fig-leaflet-adirondacks) gather phenology data on both the greenup and maximum canopy development of a location centered on 43.5$^\circ$N and 74.5$^\circ$W. Gather data for all pixels in 100 km around this location for years 2001 to 2010. Similarly, download land cover data for the year 2010 for the same spatial extent, and only consider IGBP broadleaf and mixed forest classes in you analysis.
+For a location near the Adirondacks in the North-Eastern United States (@fig-leaflet-adirondacks) gather phenology data on both the greenup and maximum canopy development of a location centered on 43.5$^\circ$N and 74.5$^\circ$W. Gather data for all pixels 100 km around this location for years 2001 to 2010. Similarly, download land cover data for the year 2010 for the same spatial extent, and only consider IGBP broadleaf and mixed forest classes in you analysis.
 
 For the years 2001 - 2009 calculate the long term mean (LTM) and standard deviation (SD) of the phenology metrics. Calculate location with an early greenup for 2010 (< LTM - 1 SD) and locations with late maturity (> LTM + 1 SD).
 
-Describe the observed patterns and speculate about the underlying reason for this trend. In addition, download a digital elevation map for the United States (30s resolution), and compare differences in altitude (e.g. a boxplot) across locations where you do or do not see any patterns in phenology.
+Describe the observed patterns and speculate about the underlying reasons. In addition, download a digital elevation map for the United States (30s resolution), and compare differences in altitude (e.g. a boxplot) across locations where you do or do not see any patterns in phenology.
  
 ```{r echo=FALSE}
 #| label: fig-leaflet-adirondacks
@@ -57,7 +57,14 @@ In this exercise you will be required to download external data manually. First 
 
 Once signed in, [download the data MCD13C1 product](https://lpdaac.usgs.gov/products/mod13c1v006/) for the year 2022. The MCD13C1 product provides vegetation indices (VI), such as the Enhanced Vegetation Index (EVI) and Normalized Difference Vegetation Index (NDVI) data products on a down-sample climate model grid (CMG, at 0.05$^\circ$ or ~5km resolution). This down-sampled data product reduces the volume of data to download and process, but should allow you to explore broad continental scale patterns when calculating vegetation (or land surface) phenology metrics.
 
-With all data downloaded, apply the algorithm as outlined in @sec-spatial-scaling using a start of season greenup signal of 25% the seasonal EVI amplitude. Assess the performance of the algorithm across the globe and discuss it's consistency. Where does it fail? How does it fail? If possible, address any issues by altering the original algorithm. Plot the global phenology maps, and it's various iterations in your discussions. Where necessary, inspect point locations to explore potential issues.
+With all data downloaded, apply the algorithm as outlined in @sec-spatial-scaling using a start of season greenup signal of 25% the seasonal EVI amplitude. 
+
+- Assess the performance of the algorithm across the globe and discuss it's consistency. 
+  - Where does it fail? How does it fail? 
+  - Where necessary, inspect point locations to explore potential issues.
+  - If possible, address any issues by altering the original algorithm. 
+
+- Plot the global phenology maps, and it's various iterations in your discussions.
 
 ::: {.callout-note}
 ## Note

@@ -427,7 +427,7 @@ The default settings will create an html output file. You can specify all other 
 knitr::include_graphics("https://www.uvm.edu/~tdonovan/RforFledglings/figure/08_newfile.PNG")
 ```
 
-#### Writing and coding in R markdown
+### Writing and coding
 
 All markdown files have a header which specifies the output format (html if following the above instructions).
 
@@ -440,7 +440,7 @@ All markdown files have a header which specifies the output format (html if foll
 knitr::include_graphics("https://d33wubrfki0l68.cloudfront.net/aa8ef57652bb9b7d6aa18f6c38b6b45a510a8960/1d9d3/lesson-images/how-1-file.png")
 ```
 
-You can write text using markdown formatting, and executable code which should be contained within code chunks, starting with "```{r}" in the above image (@fig-rmarkdown-file).
+You can write text using markdown formatting, and executable code which should be contained within code chunks, starting with "```{r}" in the above image (@fig-rmarkdown-file). These code chunk/block can be executed using the green "play" button on the right hand side of the code block. This will let you incrementally step through a workflow (with both documentation, and code).
 
 ::: callout-note
 ### Note
@@ -448,5 +448,8 @@ You can write text using markdown formatting, and executable code which should b
 You can use the `here` package to make references to paths consistent within an R project. When wrapping a path with `here::here()` you reference the file relative to the main project directory, not the current directory. This is especially helpful when using R markdown or other notebook formats such as Quarto. These notebooks render code relative to their current location (path). Notebooks in sub-directories in a project will therefore not be able to easily access data in other sub-directories. The `here` package resolves this issue.
 :::
 
-#### Render your project
+### Rendering a project
 
+The full document can be rendered as an html file (a self-contained web page), by pushing the "knitr" or "render" button at the top of the editor panel. Running all code like this requires that all necesasry data, external code and or packages are loaded.
+
+When using online data resources, such as APIs (see @sec-apis), it might be useful to buffer and load the data locally (while disabling the execution of the commands to get the data in the final render, the latter can be done by specifying "```{r eval = FALSE}" at the top of a code block).

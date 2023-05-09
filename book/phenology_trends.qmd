@@ -2,22 +2,22 @@
 
 ## Introduction
 
-Land surface phenology is a first order control on the exchange of water and energy between the biosphere and atmosphere. ...  As such it is an indicator of climate change. Plant phenology has historically been recorded for many centuries. More recently plant phenology (and its changes) have been recorded by networks of observers, near-surface cameras and not in the least by global satellite monitoring.
+Phenology is broadly defined as seasonally recurring life cycle events, ranging from migration to seasonal plant growth. Land surface phenology is a first order control on the exchange of water and energy between the biosphere and atmosphere [@cleland_shifting_2007; @lieth_phenology_2013; @piao_plant_2019; @Richardson2010]. As such it is an indicator of climate change [@Penuelas2009]. Plant phenology has historically been recorded for many centuries [@Menzel2005]. More recently plant phenology (and its changes) have been recorded by networks of observers [@Crimmins2017], near-surface cameras [@richardson_tracking_2018; @richardson_tracking_2018-1] and not in the least by global satellite monitoring [@Zhang2003; @Ganguly2010a].
 
 ```{r}
 #| label: fig-canopy-change
-#| fig-cap: "Canopy change between winter and spring/summer"
+#| fig-cap: "Split image of canopy change between winter and spring/summer at Harvard Forest, Petersham, MA, USA"
 #| fig-align: "center"
 #| out-width: "100%"
 #| echo: FALSE
 knitr::include_graphics("./images/canopy_change.jpg")
 ```
 
-All these (remote sensing) measurements have provided us with insights in how climate change has altered plant phenology. Overall, climate change moves phenology forward (from spring toward winter) at a rate of 3 days/decade, with rates varying depending on locality and altitude.
+All these (remote sensing) measurements have provided us with insights in how climate change has altered plant phenology. Overall, climate change moves phenology forward (from spring toward winter) at a rate of ~ 1 - 5 days per decade, with rates varying depending on locality and altitude [@wang_has_2015; @Vitasse2009; @Menzel2006].
 
-Consequences are many, such as exposing early blooming or leafing plants to increased frosts risks and carbon losses through an explicit opportunity cost. In short, changes to plant and land surface phenology have a profound effect on both the carbon balance and all (co-) dependent processes. Therefore, it is key that we can quantify how phenology changes in response to year-to-year variability, climate change and global heating.
+Consequences are many, such as exposing early blooming or leafing plants to increased frosts risks and carbon losses through an explicit opportunity cost [@Hufkens2012f; @augspurger_reconstructing_2013; @Gu2008]. In short, changes to plant and land surface phenology have a profound effect on both the carbon balance and all (co-) dependent processes [@Hufkens2012f]. Therefore, it is key that we can quantify how phenology changes in response to year-to-year variability, climate change and global heating [@Richardson2010; @Penuelas2009].
 
-Remote sensing products provide these insights for almost four decades. Remote sensing, and land surface phenology  products they produce have a number of advantages. They provide wall-to-wall coverage, with relative consistency and known (methodological) biases. I will cover several aspects of developing a small research project using the remote sensing of phenology as it's basis, using small data sets (a handfull of pixels). 
+Remote sensing products provide these insights for almost four decades [@Zhang2003; @Hufkens2012e]. Remote sensing, and land surface phenology  products they produce have a number of advantages. They provide wall-to-wall coverage, with relative consistency and known (methodological) biases. I will cover several aspects of developing a small research project using the remote sensing of phenology as it's basis, using small data sets (a handfull of pixels). 
 
 In this chapter (@sec-phenology-trends) I will highlight how to detect landscape wide trends in phenology and how they relate to physical geography. This knowledge can then be used to infer some broad, cross-cutting, properties of vegetation phenology. In @sec-algorithms I will demonstrate how you can detect phenology from vegetation time series yourself, using a simple algorithm, and scale this regionally and globally.
 
@@ -88,9 +88,10 @@ phenology <- MODISTools::mt_subset(
 )
 ```
 
-::: callout-tip
-### Exercise: know what you use / download
-Find information on who produced the product, track down the latest literature in this respect and note what the limitations of the product are.
+::: callout-note
+### Note
+
+It is always important to understand the data products you use. Find information on who produced the product, track down the latest literature in this respect and note what the limitations of the product are.
 
 - What does the band name stand for (mathematically)? 
 - How does this relate to other bands within this product?

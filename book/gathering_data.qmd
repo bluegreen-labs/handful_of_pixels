@@ -61,7 +61,7 @@ df <- read.table(
 )
 ```
 
-### APIs
+### APIs {#sec-apis}
 
 Web-based Application Programming Interfaces (APIs) offer a way to specify the scope of the returned data, and ultimately, the processing which goes on behind the scene in response to a (data) query. APIs are a way to, in a limited way, control a remote server to execute a certain (data) action. In most (RESTful) APIs, such query takes the form of an HTTP URL via an URL-encoded scheme using an API endpoint (or base URL).
 
