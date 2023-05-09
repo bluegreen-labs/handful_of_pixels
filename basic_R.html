@@ -300,7 +300,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#tidy-data-conversions" id="toc-tidy-data-conversions" class="nav-link" data-scroll-target="#tidy-data-conversions"><span class="header-section-number">1.4.1</span> Tidy data conversions</a></li>
   <li><a href="#tidy-data-manipulations" id="toc-tidy-data-manipulations" class="nav-link" data-scroll-target="#tidy-data-manipulations"><span class="header-section-number">1.4.2</span> Tidy data manipulations</a></li>
   </ul></li>
-  <li><a href="#sec-rmarkdown" id="toc-sec-rmarkdown" class="nav-link" data-scroll-target="#sec-rmarkdown"><span class="header-section-number">1.5</span> Reporting using R markdown</a></li>
+  <li><a href="#sec-rmarkdown" id="toc-sec-rmarkdown" class="nav-link" data-scroll-target="#sec-rmarkdown"><span class="header-section-number">1.5</span> Reporting using R markdown</a>
+  <ul class="collapse">
+  <li><a href="#writing-and-coding" id="toc-writing-and-coding" class="nav-link" data-scroll-target="#writing-and-coding"><span class="header-section-number">1.5.1</span> Writing and coding</a></li>
+  <li><a href="#rendering-a-project" id="toc-rendering-a-project" class="nav-link" data-scroll-target="#rendering-a-project"><span class="header-section-number">1.5.2</span> Rendering a project</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -887,8 +891,8 @@ Note
 </div>
 </div>
 </div>
-<section id="writing-and-coding-in-r-markdown" class="level4" data-number="1.5.0.1">
-<h4 data-number="1.5.0.1" class="anchored" data-anchor-id="writing-and-coding-in-r-markdown"><span class="header-section-number">1.5.0.1</span> Writing and coding in R markdown</h4>
+<section id="writing-and-coding" class="level3" data-number="1.5.1">
+<h3 data-number="1.5.1" class="anchored" data-anchor-id="writing-and-coding"><span class="header-section-number">1.5.1</span> Writing and coding</h3>
 <p>All markdown files have a header which specifies the output format (html if following the above instructions).</p>
 <div class="cell" data-layout-align="left">
 <div class="cell-output-display">
@@ -900,7 +904,7 @@ Note
 </div>
 </div>
 </div>
-<p>You can write text using markdown formatting, and executable code which should be contained within code chunks, starting with “```{r}” in the above image (<a href="#fig-rmarkdown-file">Figure&nbsp;<span>1.7</span></a>).</p>
+<p>You can write text using markdown formatting, and executable code which should be contained within code chunks, starting with “```{r}” in the above image (<a href="#fig-rmarkdown-file">Figure&nbsp;<span>1.7</span></a>). These code chunk/block can be executed using the green “play” button on the right hand side of the code block. This will let you incrementally step through a workflow (with both documentation, and code).</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -915,8 +919,10 @@ Note
 </div>
 </div>
 </section>
-<section id="render-your-project" class="level4" data-number="1.5.0.2">
-<h4 data-number="1.5.0.2" class="anchored" data-anchor-id="render-your-project"><span class="header-section-number">1.5.0.2</span> Render your project</h4>
+<section id="rendering-a-project" class="level3" data-number="1.5.2">
+<h3 data-number="1.5.2" class="anchored" data-anchor-id="rendering-a-project"><span class="header-section-number">1.5.2</span> Rendering a project</h3>
+<p>The full document can be rendered as an html file (a self-contained web page), by pushing the “knitr” or “render” button at the top of the editor panel. Running all code like this requires that all necesasry data, external code and or packages are loaded.</p>
+<p>When using online data resources, such as APIs (see <a href="gathering_data.html#sec-apis"><span>Section&nbsp;2.2.2</span></a>), it might be useful to buffer and load the data locally (while disabling the execution of the commands to get the data in the final render, the latter can be done by specifying “```{r eval = FALSE}” at the top of a code block).</p>
 
 
 </section>

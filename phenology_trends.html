@@ -54,7 +54,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -313,20 +332,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">4.1</span> Introduction</h2>
-<p>Land surface phenology is a first order control on the exchange of water and energy between the biosphere and atmosphere. … As such it is an indicator of climate change. Plant phenology has historically been recorded for many centuries. More recently plant phenology (and its changes) have been recorded by networks of observers, near-surface cameras and not in the least by global satellite monitoring.</p>
+<p>Phenology is broadly defined as seasonally recurring life cycle events, ranging from migration to seasonal plant growth. Land surface phenology is a first order control on the exchange of water and energy between the biosphere and atmosphere <span class="citation" data-cites="cleland_shifting_2007 lieth_phenology_2013 piao_plant_2019 Richardson2010">(<a href="references.html#ref-cleland_shifting_2007" role="doc-biblioref">Cleland et al. 2007</a>; <a href="references.html#ref-lieth_phenology_2013" role="doc-biblioref">Lieth 2013</a>; <a href="references.html#ref-piao_plant_2019" role="doc-biblioref">Piao et al. 2019</a>; <a href="references.html#ref-Richardson2010" role="doc-biblioref">Andrew D. Richardson et al. 2010</a>)</span>. As such it is an indicator of climate change <span class="citation" data-cites="Penuelas2009">(<a href="references.html#ref-Penuelas2009" role="doc-biblioref">Peñuelas and Filella 2009</a>)</span>. Plant phenology has historically been recorded for many centuries <span class="citation" data-cites="Menzel2005">(<a href="references.html#ref-Menzel2005" role="doc-biblioref">Menzel and Dose 2005</a>)</span>. More recently plant phenology (and its changes) have been recorded by networks of observers <span class="citation" data-cites="Crimmins2017">(<a href="references.html#ref-Crimmins2017" role="doc-biblioref">Crimmins et al. 2017</a>)</span>, near-surface cameras <span class="citation" data-cites="richardson_tracking_2018 richardson_tracking_2018-1">(<a href="references.html#ref-richardson_tracking_2018" role="doc-biblioref">Andrew D. Richardson 2018</a>; <a href="references.html#ref-richardson_tracking_2018-1" role="doc-biblioref">Andrew D. Richardson et al. 2018</a>)</span> and not in the least by global satellite monitoring <span class="citation" data-cites="Zhang2003 Ganguly2010a">(<a href="references.html#ref-Zhang2003" role="doc-biblioref">Zhang et al. 2003</a>; <a href="references.html#ref-Ganguly2010a" role="doc-biblioref">Ganguly et al. 2010</a>)</span>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-canopy-change" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="./images/canopy_change.jpg" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;4.1: Canopy change between winter and spring/summer</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;4.1: Split image of canopy change between winter and spring/summer at Harvard Forest, Petersham, MA, USA</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>All these (remote sensing) measurements have provided us with insights in how climate change has altered plant phenology. Overall, climate change moves phenology forward (from spring toward winter) at a rate of 3 days/decade, with rates varying depending on locality and altitude.</p>
-<p>Consequences are many, such as exposing early blooming or leafing plants to increased frosts risks and carbon losses through an explicit opportunity cost. In short, changes to plant and land surface phenology have a profound effect on both the carbon balance and all (co-) dependent processes. Therefore, it is key that we can quantify how phenology changes in response to year-to-year variability, climate change and global heating.</p>
-<p>Remote sensing products provide these insights for almost four decades. Remote sensing, and land surface phenology products they produce have a number of advantages. They provide wall-to-wall coverage, with relative consistency and known (methodological) biases. I will cover several aspects of developing a small research project using the remote sensing of phenology as it’s basis, using small data sets (a handfull of pixels).</p>
+<p>All these (remote sensing) measurements have provided us with insights in how climate change has altered plant phenology. Overall, climate change moves phenology forward (from spring toward winter) at a rate of ~ 1 - 5 days per decade, with rates varying depending on locality and altitude <span class="citation" data-cites="wang_has_2015 Vitasse2009 Menzel2006">(<a href="references.html#ref-wang_has_2015" role="doc-biblioref">Wang et al. 2015</a>; <a href="references.html#ref-Vitasse2009" role="doc-biblioref">Vitasse et al. 2009</a>; <a href="references.html#ref-Menzel2006" role="doc-biblioref">Menzel et al. 2006</a>)</span>.</p>
+<p>Consequences are many, such as exposing early blooming or leafing plants to increased frosts risks and carbon losses through an explicit opportunity cost <span class="citation" data-cites="Hufkens2012f augspurger_reconstructing_2013 Gu2008">(<a href="references.html#ref-Hufkens2012f" role="doc-biblioref">Hufkens, Friedl, Keenan, et al. 2012</a>; <a href="references.html#ref-augspurger_reconstructing_2013" role="doc-biblioref">Augspurger 2013</a>; <a href="references.html#ref-Gu2008" role="doc-biblioref">Gu et al. 2008</a>)</span>. In short, changes to plant and land surface phenology have a profound effect on both the carbon balance and all (co-) dependent processes <span class="citation" data-cites="Hufkens2012f">(<a href="references.html#ref-Hufkens2012f" role="doc-biblioref">Hufkens, Friedl, Keenan, et al. 2012</a>)</span>. Therefore, it is key that we can quantify how phenology changes in response to year-to-year variability, climate change and global heating <span class="citation" data-cites="Richardson2010 Penuelas2009">(<a href="references.html#ref-Richardson2010" role="doc-biblioref">Andrew D. Richardson et al. 2010</a>; <a href="references.html#ref-Penuelas2009" role="doc-biblioref">Peñuelas and Filella 2009</a>)</span>.</p>
+<p>Remote sensing products provide these insights for almost four decades <span class="citation" data-cites="Zhang2003 Hufkens2012e">(<a href="references.html#ref-Zhang2003" role="doc-biblioref">Zhang et al. 2003</a>; <a href="references.html#ref-Hufkens2012e" role="doc-biblioref">Hufkens, Friedl, Sonnentag, et al. 2012</a>)</span>. Remote sensing, and land surface phenology products they produce have a number of advantages. They provide wall-to-wall coverage, with relative consistency and known (methodological) biases. I will cover several aspects of developing a small research project using the remote sensing of phenology as it’s basis, using small data sets (a handfull of pixels).</p>
 <p>In this chapter (<a href="#sec-phenology-trends"><span>Chapter&nbsp;4</span></a>) I will highlight how to detect landscape wide trends in phenology and how they relate to physical geography. This knowledge can then be used to infer some broad, cross-cutting, properties of vegetation phenology. In <a href="phenology_algorithms.html"><span>Chapter&nbsp;5</span></a> I will demonstrate how you can detect phenology from vegetation time series yourself, using a simple algorithm, and scale this regionally and globally.</p>
 <p>Now, let’s get started!</p>
 </section>
@@ -375,17 +394,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">progress =</span> <span class="cn">FALSE</span></span>
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Exercise: know what you use / download
+Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Find information on who produced the product, track down the latest literature in this respect and note what the limitations of the product are.</p>
+<p>It is always important to understand the data products you use. Find information on who produced the product, track down the latest literature in this respect and note what the limitations of the product are.</p>
 <ul>
 <li>What does the band name stand for (mathematically)?</li>
 <li>How does this relate to other bands within this product?</li>
@@ -618,6 +637,62 @@ F-statistic: 2.89e+05 on 1 and 145522 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-augspurger_reconstructing_2013" class="csl-entry" role="listitem">
+Augspurger, Carol K. 2013. <span>“Reconstructing Patterns of Temperature, Phenology, and Frost Damage over 124 Years: {<span>Spring</span>} Damage Risk Is Increasing.”</span> <em>Ecology</em> 94 (1): 41–50. <a href="https://doi.org/10.1890/12-0200.1">https://doi.org/10.1890/12-0200.1</a>.
+</div>
+<div id="ref-cleland_shifting_2007" class="csl-entry" role="listitem">
+Cleland, E, I Chuine, A Menzel, H Mooney, and M Schwartz. 2007. <span>“Shifting Plant Phenology in Response to Global Change.”</span> <em>Trends in Ecology &amp; Evolution</em> 22 (7): 357–65. <a href="https://doi.org/10.1016/j.tree.2007.04.003">https://doi.org/10.1016/j.tree.2007.04.003</a>.
+</div>
+<div id="ref-Crimmins2017" class="csl-entry" role="listitem">
+Crimmins, Theresa M., Michael A. Crimmins, Katharine L. Gerst, Alyssa H. Rosemartin, and Jake F. Weltzin. 2017. <span>“<span>USA</span> <span>National</span> <span>Phenology</span> <span>Network</span>’s Volunteer-Contributed Observations Yield Predictive Models of Phenological Transitions.”</span> <em>PLoS ONE</em> 12 (8): 1–17. <a href="https://doi.org/10.1371/journal.pone.0182919">https://doi.org/10.1371/journal.pone.0182919</a>.
+</div>
+<div id="ref-Ganguly2010a" class="csl-entry" role="listitem">
+Ganguly, Sangram, Mark a. Friedl, Bin Tan, Xiaoyang Y Zhang, and Manish Verma. 2010. <span>“Land Surface Phenology from <span>MODIS</span>: <span>Characterization</span> of the <span>Collection</span> 5 Global Land Cover Dynamics Product.”</span> <em>Remote Sensing of Environment</em> 114 (8): 1805–16. <a href="https://doi.org/10.1016/j.rse.2010.04.005">https://doi.org/10.1016/j.rse.2010.04.005</a>.
+</div>
+<div id="ref-Gu2008" class="csl-entry" role="listitem">
+Gu, Lianhong, Paul J Hanson, W Mac Post, Dale P Kaiser, Bai Yang, Ramakrishna Nemani, Stephen G Pallardy, and Tilden Meyers. 2008. <span>“The 2007 <span>Eastern</span> <span>US</span> <span>Spring</span> <span>Freeze</span>: <span>Increased</span> <span>Cold</span> <span>Damage</span> in a <span>Warming</span> <span>World</span>.”</span> <em>BioScience</em> 58 (3): 253–62. <a href="https://doi.org/10.1641/b580311">https://doi.org/10.1641/b580311</a>.
+</div>
+<div id="ref-Hufkens2012f" class="csl-entry" role="listitem">
+Hufkens, Koen, Mark A. Friedl, Trevor F. Keenan, Oliver Sonnentag, Amey Bailey, John O’Keefe, and Andrew D. Richardson. 2012. <span>“Ecological Impacts of a Widespread Frost Event Following Early Spring Leaf-Out.”</span> <em>Global Change Biology</em> 18 (7): 2365–77. <a href="https://doi.org/10.1111/j.1365-2486.2012.02712.x">https://doi.org/10.1111/j.1365-2486.2012.02712.x</a>.
+</div>
+<div id="ref-Hufkens2012e" class="csl-entry" role="listitem">
+Hufkens, Koen, Mark Friedl, Oliver Sonnentag, Bobby H. Braswell, Thomas Milliman, and Andrew D. Richardson. 2012. <span>“Linking Near-Surface and Satellite Remote Sensing Measurements of Deciduous Broadleaf Forest Phenology.”</span> <em>Remote Sensing of Environment</em> 117 (February): 307–21. <a href="https://doi.org/10.1016/j.rse.2011.10.006">https://doi.org/10.1016/j.rse.2011.10.006</a>.
+</div>
+<div id="ref-lieth_phenology_2013" class="csl-entry" role="listitem">
+Lieth, Helmut. 2013. <em>Phenology and Seasonality Modeling</em>. Vol. 8. Springer Science &amp; Business Media.
+</div>
+<div id="ref-Menzel2005" class="csl-entry" role="listitem">
+Menzel, Annette, and Volker Dose. 2005. <span>“Analysis of Long-Term Time Series of the Beginning of Flowering by <span>Bayesian</span> Function Estimation.”</span> <em>Meteorologische Zeitschrift</em> 14 (3): 429–34. <a href="https://doi.org/10.1127/0941-2948/2005/0040">https://doi.org/10.1127/0941-2948/2005/0040</a>.
+</div>
+<div id="ref-Menzel2006" class="csl-entry" role="listitem">
+Menzel, Annette, Tim H. Sparks, Nicole Estrella, Elisabeth Koch, Anto Aasa, Rein Ahas, Kerstin Alm-Kübler, et al. 2006. <span>“European Phenological Response to Climate Change Matches the Warming Pattern.”</span> <em>Global Change Biology</em> 12 (10): 1969–76. <a href="https://doi.org/10.1111/j.1365-2486.2006.01193.x">https://doi.org/10.1111/j.1365-2486.2006.01193.x</a>.
+</div>
+<div id="ref-Penuelas2009" class="csl-entry" role="listitem">
+Peñuelas, J., and I. Filella. 2009. <span>“Phenology Feedbacks on Climate Change.”</span> <em>Science</em> 324 (5929): 887. <a href="http://www.sciencemag.org/content/324/5929/887.short">http://www.sciencemag.org/content/324/5929/887.short</a>.
+</div>
+<div id="ref-piao_plant_2019" class="csl-entry" role="listitem">
+Piao, Shilong, Qiang Liu, Anping Chen, Ivan A Janssens, Yongshuo Fu, Junhu Dai, Lingli Liu, Xu Lian, Miaogen Shen, and Xiaolin Zhu. 2019. <span>“Plant Phenology and Global Climate Change: Current Progresses and Challenges.”</span> <em>Global Change Biology</em>, March. <a href="https://doi.org/10.1111/gcb.14619">https://doi.org/10.1111/gcb.14619</a>.
+</div>
+<div id="ref-richardson_tracking_2018" class="csl-entry" role="listitem">
+Richardson, Andrew D. 2018. <span>“Tracking Seasonal Rhythms of Plants in Diverse Ecosystems with Digital Camera Imagery.”</span> <em>New Phytologist</em>, no. 11: 1–9. <a href="https://doi.org/10.1111/nph.15591">https://doi.org/10.1111/nph.15591</a>.
+</div>
+<div id="ref-Richardson2010" class="csl-entry" role="listitem">
+Richardson, Andrew D, T Andy Black, Philippe Ciais, Nicolas Delbart, Mark a Friedl, Nadine Gobron, David Y Hollinger, et al. 2010. <span>“Influence of Spring and Autumn Phenological Transitions on Forest Ecosystem Productivity.”</span> <em>Philosophical Transactions of the Royal Society of London. Series B, Biological Sciences</em> 365 (1555): 3227–46. <a href="https://doi.org/10.1098/rstb.2010.0102">https://doi.org/10.1098/rstb.2010.0102</a>.
+</div>
+<div id="ref-richardson_tracking_2018-1" class="csl-entry" role="listitem">
+Richardson, Andrew D., Koen Hufkens, Tom Milliman, Donald M. Aubrecht, Min Chen, Josh M. Gray, Miriam R. Johnston, et al. 2018. <span>“Tracking Vegetation Phenology Across Diverse <span>North</span> <span>American</span> Biomes Using <span>PhenoCam</span> Imagery.”</span> <em>Scientific Data</em> 5 (1). <a href="https://doi.org/10.1038/sdata.2018.28">https://doi.org/10.1038/sdata.2018.28</a>.
+</div>
+<div id="ref-Vitasse2009" class="csl-entry" role="listitem">
+Vitasse, Yann, Annabel Josée Porté, Antoine Kremer, Richard Michalet, and Sylvain Delzon. 2009. <span>“Responses of Canopy Duration to Temperature Changes in Four Temperate Tree Species: Relative Contributions of Spring and Autumn Leaf Phenology.”</span> <em>Oecologia</em> 161 (1): 187–98. <a href="https://doi.org/10.1007/s00442-009-1363-4">https://doi.org/10.1007/s00442-009-1363-4</a>.
+</div>
+<div id="ref-wang_has_2015" class="csl-entry" role="listitem">
+Wang, Xuhui, Shilong Piao, Xiangtao Xu, Philippe Ciais, Natasha MacBean, Ranga B. Myneni, and Laurent Li. 2015. <span>“Has the Advancing Onset of Spring Vegetation Green-up Slowed down or Changed Abruptly over the Last Three Decades?: 30-Year Change of Spring Vegetation Phenology.”</span> <em>Global Ecology and Biogeography</em> 24 (6): 621–31. <a href="https://doi.org/10.1111/geb.12289">https://doi.org/10.1111/geb.12289</a>.
+</div>
+<div id="ref-Zhang2003" class="csl-entry" role="listitem">
+Zhang, Xiaoyang, Mark A Friedl, Crystal B Schaaf, Alan H Strahler, John C F Hodges, Feng Gao, Bradley C Reed, and Alfredo Huete. 2003. <span>“Monitoring Vegetation Phenology Using <span>MODIS</span>.”</span> <em>Remote Sensing of Environment</em> 84 (3): 471–75. <a href="http://www.sciencedirect.com/science/article/B6V6V-478RS7T-1/2/19c385401eecea8964bca155ac01eb71">http://www.sciencedirect.com/science/article/B6V6V-478RS7T-1/2/19c385401eecea8964bca155ac01eb71</a>.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
