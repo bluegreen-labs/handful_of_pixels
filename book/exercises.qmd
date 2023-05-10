@@ -55,16 +55,24 @@ Use details in @sec-accessing-data, @sec-geospatial and @sec-phenology-trends to
 
 In this exercise you will be required to download external data manually. First you will have to sign up for a [NASA EarthData login](https://www.earthdata.nasa.gov/) to access the required data. The NASA EarthData login provides access to a wide range of data products.
 
-Once signed in, [download the data MCD13C1 product](https://lpdaac.usgs.gov/products/mod13c1v006/) for the year 2022. The MCD13C1 product provides vegetation indices (VI), such as the Enhanced Vegetation Index (EVI) and Normalized Difference Vegetation Index (NDVI) data products on a down-sample climate model grid (CMG, at 0.05$^\circ$ or ~5km resolution). This down-sampled data product reduces the volume of data to download and process, but should allow you to explore broad continental scale patterns when calculating vegetation (or land surface) phenology metrics.
+Once signed in, [download the data MCD13C1 product](https://lpdaac.usgs.gov/products/mod13c1v006/) for the year 2022. The MCD13C1 product provides vegetation indices (VI), such as the Enhanced Vegetation Index (EVI) and Normalized Difference Vegetation Index (NDVI) data products on a down-sampled climate model grid (CMG, at 0.05$^\circ$ or ~5km resolution). This down-sampled data product reduces the volume of data to download and process, but should allow you to explore broad continental scale patterns when calculating vegetation (or land surface) phenology metrics.
 
-With all data downloaded, apply the algorithm as outlined in @sec-spatial-scaling using a start of season greenup signal of 25% the seasonal EVI amplitude. 
+With all data downloaded:
 
+- Combine all EVI data (23 layers) into a single compressed geotiff file (write to file)
+- Read in the geotiff file to work faster from memory
+- For a first trial crop the full dataset to 26$^\circ$W, 20$^\circ$E, 31$^\circ$N, 70$^\circ$N
+- Apply the algorithm as outlined in @sec-spatial-scaling using a start of season greenup signal of 25% the seasonal EVI amplitude
 - Assess the performance of the algorithm across the globe and discuss it's consistency. 
   - Where does it fail? How does it fail? 
   - Where necessary, inspect point locations to explore potential issues.
   - If possible, address any issues by altering the original algorithm. 
 
-- Plot the global phenology maps, and it's various iterations in your discussions.
+- Could you scale this globally?
+  - How long would it take?
+  - Can you improve calculation times?
+
+Plot the global phenology maps, and it's various iterations in the R markdown notebook.
 
 ::: {.callout-note}
 ## Note
