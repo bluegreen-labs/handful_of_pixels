@@ -97,6 +97,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-submit-button-title": "Submit"
   }
 }</script>
+<script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="site_libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+<script src="site_libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="site_libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
+<script src="site_libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="site_libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="site_libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
+<script src="site_libs/leaflet-binding-2.1.2.9000/leaflet.js"></script>
+<script src="site_libs/leaflet-providers-1.9.0/leaflet-providers_1.9.0.js"></script>
+<script src="site_libs/leaflet-providers-plugin-2.1.2.9000/leaflet-providers-plugin.js"></script>
 
 
 <meta name="twitter:title" content="A Handfull of Pixels - 3&nbsp; Geospatial data in R">
@@ -361,7 +372,7 @@ unit        :   K
 time        : 2022-01-01 12:00:00 UTC </code></pre>
 </div>
 </div>
-<p>Or you can visualize the data by plotting the data (e.g.&nbsp;using <code>plot()</code>).</p>
+<p>Or you can visualize the data by plotting the data (e.g.&nbsp;using <code>plot()</code>). Note that <a href="#fig-demo-nc">Figure&nbsp;<span>3.2</span></a> is generated using the <code>ggplot2</code> library and is a bit more pleasing to the eye than the default <code>plot()</code> routine. You can also plot an interactive map using the <code>terra</code> function <code>plet()</code>, allowing you to scroll and zoom, while including various background tiles (such as satellite imagery, or topographic data).</p>
 <div class="cell" data-layout-align="center">
 <details>
 <summary>Code</summary>
@@ -385,13 +396,69 @@ time        : 2022-01-01 12:00:00 UTC </code></pre>
 </div>
 </div>
 </div>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># set te colour scale manually</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>pal <span class="ot">&lt;-</span> <span class="fu">colorNumeric</span>(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"magma"</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">values</span>(r),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.color =</span> <span class="st">"transparent"</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># build the leaflet map</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># using ESRI tile servers</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># and the loaded demo raster</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">leaflet</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addProviderTiles</span>(providers<span class="sc">$</span>Esri.WorldImagery, <span class="at">group =</span> <span class="st">"World Imagery"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addProviderTiles</span>(providers<span class="sc">$</span>Esri.WorldTopoMap, <span class="at">group =</span> <span class="st">"World Topo"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addRasterImage</span>(</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    r,</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">colors =</span> pal,</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">opacity =</span> <span class="fl">0.8</span>,</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="st">"raster"</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addLayersControl</span>(</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">baseGroups =</span> <span class="fu">c</span>(<span class="st">"World Imagery"</span>,<span class="st">"World Topo"</span>),</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> <span class="st">"topleft"</span>,</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">options =</span> <span class="fu">layersControlOptions</span>(<span class="at">collapsed =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">overlayGroups =</span> <span class="fu">c</span>(<span class="st">"raster"</span>)</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addLegend</span>(</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">pal =</span> pal,</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">values</span>(r),</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"2m Temp (K)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="fig-demo-dyn" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-1e2829c13914a06c2f3a" style="width:100%;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-1e2829c13914a06c2f3a">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addProviderTiles","args":["Esri.WorldImagery",null,"World Imagery",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addProviderTiles","args":["Esri.WorldTopoMap",null,"World Topo",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addRasterImage","args":["data:image/png;base64,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",[[48.05,4.95],[43.95,12.05]],0.8,null,null,"raster"]},{"method":"addLayersControl","args":[["World Imagery","World Topo"],"raster",{"collapsed":false,"autoZIndex":true,"position":"topleft"}]},{"method":"addLegend","args":[{"colors":["#000004 , #21114E 13.710799190693%, #792282 35.2923200134884%, #D2426F 56.8738408362839%, #FD9869 78.4553616590794%, #FCFDBF "],"labels":["270","275","280","285"],"na_color":null,"na_label":"NA","opacity":0.5,"position":"topright","type":"numeric","title":"2m Temp (K)","extra":{"p_1":0.13710799190693,"p_n":0.784553616590794},"layerId":null,"className":"info legend","group":null}]}],"limits":{"lat":[43.95,48.05],"lng":[4.95,12.05]}},"evals":[],"jsHooks":[]}</script>
+<figcaption class="figure-caption">Figure&nbsp;3.3: Dynamic output of the generated map</figcaption>
+</figure>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Dynamic maps with the <code>plet()</code> function in <code>terra</code> leverages the <code>leaflet</code> library and <a href="https://rstudio.github.io/leaflet/">Leafletjs javascript framework</a>. To use dynamic maps straight from <code>terra</code> you require the latest <code>leaflet</code> package version. You can install this version by using <code>remotes::install_github('rstudio/leaflet')</code>. The above example shows a more advanced example, using two base maps and the demo raster data.</p>
+</div>
+</div>
 <p>Dedicated functions exist to extract the layer names (<code>names()</code>) and the time stamps (<code>time()</code>) if there is a time component to the data. These functions allow you to extract these data and use them in analysis.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">time</span>(r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">time</span>(r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "2022-01-01 12:00:00 UTC"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "t2m"</code></pre>
 </div>
@@ -401,85 +468,85 @@ time        : 2022-01-01 12:00:00 UTC </code></pre>
 <h4 class="unnumbered anchored" data-anchor-id="basic-math">Basic math</h4>
 <p>Basic math or logical operations can be performed on maps using standard <code>R</code> notations. As shown above the data contains temperature data in Kelvin. You can convert this data from Kelvin to Celsius by subtracting 273.15 from all values in the data set.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># conversion from Kelvin to C</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>r_c <span class="ot">&lt;-</span> r <span class="sc">-</span> <span class="fl">273.15</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># conversion from Kelvin to C</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>r_c <span class="ot">&lt;-</span> r <span class="sc">-</span> <span class="fl">273.15</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  tidyterra<span class="sc">::</span><span class="fu">geom_spatraster</span>(<span class="at">data =</span> r_c) <span class="sc">+</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">na.value =</span> <span class="cn">NA</span>,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Temperature (C) </span><span class="sc">\n</span><span class="st">"</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  tidyterra<span class="sc">::</span><span class="fu">geom_spatraster</span>(<span class="at">data =</span> r_c) <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">na.value =</span> <span class="cn">NA</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Temperature (C) </span><span class="sc">\n</span><span class="st">"</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-demo-nc-C" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="geospatial_R_files/figure-html/fig-demo-nc-C-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;3.3: Temperature in Celsius (C) as calculated from the original values in Kelvin</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;3.4: Temperature in Celsius (C) as calculated from the original values in Kelvin</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>Logical operations work in the same way. You can create a mask of temperatures above 5C using a simple logical operation.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># all locations above freezing</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># as a binary mask</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> r_c <span class="sc">&gt;</span> <span class="dv">5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># all locations above freezing</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># as a binary mask</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> r_c <span class="sc">&gt;</span> <span class="dv">5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  tidyterra<span class="sc">::</span><span class="fu">geom_spatraster</span>(<span class="at">data =</span> m) <span class="sc">+</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Mask </span><span class="sc">\n</span><span class="st">"</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  tidyterra<span class="sc">::</span><span class="fu">geom_spatraster</span>(<span class="at">data =</span> m) <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Mask </span><span class="sc">\n</span><span class="st">"</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-demo-mask" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="geospatial_R_files/figure-html/fig-demo-mask-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;3.4: Mask, defining positions where temperatures are larger than 5C</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;3.5: Mask, defining positions where temperatures are larger than 5C</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>You can exclude locations from calculations using masks. This is useful to restrict the region of interest of an analysis or limit edge cases of complex calculations beforehand. As an example you can mask out all values where the binary mask as generated above if <code>FALSE</code> (i.e.&nbsp;temperatures lower than 5C).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># all locations above freezing</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># as a binary mask</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>r_m <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">mask</span>(r_c, m, <span class="at">maskvalue =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># all locations above freezing</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># as a binary mask</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>r_m <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">mask</span>(r_c, m, <span class="at">maskvalue =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  tidyterra<span class="sc">::</span><span class="fu">geom_spatraster</span>(<span class="at">data =</span> r_m) <span class="sc">+</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">na.value =</span> <span class="cn">NA</span>,</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Temperature (C) </span><span class="sc">\n</span><span class="st">"</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  tidyterra<span class="sc">::</span><span class="fu">geom_spatraster</span>(<span class="at">data =</span> r_m) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">na.value =</span> <span class="cn">NA</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Temperature (C) </span><span class="sc">\n</span><span class="st">"</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-demo-mask-C" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="geospatial_R_files/figure-html/fig-demo-mask-C-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;3.5: Temperature in Celsius (C), with values lower than 5 C masked.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;3.6: Temperature in Celsius (C), with values lower than 5 C masked.</figcaption>
 </figure>
 </div>
 </div>
@@ -490,17 +557,17 @@ time        : 2022-01-01 12:00:00 UTC </code></pre>
 <p>The <code>terra</code> library uses pointers when referencing to data (in memory). This means that you can not save the object itself to resume your work later on. Saving the above masked map <code>r_m</code> using <code>saveRDS(r_m, "data.rds")</code> will only save a pointer to a memory space which will not exist when opening a new session. This is in contrast to for example operations on tabulated data (e.g.&nbsp;JSON, CSV files). As such, you need to save the output of your analysis using a formal geospatial data format using <code>writeRaster()</code>.</p>
 <p>To save masked temperature data in Celsius you would use:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># save data to file</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>terra<span class="sc">::</span><span class="fu">writeRaster</span>(r_m, <span class="st">"celsius_data_masked.tif"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># save data to file</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>terra<span class="sc">::</span><span class="fu">writeRaster</span>(r_m, <span class="st">"celsius_data_masked.tif"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Alternatively, but for small datasets only, you could convert the geospatial data to a long oriented data frame and save the data using standard methods to save tabulated data. However, you might loose critical meta-data on geographic projections etc. Using this method to save your work is not recommended unless you keep track of all ancillary meta-data separately.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># convert geospatial data to a</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># data frame notation, where the flag</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># xy = TRUE denotes that pixel coordinate</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># details should be exported as well</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(r, <span class="at">xy =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># convert geospatial data to a</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># data frame notation, where the flag</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># xy = TRUE denotes that pixel coordinate</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># details should be exported as well</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(r, <span class="at">xy =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    x  y      t2m
 1 5.0 48 286.4682
@@ -520,11 +587,11 @@ time        : 2022-01-01 12:00:00 UTC </code></pre>
 <h4 class="unnumbered anchored" data-anchor-id="reading-and-inspecting-data-1">Reading and inspecting data</h4>
 <p>A lot of GIS vector data comes as <a href="https://en.wikipedia.org/wiki/Shapefile">shapefiles</a> (.shp extention). An example shapefile is include in the <code>sf</code> package, and we can read it using:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load library</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># load included shapefile</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>nc <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(<span class="fu">system.file</span>(<span class="st">"shape/nc.shp"</span>, <span class="at">package=</span><span class="st">"sf"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load library</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># load included shapefile</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>nc <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(<span class="fu">system.file</span>(<span class="st">"shape/nc.shp"</span>, <span class="at">package=</span><span class="st">"sf"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `nc' from data source 
   `/home/runner/.cache/R/renv/cache/v5/R-4.3/x86_64-pc-linux-gnu/sf/1.0-12/5b41b4f0bd22b38661d82205a87deb4b/sf/shape/nc.shp' 
@@ -538,7 +605,7 @@ Geodetic CRS:  NAD27</code></pre>
 </div>
 <p>When printing the object you will be provided with an overview, when plotting the spatial data (using <code>plot()</code>) will be visualized (similar to the raster data above).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(nc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(nc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Simple feature collection with 100 features and 14 fields
 Geometry type: MULTIPOLYGON
@@ -575,14 +642,14 @@ First 10 features:
 <div id="fig-shapefile" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="geospatial_R_files/figure-html/fig-shapefile-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;3.6: Various layers of the shapefile</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;3.7: Various layers of the shapefile</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>You can extract basic information such as the overall bounding box of the vector data using <code>st_bbox()</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_bbox</span>(nc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_bbox</span>(nc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     xmin      ymin      xmax      ymax 
 -84.32385  33.88199 -75.45698  36.58965 </code></pre>
@@ -590,10 +657,10 @@ First 10 features:
 </div>
 <p>The <code>sf</code> framework uses a tidy data approach, as such you can use operations upon the list items stored within the larger data set by calculating the bounding box for each geometry.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>nc <span class="sc">|&gt;</span> </span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">bbox =</span> purrr<span class="sc">::</span><span class="fu">map</span>(geometry, sf<span class="sc">::</span>st_bbox)</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>nc <span class="sc">|&gt;</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">bbox =</span> purrr<span class="sc">::</span><span class="fu">map</span>(geometry, sf<span class="sc">::</span>st_bbox)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Simple feature collection with 100 features and 15 fields
 Geometry type: MULTIPOLYGON
@@ -641,19 +708,19 @@ First 10 features:
 <h4 class="unnumbered anchored" data-anchor-id="basic-vector-operations">Basic vector operations</h4>
 <p>Given the tidy data approach of <code>sf</code> data we can use the same logic to filter data. For example, if we only want to retain Camden county from the data set we can use the <code>filter()</code> function as shown in <a href="basic_R.html#sec-tidy-data"><span>Section&nbsp;1.4</span></a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># subset data using the</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># tidy filter approach</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>camden <span class="ot">&lt;-</span> nc <span class="sc">|&gt;</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>        NAME <span class="sc">==</span> <span class="st">"Camden"</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># subset data using the</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># tidy filter approach</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>camden <span class="ot">&lt;-</span> nc <span class="sc">|&gt;</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>        NAME <span class="sc">==</span> <span class="st">"Camden"</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-camden" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="geospatial_R_files/figure-html/fig-camden-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;3.7: Camden county, as filtered from the larger dataset</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;3.8: Camden county, as filtered from the larger dataset</figcaption>
 </figure>
 </div>
 </div>
@@ -661,58 +728,58 @@ First 10 features:
 <p>Most common operators vector data are area based logical operations. Such as taking the intersection or union of features, which only retains the outline of a polygon. These operations can be executed on features themselves or should be mediated by geometric binary operations which can be used for filtering the original data.</p>
 <p>For example the <code>st_intersection()</code> function calculates where and how frequent simple features overlap (interesect) with each other.The results are again a tidy simple feature which can be sorted or filtered using the standard <code>filter()</code> function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the intersection of all simple features</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_intersection</span>(sf)</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># filter out polygons with more than 1 overlap</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co"># with 1 being a self overlap</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> i <span class="sc">|&gt;</span></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>        n.overlaps <span class="sc">&gt;</span> <span class="dv">1</span></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the intersection of all simple features</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_intersection</span>(sf)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># filter out polygons with more than 1 overlap</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co"># with 1 being a self overlap</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> i <span class="sc">|&gt;</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>        n.overlaps <span class="sc">&gt;</span> <span class="dv">1</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> i[<span class="st">"n.overlaps"</span>],</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill =</span> n.overlaps</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(</span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"overlaps"</span></span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> i[<span class="st">"n.overlaps"</span>],</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill =</span> n.overlaps</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"overlaps"</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-intersection-nc" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="geospatial_R_files/figure-html/fig-intersection-nc-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;3.8: A plot with all intetersecting vectors polygons, with the number of overlaps as a coloured index</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;3.9: A plot with all intetersecting vectors polygons, with the number of overlaps as a coloured index</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>Other functions allow you to group overlapping features. For example grouping of intersecting features can be done using <code>st_union()</code>, which only returns the outermost boundary of a feature.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>u <span class="ot">&lt;-</span> <span class="fu">st_union</span>(i)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>u <span class="ot">&lt;-</span> <span class="fu">st_union</span>(i)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> u</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> u</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-union-nc" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="geospatial_R_files/figure-html/fig-union-nc-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;3.9: A plot with all intetersecting vectors polygons aggregated by st_union()</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;3.10: A plot with all intetersecting vectors polygons aggregated by st_union()</figcaption>
 </figure>
 </div>
 </div>
@@ -723,9 +790,9 @@ First 10 features:
 <h4 class="unnumbered anchored" data-anchor-id="writing-and-exporting-data-1">Writing and exporting data</h4>
 <p>Although read in <code>sf</code> objects can be saved as internal <code>R</code> formats such as <code>rds</code> files using <code>saveRDS()</code>, for portability between various GIS software packages <code>sf</code> can write out a new shapefile using <code>st_write()</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># write the north carolina data</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co"># to shapefile in the tempdir()</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>sf<span class="sc">::</span><span class="fu">st_write</span>(nc, <span class="fu">file.path</span>(<span class="fu">tempdir</span>(), <span class="st">"nc.shp"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># write the north carolina data</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co"># to shapefile in the tempdir()</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>sf<span class="sc">::</span><span class="fu">st_write</span>(nc, <span class="fu">file.path</span>(<span class="fu">tempdir</span>(), <span class="st">"nc.shp"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -737,18 +804,18 @@ First 10 features:
 <div id="fig-datacube" class="quarto-figure quarto-figure-left anchored">
 <figure class="figure">
 <p><img src="https://raw.githubusercontent.com/r-spatial/stars/master/images/cube1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;3.10: Data cube representation by <a href="https://r-spatial.github.io/stars/">Edzer Pebesma</a></figcaption>
+<figcaption class="figure-caption">Figure&nbsp;3.11: Data cube representation by <a href="https://r-spatial.github.io/stars/">Edzer Pebesma</a></figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Unlike the <code>terra</code> package the grid should not regular, but can of a different sort such as curvi-linear data (<a href="#fig-datagrid">Figure&nbsp;<span>3.11</span></a>).</p>
+<p>Unlike the <code>terra</code> package the grid should not regular, but can of a different sort such as curvi-linear data (<a href="#fig-datagrid">Figure&nbsp;<span>3.12</span></a>).</p>
 <div class="cell" data-layout-align="left">
 <div class="cell-output-display">
 <div id="fig-datagrid" class="quarto-figure quarto-figure-left anchored">
 <figure class="figure">
 <p><img src="https://r-spatial.github.io/stars/reference/figures/README-plot2-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;3.11: Various non-regular grid representations of raster data, handled by the {stars} package. Image by <a href="https://r-spatial.github.io/stars/">Edzer Pebesma</a></figcaption>
+<figcaption class="figure-caption">Figure&nbsp;3.12: Various non-regular grid representations of raster data, handled by the {stars} package. Image by <a href="https://r-spatial.github.io/stars/">Edzer Pebesma</a></figcaption>
 </figure>
 </div>
 </div>
