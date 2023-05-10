@@ -486,7 +486,15 @@ phenology_map[phenology_map > 180] <- NA
 phenology_raster[phenology_raster > 180] <- NA
 ```
 
-The generated dynamic map @fig-phenology-dyn shows you the result of the algorithm, and allows you to explore some of the underlying reasons for the observed patterns. For example, meadows and agricultural fields often show early leaf development, while forested areas are later. Our own "product" shows differences with
+The generated dynamic map @fig-phenology-dyn shows you the result of the algorithm, and allows you to explore some of the underlying reasons for the observed patterns. For example, meadows and agricultural fields often show early leaf development, while forested areas are later. This new "product" shows differences with MODIS (MCD12Q2) phenology product, which can be attributed to methodological choices.
+
+::: callout-tip
+# Exercise
+
+Think of the various ways the algorithm design could change the results relative to the algorithm used in the MODIS (MCD12Q2) phenology product.
+
+:::
+
 
 ```{r}
 #| code-fold: true
@@ -532,10 +540,6 @@ leaflet() |>
     values = values(phenology_map),
     title = "DOY")
 ```
-
-### Inference and comparisons to actual products
-
-You now have output from our custom algorithm, and the previously downloaded MODIS (MCD12Q2) phenology data product. You can therefore easily compare both outputs.
 
 ```{r message=FALSE, include=FALSE}
 #| code-fold: true
