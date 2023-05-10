@@ -313,8 +313,8 @@ ul.task-list li input[type="checkbox"] {
 <div class="cell" data-layout-align="center">
 <div id="fig-leaflet-adirondacks" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
-<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-2720c0efd5850ca6deb3" style="width:100%;height:288px;"></div>
-<script type="application/json" data-for="htmlwidget-2720c0efd5850ca6deb3">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[43.5,-74.5],6,[]],"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[43.5,-74.5,null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},"Adirondacks",null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[43.5,43.5],"lng":[-74.5,-74.5]}},"evals":[],"jsHooks":[]}</script>
+<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-71dd2026fd65ea491d92" style="width:100%;height:288px;"></div>
+<script type="application/json" data-for="htmlwidget-71dd2026fd65ea491d92">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[43.5,-74.5],6,[]],"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[43.5,-74.5,null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},"Adirondacks",null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[43.5,43.5],"lng":[-74.5,-74.5]}},"evals":[],"jsHooks":[]}</script>
 <figcaption class="figure-caption">Figure&nbsp;6.1: The location of the Adirondack mountains in the North-Eastern United States</figcaption>
 </figure>
 </div>
@@ -336,17 +336,26 @@ Note
 <section id="scaling-the-calculation-of-phenology-metrics" class="level3" data-number="6.1.3">
 <h3 data-number="6.1.3" class="anchored" data-anchor-id="scaling-the-calculation-of-phenology-metrics"><span class="header-section-number">6.1.3</span> Scaling the calculation of phenology metrics</h3>
 <p>In this exercise you will be required to download external data manually. First you will have to sign up for a <a href="https://www.earthdata.nasa.gov/">NASA EarthData login</a> to access the required data. The NASA EarthData login provides access to a wide range of data products.</p>
-<p>Once signed in, <a href="https://lpdaac.usgs.gov/products/mod13c1v006/">download the data MCD13C1 product</a> for the year 2022. The MCD13C1 product provides vegetation indices (VI), such as the Enhanced Vegetation Index (EVI) and Normalized Difference Vegetation Index (NDVI) data products on a down-sample climate model grid (CMG, at 0.05<span class="math inline">\(^\circ\)</span> or ~5km resolution). This down-sampled data product reduces the volume of data to download and process, but should allow you to explore broad continental scale patterns when calculating vegetation (or land surface) phenology metrics.</p>
-<p>With all data downloaded, apply the algorithm as outlined in <a href="phenology_algorithms.html#sec-spatial-scaling"><span>Section&nbsp;5.4.1</span></a> using a start of season greenup signal of 25% the seasonal EVI amplitude.</p>
+<p>Once signed in, <a href="https://lpdaac.usgs.gov/products/mod13c1v006/">download the data MCD13C1 product</a> for the year 2022. The MCD13C1 product provides vegetation indices (VI), such as the Enhanced Vegetation Index (EVI) and Normalized Difference Vegetation Index (NDVI) data products on a down-sampled climate model grid (CMG, at 0.05<span class="math inline">\(^\circ\)</span> or ~5km resolution). This down-sampled data product reduces the volume of data to download and process, but should allow you to explore broad continental scale patterns when calculating vegetation (or land surface) phenology metrics.</p>
+<p>With all data downloaded:</p>
 <ul>
+<li>Combine all EVI data (23 layers) into a single compressed geotiff file (write to file)</li>
+<li>Read in the geotiff file to work faster from memory</li>
+<li>For a first trial crop the full dataset to 26<span class="math inline">\(^\circ\)</span>W, 20<span class="math inline">\(^\circ\)</span>E, 31<span class="math inline">\(^\circ\)</span>N, 70<span class="math inline">\(^\circ\)</span>N</li>
+<li>Apply the algorithm as outlined in <a href="phenology_algorithms.html#sec-spatial-scaling"><span>Section&nbsp;5.4.1</span></a> using a start of season greenup signal of 25% the seasonal EVI amplitude</li>
 <li>Assess the performance of the algorithm across the globe and discuss it’s consistency.
 <ul>
 <li>Where does it fail? How does it fail?</li>
 <li>Where necessary, inspect point locations to explore potential issues.</li>
 <li>If possible, address any issues by altering the original algorithm.</li>
 </ul></li>
-<li>Plot the global phenology maps, and it’s various iterations in your discussions.</li>
+<li>Could you scale this globally?
+<ul>
+<li>How long would it take?</li>
+<li>Can you improve calculation times?</li>
+</ul></li>
 </ul>
+<p>Plot the global phenology maps, and it’s various iterations in the R markdown notebook.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
