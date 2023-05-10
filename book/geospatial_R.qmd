@@ -64,7 +64,7 @@ We can inspect the meta data by calling the object:
 print(r)
 ```
 
-Or you can visualize the data by plotting the data (e.g. using `plot()`).
+Or you can visualize the data by plotting the data (e.g. using `plot()`). Note that @fig-demo-nc is generated using the `ggplot2` library and is a bit more pleasing to the eye than the default `plot()` routine. You can also plot an interactive map using the `terra` function `plet()`, allowing you to scroll and zoom, while including various background tiles (such as satellite imagery, or topographic data).
 
 ```{r message=FALSE, warning=FALSE}
 #| code-fold: true
@@ -86,6 +86,51 @@ ggplot() +
     legend.position = "bottom"
     )
 ```
+
+```{r}
+#| code-fold: true
+#| label: fig-demo-dyn
+#| fig-cap: "Dynamic output of the generated map"
+#| fig-align: "center"
+#| out-width: "100%"
+library(leaflet)
+
+# set te colour scale manually
+pal <- colorNumeric(
+  "magma",
+  values(r),
+  na.color = "transparent"
+  )
+
+# build the leaflet map
+# using ESRI tile servers
+# and the loaded demo raster
+leaflet() |> 
+  addProviderTiles(providers$Esri.WorldImagery, group = "World Imagery") |>
+  addProviderTiles(providers$Esri.WorldTopoMap, group = "World Topo") |>
+  addRasterImage(
+    r,
+    colors = pal,
+    opacity = 0.8,
+    group = "raster"
+    ) |>
+  addLayersControl(
+    baseGroups = c("World Imagery","World Topo"),
+    position = "topleft",
+    options = layersControlOptions(collapsed = FALSE),
+    overlayGroups = c("raster")
+    ) |>
+  addLegend(
+    pal = pal,
+    values = values(r),
+    title = "2m Temp (K)")
+```
+
+::: callout-note
+# Note
+
+Dynamic maps with the `plet()` function in `terra` leverages the `leaflet` library and [Leafletjs javascript framework](https://rstudio.github.io/leaflet/). To use dynamic maps straight from `terra` you require the latest `leaflet` package version. You can install this version by using `remotes::install_github('rstudio/leaflet')`. The above example shows a more advanced example, using two base maps and the demo raster data.
+:::
 
 Dedicated functions exist to extract the layer names (`names()`) and the time stamps (`time()`) if there is a time component to the data. These functions allow you to extract these data and use them in analysis.
 

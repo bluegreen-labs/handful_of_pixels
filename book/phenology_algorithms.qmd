@@ -375,7 +375,10 @@ However, data downloaded using `MODISTools` by default is formated as tidy (row 
 
 ```{r eval = FALSE}
 # conversion from tidy data to a raster format
-r <- MODISTools::mt_to_terra(lai_2012)
+r <- MODISTools::mt_to_terra(
+  lai_2012,
+  reproject = TRUE
+  )
 ```
 
 Remember the algorithm for a single time series above. To make this collection of steps re-usable within the context of a multi-layer `terra` raster object (or data cube) you need to define a function. This allows you to run the routine across several pixels (at once).
@@ -477,15 +480,64 @@ phenology_raster <- MODISTools::mt_to_terra(
   )
 ```
 
-### Inference and comparisons to actual products
-
 ```{r include = FALSE}
 phenology_map <- terra::rast(here::here("data/LAI_phenology.tiff"))
+phenology_map[phenology_map > 180] <- NA
+phenology_raster[phenology_raster > 180] <- NA
 ```
+
+The generated dynamic map @fig-phenology-dyn shows you the result of the algorithm, and allows you to explore some of the underlying reasons for the observed patterns. For example, meadows and agricultural fields often show early leaf development, while forested areas are later. Our own "product" shows differences with
+
+```{r}
+#| code-fold: true
+#| label: fig-phenology-dyn
+#| fig-cap: "Dynamic output of the generated phenology map"
+#| fig-align: "center"
+#| out-width: "100%"
+library(leaflet)
+
+# set te colour scale manually
+pal <- colorNumeric(
+  "magma",
+  values(phenology_map),
+  na.color = "transparent"
+  )
+
+# build the leaflet map
+# using ESRI tile servers
+# and the loaded demo raster
+leaflet() |> 
+  addProviderTiles(providers$Esri.WorldImagery, group = "World Imagery") |>
+  addProviderTiles(providers$Esri.WorldTopoMap, group = "World Topo") |>
+  addRasterImage(
+    phenology_map,
+    colors = pal,
+    opacity = 0.8,
+    group = "Custom phenology"
+    ) |>
+  addRasterImage(
+    phenology_raster,
+    colors = pal,
+    opacity = 1,
+    group = "MODIS phenology"
+    ) |>
+  addLayersControl(
+    baseGroups = c("World Imagery","World Topo"),
+    position = "topleft",
+    options = layersControlOptions(collapsed = FALSE),
+    overlayGroups = c("Custom phenology","MODIS phenology")
+    ) |>
+  addLegend(
+    pal = pal,
+    values = values(phenology_map),
+    title = "DOY")
+```
+
+### Inference and comparisons to actual products
 
 You now have output from our custom algorithm, and the previously downloaded MODIS (MCD12Q2) phenology data product. You can therefore easily compare both outputs.
 
-```{r message=FALSE}
+```{r message=FALSE, include=FALSE}
 #| code-fold: true
 #| label: fig-comparison
 #| fig-cap: "Comparison of custom algorithm (a) and MODIS phenology product (b) outputs"
