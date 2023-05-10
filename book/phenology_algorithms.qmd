@@ -393,7 +393,7 @@ phenophases <- function(
 ) {
 
   # split out useful info
-  value <- as.vector(df) * 0.1
+  value <- as.vector(df)
   
   # if all values are NA
   # return NA (missing data error trap)
@@ -403,10 +403,20 @@ phenophases <- function(
   
   date <- as.Date(names(df))
   
+  # pick n to be 1/3th the total length
+  # of the time series (in recorded values)
+  # n must be odd
+  n <- 31
+  
   # smooth this original input data using a
   # savitski-golay filter
-  smooth <- signal::sgolayfilt(value, p = 3, n = 31)
-
+  smooth <- try(signal::sgolayfilt(
+    value,
+    p = 3,
+    n = n
+    )
+  )
+  
   # expand the time series to a daily time step
   # and merge with the original data
   date_expanded <- seq.Date(min(date, na.rm = TRUE), max(date, na.rm = TRUE), by = 1)
