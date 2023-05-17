@@ -33,7 +33,7 @@ book:
   favicon: "figures/favicon.ico"
   twitter-card: true
   search: true
-  repo-url: https://github.com/geco-group/handfull_of_pixels/
+  repo-url: https://github.com/geco-bern/handfull_of_pixels/
   sharing: [twitter, facebook]
   navbar:
     title: " "
