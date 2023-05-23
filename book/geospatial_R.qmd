@@ -195,7 +195,7 @@ ggplot() +
     )
 ```
 
-You can exclude locations from calculations using masks. This is useful to restrict the region of interest of an analysis or limit edge cases of complex calculations beforehand. As an example you can mask out all values where the binary mask as generated above if `FALSE` (i.e. temperatures lower than 5C).
+You can exclude locations from calculations using masks. This is useful to restrict the region of interest of an analysis or limit edge cases of complex calculations beforehand. As an example you can mask out all values where the binary mask as generated above is `FALSE` (i.e. temperatures lower than 5C).
 ```{r}
 # all locations above freezing
 # as a binary mask
