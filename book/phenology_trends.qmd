@@ -64,7 +64,7 @@ dem <- terra::rast(
 )
 ```
 
-In this exercise I will rely on the MODIS land surface phenology product. This remote sensing based data product quantifies land surface phenology and is a good trade-off between data coverage (global) and precision (on a landscape scale).
+In this exercise I will rely on the [MODIS land surface phenology product (MCD12Q2)](https://www.bu.edu/lcsc/data-documentation/). This remote sensing based data product quantifies land surface phenology and is a good trade-off between data coverage (global) and precision (on a landscape scale).
 
 To gather this data I will use the `MODISTools` package. For an in depth discussion on gathering data using APIs and this API in particular I refer to @sec-accessing-data.
 
