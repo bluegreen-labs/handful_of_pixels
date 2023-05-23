@@ -2,7 +2,7 @@
 
 The example above illustrating Hopkin's law and the explicit temperature sensitivity of vegetation phenology to changes in temperature shows the importance of monitoring these changes within the context of climate change. In the previous example we have used an operational land surface vegetation phenology product.
 
-Many products exist, depending on the remote sensing platform or data used, and cover a wide range of spatial scales. For example the HR-VPP product allows for continuous vegetation monitoring using 10m resolution Sentinel-2 data, while the previous example relies on 500m resolution MODIS data. While MODIS provides a landscape wide measure of vegetation phenology the spatial scale of Sentinel-2 and near real time data allows for fine grained assessments of crop growth.
+Many products exist, depending on the remote sensing platform or data used, and cover a wide range of spatial scales. For example the [HR-VPP product](https://land.copernicus.eu/pan-european/biophysical-parameters/high-resolution-vegetation-phenology-and-productivity) allows for continuous vegetation monitoring using 10m resolution Sentinel-2 data, while the previous example relies on 500m resolution MODIS data. While MODIS provides a landscape wide measure of vegetation phenology the spatial scale of Sentinel-2 and near real time data allows for fine grained assessments of crop growth.
 
 ## Algorithms
 
@@ -244,7 +244,7 @@ ggplot(df) +
   theme_bw()
 ```
 
-Obviously this does not translate well to other locations, when vegetation types and densities vary from place to place. This is illustrated in @fig-smooth-phen, using an artificially lowered signal in the year 2004, were years not meeting the absolute threshold will not produce accurate phenology estimates. Scaling the time series between 0 and 1 will **regularize responses across time series** and years and resolves this issue.
+Obviously this does not translate well to other locations, when vegetation types and densities vary from place to place. This is illustrated in @fig-smooth-phen, using an artificially lowered signal in the year 2004, where years not meeting the absolute threshold will not produce accurate phenology estimates. Scaling the time series between 0 and 1 will **regularize responses across time series** and years and resolves this issue.
 
 ```{r}
 # potential issues?
@@ -509,7 +509,7 @@ Think of the various ways the algorithm design could change the results relative
 ```{r}
 #| code-fold: true
 #| label: fig-phenology-dyn
-#| fig-cap: "Dynamic output of the generated phenology map"
+#| fig-cap: "Dynamic output of the generated phenology map. Toggle different layers to visualize the different products (MODIS or custom)."
 #| fig-align: "center"
 #| out-width: "100%"
 library(leaflet)
