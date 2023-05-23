@@ -402,7 +402,7 @@ The [`stars` package](https://r-spatial.github.io/stars/) is another geospatial 
 knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/cube1.png")
 ```
 
-Unlike the `terra` package the grid should not regular, but can of a different sort such as curvi-linear data (@fig-datagrid).
+Unlike the `terra` package the grid should not be regular, but can be of a different sort such as curvi-linear data (@fig-datagrid).
 
 ```{r}
 #| label: fig-datagrid
