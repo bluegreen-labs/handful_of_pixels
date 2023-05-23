@@ -15,7 +15,7 @@ Environmental data can be found in a number of locations and a general web searc
 
 Similarly, non-governmental organizations (NGOs), foundations and other non-profit organizations can be a valuable source of information. General street layouts, and **location based information on businesses and other venues** can be sourced from **Open Street Map (OSM)**. The World Wild Fund (WWF) has contributed to biodiversity mapping initiatives. In general, non-profits and NGOs are trustworthy but in an age of disinformation and shadow lobbying you should verify if sources are common within scientific literature.
 
-Scientific literature can also be a valuable source of data products. However, finding these data products is often difficult as they are not necessarily centralized in a structured way or they might not even be shared publicly. Centralized repositories do exist. Noteworthy are **Zenodo**, an data repository for research data supported by CERN but holding vast stores of data on a variety of research topics. Similarly **Dryad and Figshare** provide long term storage of published research data.
+Scientific literature can also be a valuable source of data products. However, finding these data products is often difficult as they are not necessarily centralized in a structured way or they might not even be shared publicly. Centralized repositories do exist. Noteworthy are **Zenodo**, a data repository for research data supported by CERN but holding vast stores of data on a variety of research topics. Similarly **Dryad and Figshare** provide long term storage of published research data.
 
 Below you find a list of useful data sources:
 
