@@ -40,7 +40,7 @@ land_cover <- readRDS(here::here("data/land-cover_2012.rds"))
 
 ## Getting the required data
 
-Our first forays into phenology research will require both topography and phenology data. If we want to download topographic data to quantify the influence of topography on phenology. Various sources can be found online but the easiest is to use the geodata package which provides a way to access Shuttle Radar Topography Mission (SRTM) elevation data easily.
+Our first forays into phenology research will require both topography and phenology data. If we want to download topographic data to quantify the influence of topography on phenology. Various sources can be found online but the easiest is to use the `geodata` package which provides a way to access Shuttle Radar Topography Mission (SRTM) elevation data easily.
 
 ```{r eval = FALSE}
 # load libraries
@@ -98,7 +98,7 @@ It is always important to understand the data products you use. Find information
 - What are the characteristics of the downloaded data?
   - is post-processing required?
 
-Write down all these aspects into any report (or code) you create to insure reproducibility.
+Write down all these aspects into any report (or code) you create to ensure reproducibility.
 :::
 
 The downloaded phenology data and the topography data need post-processing in our analysis. There are a number of reasons for this:
