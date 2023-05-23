@@ -251,7 +251,7 @@ head(df)
 
 #### Reading and inspecting data {.unnumbered}
 
-A lot of GIS vector data comes as [shapefiles](https://en.wikipedia.org/wiki/Shapefile) (.shp extention). An example shapefile is include in the `sf` package, and we can read it using:
+A lot of GIS vector data comes as [shapefiles](https://en.wikipedia.org/wiki/Shapefile) (.shp extention). An example shapefile is included in the `sf` package, and we can read it using:
 
 ```{r warning=FALSE, message=FALSE}
 # load library
