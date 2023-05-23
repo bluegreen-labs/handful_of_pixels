@@ -370,7 +370,7 @@ The tidy logic allows for easy conversions or reduction of column data using the
 ```{r}
 tidy_df |>
   dplyr::mutate(
-    caces_2x = cases * 2
+    cases_2x = cases * 2
   ) |>
   head()
 ```
