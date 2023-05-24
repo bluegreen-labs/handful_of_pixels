@@ -544,7 +544,7 @@ Note
 </div>
 </div>
 </div>
-<p>You can exclude locations from calculations using masks. This is useful to restrict the region of interest of an analysis or limit edge cases of complex calculations beforehand. As an example you can mask out all values where the binary mask as generated above if <code>FALSE</code> (i.e.&nbsp;temperatures lower than 5C).</p>
+<p>You can exclude locations from calculations using masks. This is useful to restrict the region of interest of an analysis or limit edge cases of complex calculations beforehand. As an example you can mask out all values where the binary mask as generated above is <code>FALSE</code> (i.e.&nbsp;temperatures lower than 5C).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># all locations above freezing</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># as a binary mask</span></span>
@@ -607,7 +607,7 @@ Note
 <p><a href="https://en.wikipedia.org/wiki/Simple_Features">Simple features</a> are an open standard to store and access geographic data. The <code>sf</code> <a href="https://r-spatial.github.io/sf/">package</a> provides a way to represent geospatial vector data as simple features in R. This results in nested data.frames or tibbles which adhere to the “tidy” data paradigm as previously described. They therefore are long oriented and support piped workflows on geometries. This standard reduces complexity and keeps geometry operations simple.</p>
 <section id="reading-and-inspecting-data-1" class="level4 unnumbered">
 <h4 class="unnumbered anchored" data-anchor-id="reading-and-inspecting-data-1">Reading and inspecting data</h4>
-<p>A lot of GIS vector data comes as <a href="https://en.wikipedia.org/wiki/Shapefile">shapefiles</a> (.shp extention). An example shapefile is include in the <code>sf</code> package, and we can read it using:</p>
+<p>A lot of GIS vector data comes as <a href="https://en.wikipedia.org/wiki/Shapefile">shapefiles</a> (.shp extention). An example shapefile is included in the <code>sf</code> package, and we can read it using:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load library</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
@@ -747,8 +747,8 @@ First 10 features:
 </div>
 </div>
 </div>
-<p>Most common operators vector data are area based logical operations. Such as taking the intersection or union of features, which only retains the outline of a polygon. These operations can be executed on features themselves or should be mediated by geometric binary operations which can be used for filtering the original data.</p>
-<p>For example the <code>st_intersection()</code> function calculates where and how frequent simple features overlap (interesect) with each other.The results are again a tidy simple feature which can be sorted or filtered using the standard <code>filter()</code> function.</p>
+<p>Most common operations on vector data are area based logical operations. Such as taking the intersection or union of features, which only retains the outline of a polygon. These operations can be executed on features themselves or should be mediated by geometric binary operations which can be used for filtering the original data.</p>
+<p>For example the <code>st_intersection()</code> function calculates where and how frequent simple features overlap (interesect) with each other. The results are again a tidy simple feature which can be sorted or filtered using the standard <code>filter()</code> function.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the intersection of all simple features</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_intersection</span>(sf)</span>
@@ -820,7 +820,7 @@ First 10 features:
 </section>
 <section id="the-stars-package" class="level3" data-number="3.1.3">
 <h3 data-number="3.1.3" class="anchored" data-anchor-id="the-stars-package"><span class="header-section-number">3.1.3</span> The stars package</h3>
-<p>The <a href="https://r-spatial.github.io/stars/"><code>stars</code> package</a> is another geospatial <code>R</code> package you should take note of. In contrast to <code>terra</code> it is specifically tailored to dealing with data cubes. These are arrays of data on which on axis is time.</p>
+<p>The <a href="https://r-spatial.github.io/stars/"><code>stars</code> package</a> is another geospatial <code>R</code> package you should take note of. In contrast to <code>terra</code> it is specifically tailored to dealing with data cubes. These are arrays of data on which one axis is time.</p>
 <div class="cell" data-layout-align="left">
 <div class="cell-output-display">
 <div id="fig-datacube" class="quarto-figure quarto-figure-left anchored">
@@ -831,7 +831,7 @@ First 10 features:
 </div>
 </div>
 </div>
-<p>Unlike the <code>terra</code> package the grid should not regular, but can of a different sort such as curvi-linear data (<a href="#fig-datagrid">Figure&nbsp;<span>3.12</span></a>).</p>
+<p>Unlike the <code>terra</code> package the grid should not be regular, but can be of a different sort such as curvi-linear data (<a href="#fig-datagrid">Figure&nbsp;<span>3.12</span></a>).</p>
 <div class="cell" data-layout-align="left">
 <div class="cell-output-display">
 <div id="fig-datagrid" class="quarto-figure quarto-figure-left anchored">
