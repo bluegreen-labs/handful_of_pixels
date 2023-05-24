@@ -54,7 +54,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -343,7 +362,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="3.1" class="anchored" data-anchor-id="the-r-geospatial-ecosystem"><span class="header-section-number">3.1</span> The R geospatial ecosystem</h2>
 <p>Spatio-temporal data often comes in the form of dense arrays, with space and time being array dimensions. Examples include socio-economic or demographic data, series of satellite images with multiple spectral bands, spatial simulations, and climate or weather model output.</p>
 <p>A number of libraries (packages) make the use of this spatio-temporal data, and geo-computational work in R easy. However, the ecosystem has grown rapidly and therefore is continuously shifting. Unlike other processing environments this makes it at times hard to keep track of what or when to use a particular package.</p>
-<p>Here, I give a quick overview of the basic functionality and their uses cases of all these packages, finally there will be a brief overview of some basic geospatial operations using <code>terra</code> and <code>sf</code> libraries (see <a href="#sec-terra"><span>Section&nbsp;3.1.1</span></a> and <a href="#sec-sf"><span>Section&nbsp;3.1.2</span></a>). For a more extensive, deep dive, of all these packages I refer to Nowasad et al.&nbsp;(FIX REF).</p>
+<p>Here, I give a quick overview of the basic functionality and their uses cases of all these packages, finally there will be a brief overview of some basic geospatial operations using <code>terra</code> and <code>sf</code> libraries (see <a href="#sec-terra"><span>Section&nbsp;3.1.1</span></a> and <a href="#sec-sf"><span>Section&nbsp;3.1.2</span></a>). For a more extensive, deep dive, of all these packages I refer to <span class="citation" data-cites="lovelace_geocomputation_2019">Lovelace, Nowosad, and Muenchow (<a href="references.html#ref-lovelace_geocomputation_2019" role="doc-biblioref">2019</a>)</span> .</p>
 <section id="sec-terra" class="level3" data-number="3.1.1">
 <h3 data-number="3.1.1" class="anchored" data-anchor-id="sec-terra"><span class="header-section-number">3.1.1</span> The terra package</h3>
 <p>The <code>terra</code> package is the successor of the older <code>raster</code> package, but with a simpler interface. This package deals with both geographic raster and vector data, with the explicit requirement that raster data represent spatially continuous processes on a fixed (rectangular) grid.</p>
@@ -354,7 +373,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># read data from file</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="st">"demo_data.nc"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="st">"demo_data.nc"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># the demo data can be downloaded from</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># https://github.com/geco-bern/handfull_of_pixels/raw/main/data/demo_data.nc</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can inspect the meta data by calling the object:</p>
 <div class="cell">
@@ -828,6 +850,11 @@ First 10 features:
 <p>Note that R (or python for that matter) is infinitely flexible, and many packages exist to address niche problems within the context of geospatial data manipulation. Although often tapping into the power of the GDAL framework these packages are very powerful in their own right but outside the scope of this basic introduction. For more in depth discussion I refer to the list of resources at the end of this book.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-lovelace_geocomputation_2019" class="csl-entry" role="listitem">
+Lovelace, Robin, Jakub Nowosad, and Jannes Muenchow. 2019. <em>Geocomputation in <span>R</span></em>. Chapman &amp; Hall.
+</div>
+</div>
 </section>
 </section>
 
