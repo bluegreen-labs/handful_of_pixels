@@ -1,15 +1,45 @@
 # Setup {#sec-setup}
 
-A common Integrated Development Environment for R is Rstudio by Posit.co. RStudio can be downloaded for free, and provides you with an interface in which a command line terminal, a text editor, a plotting window and file manager are combined. Many other features are also included.
+A common Integrated Development Environment (IDE) for R is Rstudio by Posit.co. RStudio can be downloaded for free, and provides you with an interface in which a command line terminal, a text editor, a plotting window and file manager are combined. Many other features are also included.
 
-![]()
+You can download and install the RStudio IDE from the posit.co website:
 
-- RStudio install
-- R packakge requirements
-  - tidyverse
-  - MODISTools
-  - ecmwfr
-  - terra
-  - sf
-  - sp
-  
+[https://posit.co/download/rstudio-desktop/](https://posit.co/download/rstudio-desktop/)
+
+Select the correct download for your current operating system.
+
+## Required packages
+
+To run this course a set of R packages is required. The below script lets you quickly install all of them, in the correct order.
+
+
+```{r eval = FALSE}
+# Windows is sensitive to the order of installation
+# of some of the packages so follow this order 
+# as noted below, on other systems this might be
+# less of an issue but follow the instructions
+# regardless
+
+# First install the rlang packages which provides
+# R functionalities needed by/for other packages
+# in particular dplyr 
+install.packages("rlang")
+
+# next install dplyr needed to manipulate
+# tidy data as discussed in the R crash course
+install.packages("dplyr")
+
+# for convenient plotting we also install
+# ggplot2 (this is not required but most plots shown
+# are generated using ggplot)
+install.packages("ggplot2")
+
+# to deal with relative paths in R markdown
+# install the here package
+install.packages("here")
+
+# next up are the installs of the geospatial
+# libraries, these can be installed in one
+# go
+install.packages(c("terra","tidyterra","sf","MODISTools"))
+```

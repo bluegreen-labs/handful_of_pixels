@@ -1,6 +1,6 @@
 # Book configuration {#sec-bookinfo}
 
-The book was rendered using the following package configuration:
+The book was rendered on github using the following package configuration:
 
 ```{r}
 renv::diagnostics()
