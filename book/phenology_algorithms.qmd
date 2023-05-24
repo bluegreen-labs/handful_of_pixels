@@ -277,7 +277,7 @@ phenology <- df |>
     SOS = date[which(smooth_int_scaled > 0.25)][1],
     MAX = date[which(smooth_int_scaled > 0.85)][1],
     SEN = last(date[which(smooth_int_scaled > 0.85)]),
-    EOS = last(date[which(smooth_int_scaled > 0.25)])[1]
+    EOS = last(date[which(smooth_int_scaled > 0.25)])
   )
 ```
 
@@ -450,7 +450,7 @@ phenophases <- function(
     last(
       date_expanded[
         which(smooth_int_scaled > threshold)
-        ][1]
+        ]
       )
   )
 
