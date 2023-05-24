@@ -48,7 +48,6 @@ Here, I give a quick overview of the basic functionality and their uses cases of
 
 The `terra` package is the successor of the older `raster` package, but with a simpler interface. This package deals with both geographic raster and vector data, with the explicit requirement that raster data represent spatially continuous processes on a fixed (rectangular) grid.
 
-
 #### Reading and inspecting data {.unnumbered}
 ```{r eval = FALSE}
 # load the library
@@ -56,6 +55,10 @@ library(terra)
 
 # read data from file
 r <- terra::rast("demo_data.nc")
+
+# the demo data can be downloaded from
+# https://github.com/geco-bern/handfull_of_pixels/raw/main/data/demo_data.nc
+
 ```
 
 We can inspect the meta data by calling the object:
