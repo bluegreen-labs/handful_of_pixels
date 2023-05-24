@@ -42,12 +42,11 @@ Spatio-temporal data often comes in the form of dense arrays, with space and tim
 
 A number of libraries (packages) make the use of this spatio-temporal data, and geo-computational work in R easy. However, the ecosystem has grown rapidly and therefore is continuously shifting. Unlike other processing environments this makes it at times hard to keep track of what or when to use a particular package.
 
-Here, I give a quick overview of the basic functionality and their uses cases of all these packages, finally there will be a brief overview of some basic geospatial operations using `terra` and `sf` libraries (see @sec-terra and @sec-sf). For a more extensive, deep dive, of all these packages I refer to Nowasad et al. (FIX REF).
+Here, I give a quick overview of the basic functionality and their uses cases of all these packages, finally there will be a brief overview of some basic geospatial operations using `terra` and `sf` libraries (see @sec-terra and @sec-sf). For a more extensive, deep dive, of all these packages I refer to @lovelace_geocomputation_2019 .
 
 ### The terra package {#sec-terra}
 
 The `terra` package is the successor of the older `raster` package, but with a simpler interface. This package deals with both geographic raster and vector data, with the explicit requirement that raster data represent spatially continuous processes on a fixed (rectangular) grid.
-
 
 #### Reading and inspecting data {.unnumbered}
 ```{r eval = FALSE}
@@ -56,6 +55,10 @@ library(terra)
 
 # read data from file
 r <- terra::rast("demo_data.nc")
+
+# the demo data can be downloaded from
+# https://github.com/geco-bern/handfull_of_pixels/raw/main/data/demo_data.nc
+
 ```
 
 We can inspect the meta data by calling the object:
