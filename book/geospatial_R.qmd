@@ -198,7 +198,7 @@ ggplot() +
     )
 ```
 
-You can exclude locations from calculations using masks. This is useful to restrict the region of interest of an analysis or limit edge cases of complex calculations beforehand. As an example you can mask out all values where the binary mask as generated above if `FALSE` (i.e. temperatures lower than 5C).
+You can exclude locations from calculations using masks. This is useful to restrict the region of interest of an analysis or limit edge cases of complex calculations beforehand. As an example you can mask out all values where the binary mask as generated above is `FALSE` (i.e. temperatures lower than 5C).
 ```{r}
 # all locations above freezing
 # as a binary mask
@@ -254,7 +254,7 @@ head(df)
 
 #### Reading and inspecting data {.unnumbered}
 
-A lot of GIS vector data comes as [shapefiles](https://en.wikipedia.org/wiki/Shapefile) (.shp extention). An example shapefile is include in the `sf` package, and we can read it using:
+A lot of GIS vector data comes as [shapefiles](https://en.wikipedia.org/wiki/Shapefile) (.shp extention). An example shapefile is included in the `sf` package, and we can read it using:
 
 ```{r warning=FALSE, message=FALSE}
 # load library
@@ -319,9 +319,9 @@ camden <- nc |>
 plot(camden)
 ```
 
-Most common operators vector data are area based logical operations. Such as taking the intersection or union of features, which only retains the outline of a polygon. These operations can be executed on features themselves or should be mediated by geometric binary operations which can be used for filtering the original data.
+Most common operations on vector data are area based logical operations. Such as taking the intersection or union of features, which only retains the outline of a polygon. These operations can be executed on features themselves or should be mediated by geometric binary operations which can be used for filtering the original data.
 
-For example the `st_intersection()` function calculates where and how frequent simple features overlap (interesect) with each other.The results are again a tidy simple feature which can be sorted or filtered using the standard `filter()` function.
+For example the `st_intersection()` function calculates where and how frequent simple features overlap (interesect) with each other. The results are again a tidy simple feature which can be sorted or filtered using the standard `filter()` function.
 
 ```{r}
 # calculate the intersection of all simple features
@@ -394,7 +394,7 @@ sf::st_write(nc, file.path(tempdir(), "nc.shp"))
 
 ### The stars package
 
-The [`stars` package](https://r-spatial.github.io/stars/) is another geospatial `R` package you should take note of. In contrast to `terra` it is specifically tailored to dealing with data cubes. These are arrays of data on which on axis is time.
+The [`stars` package](https://r-spatial.github.io/stars/) is another geospatial `R` package you should take note of. In contrast to `terra` it is specifically tailored to dealing with data cubes. These are arrays of data on which one axis is time.
 
 ```{r}
 #| label: fig-datacube
@@ -405,7 +405,7 @@ The [`stars` package](https://r-spatial.github.io/stars/) is another geospatial 
 knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/cube1.png")
 ```
 
-Unlike the `terra` package the grid should not regular, but can of a different sort such as curvi-linear data (@fig-datagrid).
+Unlike the `terra` package the grid should not be regular, but can be of a different sort such as curvi-linear data (@fig-datagrid).
 
 ```{r}
 #| label: fig-datagrid
