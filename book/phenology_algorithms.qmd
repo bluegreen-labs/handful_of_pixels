@@ -599,3 +599,19 @@ p + p2 +
     tag_suffix = ")"
     )
 ```
+
+::: {.callout-note collapse="true"}
+## Note
+
+The downloading of the Leaf Area Index data can be slow. If this process takes too long
+you can load the data from a pre-loaded online source:
+
+https://github.com/geco-bern/handfull_of_pixels/raw/main/data/lai_2012.rds
+
+```r
+# load RDS data using
+r <- readRDS("url")
+```
+
+:::
+
