@@ -9,4 +9,6 @@ Note: When forking this repository the automatic rendering through a runner need
 Changes to the course are governed by making changes/pull requests to the original project at:
 https://github.com/khufkens/handfull_of_pixels
 
-If making changes fork the original project and do a pull request. Then, sync this repository to visualize content using the GECO theme.
+If making changes fork this original project and do a pull request. Then, sync this repository to visualize content using the GECO theme by pushing the `Sync fork` button.
+
+![Screenshot from 2023-05-25 10-22-55](https://github.com/geco-bern/handfull_of_pixels/assets/1354258/a148e027-a590-4864-95d1-f98729692930)
