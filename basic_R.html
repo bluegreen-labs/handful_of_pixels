@@ -54,7 +54,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -328,7 +347,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p>This chapter will briefly summarize some of the principles which will be used throughout the book. In particular, I outline some of the best practices in managing projects and the basic data manipulations using the tidy data principles. For a thourough introduction to data science in R I refer to <a href="https://r4ds.had.co.nz/">R for data science</a> by Hadley &amp; Grolemund, while open data science practices and reproducible project management I refer to <a href="https://eliocamp.github.io/reproducibility-with-r/">Reproducibility with R</a> by Campitelli &amp; Corrales. For an in depth discussion of geocomputational concepts I refer to <a href="https://r.geocompx.org/index.html">Geocomputation with R</a> by Lovelace, Nowosad, Muenchow.</p>
+<p>This chapter will briefly summarize some of the principles which will be used throughout the book. In particular, I outline some of the best practices in managing projects and the basic data manipulations using the tidy data principles. For a thourough introduction to data science in R I refer to <a href="https://r4ds.had.co.nz/">R for data science</a> by Hadley &amp; Grolemund, while open data science practices and reproducible project management I refer to <a href="https://eliocamp.github.io/reproducibility-with-r/">Reproducibility with R</a> by Campitelli &amp; Corrales. For an in depth discussion of geocomputational concepts I refer to <a href="https://r.geocompx.org/index.html">Geocomputation with R</a> by <span class="citation" data-cites="lovelace_geocomputation_2019">Lovelace, Nowosad, and Muenchow (<a href="references.html#ref-lovelace_geocomputation_2019" role="doc-biblioref">2019</a>)</span>.</p>
 <section id="project-management" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="project-management"><span class="header-section-number">1.1</span> Project management</h2>
 <p>From a very practical and pragmatic point of view a solid workflow requires reproducible results. The smallest unit in a reproducible workflow is the structure of your personal research project (irrespective of its contributions to a larger whole). <strong>Structuring</strong> a research project.</p>
@@ -925,6 +944,11 @@ Note
 <p>When using online data resources, such as APIs (see <a href="gathering_data.html#sec-apis"><span>Section&nbsp;2.2.2</span></a>), it might be useful to buffer and load the data locally (while disabling the execution of the commands to get the data in the final render, the latter can be done by specifying “```{r eval = FALSE}” at the top of a code block).</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-lovelace_geocomputation_2019" class="csl-entry" role="listitem">
+Lovelace, Robin, Jakub Nowosad, and Jannes Muenchow. 2019. <em>Geocomputation in <span>R</span></em>. Chapman &amp; Hall.
+</div>
+</div>
 </section>
 </section>
 
