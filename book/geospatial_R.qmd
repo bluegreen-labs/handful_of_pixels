@@ -380,7 +380,7 @@ ggplot() +
 ```
 
 
-The `sf` package is relatively complex and for a full understanding of its components I refer to the [package documentation](https://r-spatial.github.io/sf/) and the book by Nowasad et al (REFERENCE).
+The `sf` package is relatively complex and for a full understanding of its components I refer to the [package documentation](https://r-spatial.github.io/sf/) and the book by @lovelace_geocomputation_2019.
 
 #### Writing and exporting data {.unnumbered}
 
