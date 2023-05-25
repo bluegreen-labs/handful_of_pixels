@@ -15,7 +15,7 @@ Interpret the results of @sec-regression and the fit model as shown in the colla
 
 ### Temporal and spatial anomalies
 
-For a location near the Adirondacks in the North-Eastern United States (@fig-leaflet-adirondacks) gather phenology data on both the greenup and maximum canopy development of a location centered on 43.5$^\circ$N and 74.5$^\circ$W. Gather data for all pixels 100 km around this location for years 2001 to 2010. Similarly, download land cover data for the year 2010 for the same spatial extent, and only consider IGBP broadleaf and mixed forest classes in you analysis.
+For a location near the Adirondacks in the North-Eastern United States (@fig-leaflet-adirondacks) gather phenology data on both the greenup and maximum canopy development of a location centered on 43.5$^\circ$N and 74.5$^\circ$W. Gather data for all pixels 100 km around this location for years 2001 to 2010. Similarly, download land cover data for the year 2010 for the same spatial extent, and only consider IGBP broadleaf and mixed forest classes in your analysis.
 
 For the years 2001 - 2009 calculate the long term mean (LTM) and standard deviation (SD) of the phenology metrics. Calculate location with an early greenup for 2010 (< LTM - 1 SD) and locations with late maturity (> LTM + 1 SD).
 
@@ -63,7 +63,7 @@ With all data downloaded:
 - Read in the geotiff file to work faster from memory
 - For a first trial crop the full dataset to 26$^\circ$W, 20$^\circ$E, 31$^\circ$N, 70$^\circ$N
 - Apply the algorithm as outlined in @sec-spatial-scaling using a start of season greenup signal of 25% the seasonal EVI amplitude
-- Assess the performance of the algorithm across the globe and discuss it's consistency. 
+- Assess the performance of the algorithm across the globe and discuss its consistency. 
   - Where does it fail? How does it fail? 
   - Where necessary, inspect point locations to explore potential issues.
   - If possible, address any issues by altering the original algorithm. 
@@ -72,7 +72,7 @@ With all data downloaded:
   - How long would it take?
   - Can you improve calculation times?
 
-Plot the global phenology maps, and it's various iterations in the R markdown notebook.
+Plot the global phenology maps, and its various iterations in the R markdown notebook.
 
 ::: {.callout-note}
 ## Note
