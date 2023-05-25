@@ -307,14 +307,14 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="temporal-and-spatial-anomalies" class="level3" data-number="6.1.2">
 <h3 data-number="6.1.2" class="anchored" data-anchor-id="temporal-and-spatial-anomalies"><span class="header-section-number">6.1.2</span> Temporal and spatial anomalies</h3>
-<p>For a location near the Adirondacks in the North-Eastern United States (<a href="#fig-leaflet-adirondacks">Figure&nbsp;<span>6.1</span></a>) gather phenology data on both the greenup and maximum canopy development of a location centered on 43.5<span class="math inline">\(^\circ\)</span>N and 74.5<span class="math inline">\(^\circ\)</span>W. Gather data for all pixels 100 km around this location for years 2001 to 2010. Similarly, download land cover data for the year 2010 for the same spatial extent, and only consider IGBP broadleaf and mixed forest classes in you analysis.</p>
+<p>For a location near the Adirondacks in the North-Eastern United States (<a href="#fig-leaflet-adirondacks">Figure&nbsp;<span>6.1</span></a>) gather phenology data on both the greenup and maximum canopy development of a location centered on 43.5<span class="math inline">\(^\circ\)</span>N and 74.5<span class="math inline">\(^\circ\)</span>W. Gather data for all pixels 100 km around this location for years 2001 to 2010. Similarly, download land cover data for the year 2010 for the same spatial extent, and only consider IGBP broadleaf and mixed forest classes in your analysis.</p>
 <p>For the years 2001 - 2009 calculate the long term mean (LTM) and standard deviation (SD) of the phenology metrics. Calculate location with an early greenup for 2010 (&lt; LTM - 1 SD) and locations with late maturity (&gt; LTM + 1 SD).</p>
 <p>Describe the observed patterns and speculate about the underlying reasons. In addition, download a digital elevation map for the United States (30s resolution), and compare differences in altitude (e.g.&nbsp;a boxplot) across locations where you do or do not see any patterns in phenology.</p>
 <div class="cell" data-layout-align="center">
 <div id="fig-leaflet-adirondacks" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
-<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-3108c3ad7e7b11ad1bee" style="width:100%;height:288px;"></div>
-<script type="application/json" data-for="htmlwidget-3108c3ad7e7b11ad1bee">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[43.5,-74.5],6,[]],"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[43.5,-74.5,null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},"Adirondacks",null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[43.5,43.5],"lng":[-74.5,-74.5]}},"evals":[],"jsHooks":[]}</script>
+<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-8d3a5725ceef32211a13" style="width:100%;height:288px;"></div>
+<script type="application/json" data-for="htmlwidget-8d3a5725ceef32211a13">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[43.5,-74.5],6,[]],"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[43.5,-74.5,null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},"Adirondacks",null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[43.5,43.5],"lng":[-74.5,-74.5]}},"evals":[],"jsHooks":[]}</script>
 <figcaption class="figure-caption">Figure&nbsp;6.1: The location of the Adirondack mountains in the North-Eastern United States</figcaption>
 </figure>
 </div>
@@ -343,7 +343,7 @@ Note
 <li>Read in the geotiff file to work faster from memory</li>
 <li>For a first trial crop the full dataset to 26<span class="math inline">\(^\circ\)</span>W, 20<span class="math inline">\(^\circ\)</span>E, 31<span class="math inline">\(^\circ\)</span>N, 70<span class="math inline">\(^\circ\)</span>N</li>
 <li>Apply the algorithm as outlined in <a href="phenology_algorithms.html#sec-spatial-scaling"><span>Section&nbsp;5.4.1</span></a> using a start of season greenup signal of 25% the seasonal EVI amplitude</li>
-<li>Assess the performance of the algorithm across the globe and discuss it’s consistency.
+<li>Assess the performance of the algorithm across the globe and discuss its consistency.
 <ul>
 <li>Where does it fail? How does it fail?</li>
 <li>Where necessary, inspect point locations to explore potential issues.</li>
@@ -355,7 +355,7 @@ Note
 <li>Can you improve calculation times?</li>
 </ul></li>
 </ul>
-<p>Plot the global phenology maps, and it’s various iterations in the R markdown notebook.</p>
+<p>Plot the global phenology maps, and its various iterations in the R markdown notebook.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
