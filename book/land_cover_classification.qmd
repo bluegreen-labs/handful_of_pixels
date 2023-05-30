@@ -1,7 +1,54 @@
-# Land-Cover classification
+# Land-Cover classification {#sec-land-cover}
 
-## Introduction
+In previous sections I've explained how seasonality in vegetation canopy density (LAI) or phenology can be detected, and how it varies depending on the geography of the region, and its ties to the exchange of carbon (C) and water between the biosphere and the atmosphere (@sec-phenology-trends). A small, first principles, example was provided on how to write your own phenology detection algorithm (@sec-algorithms).
 
-## Scope
+However, many satellite platforms provide information in various spectral bands (and not only one product in the temporal domain). One can say the data are multi-dimensional, having both a temporal, spatial and spectral component. These various bands, or locations in the spectral domain, provide key insights into the state of the land surface (throughout the year).
 
-## Demo
+For example the combination of information in the red and near-infrared bands (spectral domains) provides key information to calculate the Normalized Difference Vegetation Index [@Huete2002]. Other band combinations lead to other indices with varying properties, tailored to specific ecological, geomorphological or other purposes [@zeng_optical_2022]. 
+
+::: callout-note
+### Note
+
+Given the non-continuous nature of the spectral bands used on most satellite platforms one calls these kinds of data **multi-spectral**, this in contrast to hyperspectral data which is quasi-continuous throughout a large spectral domain (@fig-spectral-bands). More on how to leverage the spectral domain characteristics to create indices is provided in chapter X where I cover band selection using densely sampled (hyper-spectral) data.
+
+```{r}
+#| label: fig-spectral-bands
+#| fig-cap: "Satellite sensors, the vegetation and the soil spectrum across wavelengths. Top: the spectral response range in the atmospheric window of a few widely used satellites109. The coloured blocks and vertical lines illustrate the spectral band range or bandpass for each satellite sensor. Bottom: reflectance of vegetation and soil. These spectral features of vegetation and soil are the foundation of the rationale of vegetation indices and support the design of various vegetation indices. Zeng et al. 2022"
+#| fig-align: "center"
+#| out-width: "100%"
+#| echo: FALSE
+knitr::include_graphics("./images/spectral_bands.png")
+```
+
+:::
+
+When we plot a time serie of a deciduous forest you note the steady seasonal changes when switching between winter, with low NDVI values, and summer with high NDVI values. However, different vegetation and land cover types have different temporal NDVI signals. For example, a glacier will have permanent snow and no seasonal NDVI signal. We can therefore discriminate between non-vegetative locations and vegetation based upon the temporal profile of NDVI.
+
+```{r}
+#| label: fig-ndvi-dbf
+#| fig-cap: "caption"
+#| fig-align: "center"
+#| out-width: "100%"
+#| echo: FALSE
+knitr::include_graphics("./images/tidy_data.png")
+```
+
+As such we can use this information to classify the Swiss alpine scene into locations which have little seasonality and those which have some. For example you can calculate the mean and standard deviation of a full year and see how much variability you see across a year. Regions with a low NDVI signal with little variability are most likely not associated with vegetation (e.g. lakes, glaciers, rocky surfaces, urban areas).
+
+```{r}
+
+```
+
+
+However, NDVI alone does not provide enough information to distinguish between more subtle vegetation or land-cocver classes (e.g. evergreen forests and or mixed forest types).
+
+
+
+However, we can use the bulk of this data, by which I mean all the spectral bands if not select number of indices and their temporal component to figure out what kind of vegetation we are looking at.
+
+
+## Using multi-spectral data to characterize land-cover
+
+
+
+https://rspatial.org/terra/rs/5-supclassification.html
