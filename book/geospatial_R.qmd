@@ -6,16 +6,7 @@ library(tidyterra)
 library(ggplot2)
 library(terra)
 library(sf)
-
 set.seed(131)
-m = rbind(c(0,0), c(1,0), c(1,1), c(0,1), c(0,0))
-p = st_polygon(list(m))
-n = 100
-l = vector("list", n)
-for (i in 1:n)
-  l[[i]] = p + 10 * runif(2)
-s = st_sfc(l)
-sf <- st_sf(s)
 
 # read data from file
 r <- terra::rast(here::here("data/demo_data.nc"))
@@ -324,6 +315,16 @@ Most common operations on vector data are area based logical operations. Such as
 For example the `st_intersection()` function calculates where and how frequent simple features overlap (interesect) with each other. The results are again a tidy simple feature which can be sorted or filtered using the standard `filter()` function.
 
 ```{r}
+# generate random boxes
+m <- rbind(c(0,0), c(1,0), c(1,1), c(0,1), c(0,0))
+p <- st_polygon(list(m))
+n <- 100
+l <- vector("list", n)
+for (i in 1:n)
+  l[[i]] = p + 10 * runif(2)
+s <- st_sfc(l)
+sf <- st_sf(s)
+
 # calculate the intersection of all simple features
 i <- sf::st_intersection(sf)
 
