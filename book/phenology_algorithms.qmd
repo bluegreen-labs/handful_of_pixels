@@ -26,7 +26,24 @@ knitr::include_graphics("https://www.mdpi.com/remotesensing/remotesensing-11-022
 
 The most simple approach around, used with or without explicit curve fitting, is the use of a simple threshold based method. Here, a phenology event is registered if a given vegetation index threshold is exceeded (@fig-threshold). Although scaling these products for global coverage is challenging creating your own algorithm and implementing it on a local or regional scale is fairly simple. Below I will show you how to calculate phenology for a vegetation index time series, for the region outlined in @sec-phenology-trends .
 
-These methods are mostly applied to various vegetation indices, which link spectral characteristics as measured by satellites to the physical development of the canopy [@Myneni1995; @Huete2002]. For example, the Normalized Vegetation Index (NDVI) uses both the red and near-infrared spectral domain to sense the state of the vegetation, while the Enhanced Vegetation Index (EVI, @fig-threshold) does the same while accounting for the saturation of the signal over dense canopies. This multi-spectral nature of satellite remote sensing data, as well as their temporal dynamics, can be leveraged using a veritable zoo of indices tailored to specific properties and research needs [@zeng_optical_2022]. An in depth analysis on how to use this multi-spectral data in a different context is given in @sec-land-cover .
+These methods are mostly applied to various vegetation indices, which link spectral characteristics as measured by satellites to the physical development of the canopy [@Myneni1995; @Huete2002]. For example, the Normalized Vegetation Index (NDVI) uses both the red and near-infrared spectral domain (@fig-spectral-bands) to sense the state of the vegetation, while the Enhanced Vegetation Index (EVI, @fig-threshold) does the same while accounting for the saturation of the signal over dense canopies. This multi-spectral nature of satellite remote sensing data, as well as their temporal dynamics, can be leveraged using a veritable zoo of indices tailored to specific properties and research needs [@zeng_optical_2022]. An in depth analysis on how to use this multi-spectral data in a different context is given in @sec-land-cover .
+
+::: callout-note
+### Note
+
+Given the non-continuous nature of the spectral bands used on most satellite platforms one calls these kinds of data **multi-spectral**, this in contrast to hyperspectral data which is quasi-continuous throughout a large spectral domain (@fig-spectral-bands). More on how to leverage the spectral domain characteristics to create indices will be provided in upcoming chapters where I cover band selection using densely sampled (hyper-spectral) data.
+
+```{r}
+#| label: fig-spectral-bands
+#| fig-cap: "According to @zeng_optical_2022: 'Satellite sensors, the vegetation and the soil spectrum across wavelengths. Top: the spectral response range in the atmospheric window of a few widely used satellites109. The coloured blocks and vertical lines illustrate the spectral band range or bandpass for each satellite sensor. Bottom: reflectance of vegetation and soil. These spectral features of vegetation and soil are the foundation of the rationale of vegetation indices and support the design of various vegetation indices.' (if no image is shown you do not have institutional access to the original article content)"
+#| fig-align: "center"
+#| out-width: "100%"
+#| echo: FALSE
+knitr::include_graphics("https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs43017-022-00298-5/MediaObjects/43017_2022_298_Fig2_HTML.png?as=webp")
+```
+
+:::
+
 
 ### Acquiring demo data
 
@@ -84,7 +101,7 @@ df <- df |>
   )
 ```
 
-Smoothing can be achieved using various algorithms, such as splines, loess regressions, etc. In this case, I will use the [Savitsky-Golay filter](https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter), a common algorithm used across various vegetation phenology products. Luckily the methodology is already implemented in the `signal` package.
+Smoothing can be achieved using various algorithms, such as splines, loess regressions, and other techniques. In this case, I will use the [Savitsky-Golay filter](https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter), a common algorithm used across various vegetation phenology products. Luckily the methodology is already implemented in the `signal` package.
 
 ```{r}
 # load the signal library
