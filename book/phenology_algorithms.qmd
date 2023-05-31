@@ -101,7 +101,7 @@ df <- df |>
   )
 ```
 
-Smoothing can be achieved using various algorithms, such as splines, loess regressions, etc. In this case, I will use the [Savitsky-Golay filter](https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter), a common algorithm used across various vegetation phenology products. Luckily the methodology is already implemented in the `signal` package.
+Smoothing can be achieved using various algorithms, such as splines, loess regressions, and other techniques. In this case, I will use the [Savitsky-Golay filter](https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter), a common algorithm used across various vegetation phenology products. Luckily the methodology is already implemented in the `signal` package.
 
 ```{r}
 # load the signal library
