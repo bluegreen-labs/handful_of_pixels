@@ -35,7 +35,7 @@ Given the non-continuous nature of the spectral bands used on most satellite pla
 
 ```{r}
 #| label: fig-spectral-bands
-#| fig-cap: "According to [Zeng et al. 2022](https://www.nature.com/articles/s43017-022-00298-5): 'Satellite sensors, the vegetation and the soil spectrum across wavelengths. Top: the spectral response range in the atmospheric window of a few widely used satellites109. The coloured blocks and vertical lines illustrate the spectral band range or bandpass for each satellite sensor. Bottom: reflectance of vegetation and soil. These spectral features of vegetation and soil are the foundation of the rationale of vegetation indices and support the design of various vegetation indices.' (if no image is shown you do not have institutional access to the original article content)"
+#| fig-cap: "According to @zeng_optical_2022: 'Satellite sensors, the vegetation and the soil spectrum across wavelengths. Top: the spectral response range in the atmospheric window of a few widely used satellites109. The coloured blocks and vertical lines illustrate the spectral band range or bandpass for each satellite sensor. Bottom: reflectance of vegetation and soil. These spectral features of vegetation and soil are the foundation of the rationale of vegetation indices and support the design of various vegetation indices.' (if no image is shown you do not have institutional access to the original article content)"
 #| fig-align: "center"
 #| out-width: "100%"
 #| echo: FALSE
