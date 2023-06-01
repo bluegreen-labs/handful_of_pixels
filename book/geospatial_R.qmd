@@ -162,7 +162,7 @@ ggplot() +
     )
 ```
 
-Logical operations work in the same way. You can create a mask of temperatures above 5C using a simple logical operation.
+Logical operations work in the same way. You can create a mask of temperatures above 5$^\circ$C using a simple logical operation.
 ```{r}
 # all locations above freezing
 # as a binary mask
@@ -189,7 +189,7 @@ ggplot() +
     )
 ```
 
-You can exclude locations from calculations using masks. This is useful to restrict the region of interest of an analysis or limit edge cases of complex calculations beforehand. As an example you can mask out all values where the binary mask as generated above is `FALSE` (i.e. temperatures lower than 5C).
+You can exclude locations from calculations using masks. This is useful to restrict the region of interest of an analysis or limit edge cases of complex calculations beforehand. As an example you can mask out all values where the binary mask as generated above is `FALSE` (i.e. temperatures lower than 5$^\circ$C).
 ```{r}
 # all locations above freezing
 # as a binary mask
@@ -199,7 +199,7 @@ r_m <- terra::mask(r_c, m, maskvalue = FALSE)
 ```{r message=FALSE, warning=FALSE}
 #| code-fold: true
 #| label: fig-demo-mask-C
-#| fig-cap: "Temperature in Celsius (C), with values lower than 5 C masked."
+#| fig-cap: "Temperature in Celsius (C), with values lower than 5C masked."
 #| fig-align: "center"
 #| out-width: "100%"
 #| fig-width: 5
@@ -216,6 +216,54 @@ ggplot() +
     legend.position = "bottom"
     )
 ```
+
+#### Band math (considering multiple layers) {.unnumbered}
+
+Geospatial data often consists of multiple layers of information, either representing different properties (bands) or different times when data was acquired. The `terra` package allows you to manipulate data within and across bands.
+
+```{r}
+# create a multi-layer object
+# by combining objects
+# here the correcte (t2m in C)
+# and the masked values (>5C)
+# are combined
+multi_layer <- c(r_c, r_m)
+
+print(multi_layer)
+```
+
+Operations on individual cells within `terra` within or across layers are governed by the `*app()` functions. Here, flavours such as `app()`, `tapp()`, and `sapp()`, are used to apply a function across all layers (to summarize data), to groups of layers (grouped summaries or complex band math), of manipulations of each individual layer with the same function (respectively).
+
+For example, to calculate the mean between both layers in this multi-layer `terra` object one can use `app()` as such:
+
+```{r}
+# apply the mean() function across
+# all layers of the multi_layer object
+multi_layer_mean <- terra::app(multi_layer, mean, na.rm = TRUE)
+```
+
+```{r message=FALSE, warning=FALSE}
+#| code-fold: true
+#| label: fig-demo-layer-mean
+#| fig-cap: "Temperature in Celsius (C) across layers"
+#| fig-align: "center"
+#| out-width: "100%"
+#| fig-width: 5
+#| fig-height: 4
+
+ggplot() +
+  tidyterra::geom_spatraster(data = multi_layer_mean) +
+  scale_fill_viridis_c(
+    na.value = NA,
+    name = "Temperature (C) \n"
+    ) +
+  theme_bw() +
+  theme(
+    legend.position = "bottom"
+    )
+```
+
+In the above analysis the mean across all layers is calculated, while passing an additional argument to the `mean()` function (i.e. na.rm = TRUE), stating that NA values should be ignored. Doing so fills in the values masked out previously and yields the original `r_c` object (i.e. the temperature values in $^\circ$C).
 
 #### Writing and exporting data {.unnumbered}
 

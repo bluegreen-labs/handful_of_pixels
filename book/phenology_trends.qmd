@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Phenology is broadly defined as seasonally recurring life cycle events, ranging from migration to seasonal plant growth. Land surface phenology is a first order control on the exchange of water and energy between the biosphere and atmosphere [@cleland_shifting_2007; @lieth_phenology_2013; @piao_plant_2019; @Richardson2010]. As such it is an indicator of climate change [@Penuelas2009]. Plant phenology has historically been recorded for many centuries [@Menzel2005]. More recently plant phenology (and its changes) have been recorded by networks of observers [@Crimmins2017], near-surface cameras [@richardson_tracking_2018; @richardson_tracking_2018-1] and not in the least by global satellite monitoring [@Zhang2003; @Ganguly2010a].
+Phenology is broadly defined as seasonally recurring life cycle events, ranging from migration to seasonal plant growth. Land surface phenology is a first order control on the exchange of water and energy between the biosphere and atmosphere [@cleland_shifting_2007; @lieth_phenology_2013; @piao_plant_2019; @Richardson2010]. With phenology being sensitive to temperature, it can be considered an indicator of climate change [@Penuelas2009]. Plant phenology has historically been recorded for many centuries [@Menzel2005]. More recently plant phenology (and its changes) have been recorded by networks of observers [@Crimmins2017], near-surface cameras [@richardson_tracking_2018; @richardson_tracking_2018-1] and not in the least by global satellite monitoring [@Zhang2003; @Ganguly2010a].
 
 ```{r}
 #| label: fig-canopy-change
