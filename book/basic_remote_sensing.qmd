@@ -1,0 +1,94 @@
+# Basics of Remote Sensing {#sec-basic-rs}
+
+This section will cover some of the basics of remote sensing in the visible
+and infrared spectral domain in order to provide you with a good understanding
+of concepts introduced in @sec-phenology-trends, and @sec-land-cover. I will not
+cover radar based remote sensing as out of scope within the context of this book
+and the examples provided. For an introduction of radar remote sensing I refer
+to XYZ.
+
+Many of these principles scale from leaf to globe, ranging from field spectroscopy,
+over tower based measurements such as [PhenoCams](phenocam.nau.edu) and 
+[SpecNet](https://specnet.info/) hyperspectral sensors, over UAVs, airplane based measurements all
+the way to satellite remote sensing platforms.
+
+This -very- brief introduction should provide you with a basic understanding of
+how remote sensing works, the origin of some of the terminology and how this
+relates to worked examples and provided data.
+
+## The electromagnetic spectrum
+
+Basic physics dictates that a [(black) body](https://en.wikipedia.org/wiki/Black-body_radiation) 
+in thermal equilibrium emits radiation
+with a spectrum (intensity distribution) determined by [Planck's law](https://en.wikipedia.org/wiki/Planck%27s_law), i.e. 
+determined only by it's temperature. This spectrum covers a range of states 
+ranging form shortwave high energy radiation to long wave radio waves.
+
+Stars in particular can be idealized as black bodies and own Sun - which 
+radiates at ~5780K - has its own particular spectrum  @fig-solar-radiation. 
+The internal state of the  Sun further determines some of the peculiarities 
+in this spectrum.
+
+How much radiation is emmitted is dependent on the internal nuclear physics,
+as well as the absorption bands which "drop" out.
+
+Check the basis of SIF measurements, solar induced.
+
+
+Given that in the visible and infrared part of the spectrum (almost all) 
+radiation is inherently originating from our own Sun. This makes that the Sun
+signal forms a reference, while other interfering factors are external to it.
+
+These external factors, and the way in which the earth surface, water or plants
+react with this incoming radiation determines the scope and applications of
+remote sensing.
+
+```{r}
+#| label: fig-solar-radiation
+#| fig-cap: "This figure shows the solar radiation spectrum for direct light at both the top of the Earth's atmosphere (represented by the area in yellow) and at sea level (area in red). The sun produces light with a distribution similar to what would be expected from a 5525 K (5250 °C) blackbody, which is approximately the sun's surface temperature. As light passes through the atmosphere, some is absorbed by gases with specific absorption bands. Additional light is redistributed by Rayleigh scattering, which is responsible for the atmosphere's blue color. These curves are based on NREL data for above the atmosphere and at sea level, which are standards adopted by the photovoltaics industry to ensure consistent test conditions and are similar to the light that could be expected in North America. Regions for ultraviolet, visible and infrared light are indicated. by [Robert A. Rohde](https://en.wikipedia.org/wiki/User:Dragons_flight)"
+#| fig-align: "center"
+#| out-width: "100%"
+#| echo: FALSE
+knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/e/e7/Solar_spectrum_en.svg")
+```
+
+
+
+```{r}
+#| label: fig-fraunhofer
+#| fig-cap: "Solar Spectral Irradiance measured with a calibrated optical spectrometer mounted with a cosine corrector. Some of the characteristic Fraunhofer lines and their corresponding elements are indicated for the extended visible spectrum (highlighted area in the graph). For photometry and colorimetry, standard measurements are usually carried out in the range 360 - 830 nm. From these data and for this spectral range, the correlated color temperature (CCT) is 5470 K. by [Cyamahat](https://commons.wikimedia.org/wiki/User:Cyamahat)"
+#| fig-align: "center"
+#| out-width: "100%"
+#| echo: FALSE
+knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/e/e4/Solar_spectral_irradiance.svg")
+```
+
+
+We detect the interactions of the earth with the incoming solar radiation.
+
+How we perceive the world is determined by the visible electro-magenetic spectrum.
+
+```{r}
+#| label: fig-spectral-bands-1
+#| fig-cap: "According to @zeng_optical_2022: 'Satellite sensors, the vegetation and the soil spectrum across wavelengths. Top: the spectral response range in the atmospheric window of a few widely used satellites109. The coloured blocks and vertical lines illustrate the spectral band range or bandpass for each satellite sensor. Bottom: reflectance of vegetation and soil. These spectral features of vegetation and soil are the foundation of the rationale of vegetation indices and support the design of various vegetation indices.' (if no image is shown you do not have institutional access to the original article content)"
+#| fig-align: "center"
+#| out-width: "100%"
+#| echo: FALSE
+knitr::include_graphics("https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs43017-022-00298-5/MediaObjects/43017_2022_298_Fig2_HTML.png?as=webp")
+```
+
+## A band-aid
+
+The lack of measurements of the full spectrum (VIS/NIR) is in part due to the 
+limitation of remote sensing platforms, or the receiving stations and processing
+capabilities.
+
+In remote sensing there is a spatio-temporal-spectral trade-off, where resolution
+in the spatial and temporal domain can be traded for more spectral information.
+However, what mostly happens is that distinct features / bands are chosen based
+upon well known characteristics of a number of broad processes of interest.
+
+For example.. MODIS vs. Sentinel-2
+
+This selection of specific bands is a trade-off or band-aid, and an ideal system
+would cover a high spatial, temporal and spectral domain.

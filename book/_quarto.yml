@@ -16,14 +16,16 @@ book:
     - part: intro.qmd
       chapters:
       - basic_R.qmd
+      #- basic_remote_sensing.qmd
     - gathering_data.qmd
     - geospatial_R.qmd
     - part: "Worked Examples"
       chapters:
+      #- hyperspectal_band_selection.qmd
       - phenology_trends.qmd
       - phenology_algorithms.qmd
-#      - land_cover_classification.qmd
-#      - phenology_modelling.qmd
+      #- land_cover_classification.qmd
+      #- phenology_modelling.qmd
     - exercises.qmd
     - references.qmd
   appendices:
