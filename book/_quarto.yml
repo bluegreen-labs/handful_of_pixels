@@ -6,7 +6,7 @@ execute:
   freeze: auto
 
 book:
-  title: "A Handfull of Pixels"
+  title: "A Handful of Pixels"
   subtitle: "big science using small data"
   author: "Koen Hufkens"
   date: "2023/03/28"
