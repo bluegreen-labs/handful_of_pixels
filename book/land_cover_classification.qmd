@@ -10,29 +10,56 @@ When we plot a time serie of a deciduous forest you note the steady seasonal cha
 
 ```{r}
 #| label: fig-ndvi-dbf
-#| fig-cap: "caption"
+#| fig-cap: "The mean and standard deviation of the normalized difference vegetation index (NDVI) over a broadleaf forest"
 #| fig-align: "center"
 #| out-width: "100%"
 #| echo: FALSE
-knitr::include_graphics("./images/tidy_data.png")
+
 ```
 
-As such we can use this information to classify the Swiss alpine scene into locations which have little seasonality and those which have some. For example you can calculate the mean and standard deviation of a full year and see how much variability you see across a year. Regions with a low NDVI signal with little variability are most likely not associated with vegetation (e.g. lakes, glaciers, rocky surfaces, urban areas).
 
 ```{r}
+#| label: fig-ndvi-ice
+#| fig-cap: "The mean and standard deviation of the normalized difference vegetation index (NDVI) over a glacier"
+#| fig-align: "center"
+#| out-width: "100%"
+#| echo: FALSE
+
 
 ```
 
+As such we can use this information to classify the Swiss alpine scene into locations which have little seasonality and those which have some (e.g. @fig-ndvi-dbf). For example you can calculate the mean and standard deviation of a full year and see how much variability you see across a year. Regions with a low NDVI signal with little variability are most likely not associated with vegetation (e.g. lakes, glaciers, rocky surfaces, urban areas, see @fig-ndvi-ice).
 
-However, NDVI alone does not provide enough information to distinguish between more subtle vegetation or land-cocver classes (e.g. evergreen forests and or mixed forest types).
+However, a simple index as an NDVI alone does not provide sufficient information to distinguish between more subtle vegetation or land-cover classes (e.g. evergreen forests and or mixed forest types). Instead we can use individual spectral bands (some of which make up the NDVI index) to create a more detailed classification of land cover in different (vegetation) types.
+
+## (supervised) Machine learning
+
+Classification of data in different classes (or clustering) can be accomplished using various methods. Clustering can either be unsupervised, where clustering is only defined by the number of classes one wants to divide the (multi-dimensional) dataset into. In contrast, one can use supervised classification of data where reference data is used as a benchmark on which to train a machine learning algorithm. In this supervised machine learning an algorithm will try to minimize the classification error on a known training or validation dataset. 
+
+In our case the temporal (seasonal) shape of the spectral data would be used to characterize different land-cover types.
+
+```{r}
+#| label: fig-spectral-bands
+#| fig-cap: "The shape of a single deciduous broadleaf pixel across various MODIS bands"
+#| fig-align: "center"
+#| out-width: "100%"
+#| echo: FALSE
 
 
+```
 
-However, we can use the bulk of this data, by which I mean all the spectral bands if not select number of indices and their temporal component to figure out what kind of vegetation we are looking at.
+A full introduction to machine learning beyond the scope of this course and I refer to XYZ and XYZ for a (free) introduction in machine learning using R.
 
+### Land-cover validation data
 
-## Using multi-spectral data to characterize land-cover
+Critical in our exercise is the reference data we use to classify different land-cover types. Generally ground truth data is used in order to create a training dataset. This ground truth data are locations which are visually validated to belong to a paurticular land-cover class.
 
+These data are gathered by *in-situ* surveys, or leverage high(er) resolution data to confirm the the land-cover type. For example, the LUCAS database of the European Commission provides 3 yearly survey data on the land-cover state (including detailed photographs of the surrounding of a validation point).
 
+WHAT DOES MODIS MCD12Q1 USE?
+
+Such up to date training and validation data is crucial in the development of supervised land-cover maps. In the below worked example we will use the
+
+## Multi-spectral data to characterize land-cover
 
 https://rspatial.org/terra/rs/5-supclassification.html
