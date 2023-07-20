@@ -2,11 +2,11 @@
 
 In previous sections I've explained how seasonality in vegetation canopy density (LAI) or phenology can be detected, and how it varies depending on the geography of the region, and its ties to the exchange of carbon (C) and water between the biosphere and the atmosphere (@sec-phenology-trends). A small, first principles, example was provided on how to write your own phenology detection algorithm (@sec-algorithms).
 
-However, many satellite platforms provide information in various spectral bands (and not only one product in the temporal domain). One can say the data are multi-dimensional, having both a temporal, spatial and spectral component. These various bands, or locations in the spectral domain, provide key insights into the state of the land surface (throughout the year).
+However, many satellite platforms provide information in various spectral bands (and not only one product in the temporal domain). One can say the data are multi-dimensional, having both a temporal, spatial and spectral component (see @fig-xyz). These various bands, or locations in the spectral domain, provide key insights into the state of the land surface (throughout the year).
 
 For example the combination of information in the red and near-infrared bands (spectral domains) provides key information to calculate the Normalized Difference Vegetation Index [@Huete2002]. Other band combinations lead to other indices with varying properties, tailored to specific ecological, geomorphological or other purposes [@zeng_optical_2022]. 
 
-When we plot a time serie of a deciduous forest you note the steady seasonal changes when switching between winter, with low NDVI values, and summer with high NDVI values. However, different vegetation and land cover types have different temporal NDVI signals. For example, a glacier will have permanent snow and no seasonal NDVI signal. We can therefore discriminate between non-vegetative locations and vegetation based upon the temporal profile of NDVI.
+When we plot a time serie of a deciduous forest you note the steady seasonal changes when switching between winter, with low NDVI values, and summer with high NDVI values. However, different vegetation and land cover types have different temporal NDVI signals. For example, a glacier will have permanent snow and no seasonal NDVI signal. We can therefore discriminate between non-vegetative locations and vegetation based upon the combine spectral and temporal profile of a location.
 
 ```{r}
 #| label: fig-ndvi-dbf
@@ -52,14 +52,83 @@ A full introduction to machine learning beyond the scope of this course and I re
 
 ### Land-cover validation data
 
-Critical in our exercise is the reference data we use to classify different land-cover types. Generally ground truth data is used in order to create a training dataset. This ground truth data are locations which are visually validated to belong to a paurticular land-cover class.
+Critical in our exercise is the reference data we use to classify different land-cover types. Generally ground truth data is used in order to create a training dataset. This ground truth data are locations which are visually validated to belong to a particular land-cover class.
 
 These data are gathered by *in-situ* surveys, or leverage high(er) resolution data to confirm the the land-cover type. For example, the LUCAS database of the European Commission provides 3 yearly survey data on the land-cover state (including detailed photographs of the surrounding of a validation point).
 
 WHAT DOES MODIS MCD12Q1 USE?
 
-Such up to date training and validation data is crucial in the development of supervised land-cover maps. In the below worked example we will use the
+Such up to date training and validation data is crucial in the development of supervised land-cover maps. In the below worked example we will use the XYZ data as validation data.
 
 ## Multi-spectral data to characterize land-cover
 
+For our worked example we'll gather MODIS data for various spectral bands. This data is not readily available using the {MODISTools} package, I will therefore rely on the {appears} package to query a small dataset of training data.
+
+The {appears} package relies on the NASA AppEEARS service which provides easy access to remote sensing data subsets similar to the ORNL DAAC service. The provided data covers more data products, but does require a login (API key) limiting ad-hoc accessibility. I refer to the {appears} documentation for the [setup and use of an API key](https://bluegreen-labs.github.io/appeears/).
+
+The training data for our land-cover mapping exercise will rely on multi-spectral band data, mainly bands 1 through 7. We first define a regions of interest covering an area similar to the previous exercises, roughly spanning the canton of Bern, Switzerland, covering a wide variety of land-cover types. 
+
+```{r eval=FALSE}
+
+# define a general task specifying
+# the product and bands to query
+# i.e. bands 1 - 7 and the quality
+# control band for data screening
+df <- data.frame(
+  task = "lulc",
+  subtask = "subtask",
+  start = "2010-01-01",
+  end = "2010-12-31",
+  product = "MOD09A1.061",
+  layer = c(paste0("sur_refl_b0", 1:7),"sur_refl_qc_500m")
+)
+
+# we'll use the raster extent
+# of the previously created maps
+# to define the region of interest
+# (extent of the area to consider)
+roi <- terra::rast(f)
+
+# build an appears task
+# with the output format
+# set to geotiff for convenience
+task <- rs_build_task(
+  df = df,
+  roi = roi,
+  format = "geotiff"
+)
+
+```
+
+
+## Training a land-cover classifier
+
+```{r}
+set.seed(1)
+# generate point samples from the polygons
+ptsamp <- spatSample(samp, 200, method="random")
+plot(ptsamp, "class")
+
+nlcd <- rast('data/rs/nlcd-L1.tif')
+names(nlcd) <- c("nlcd2001", "nlcd2011")
+nlcd2011 <- nlcd[[2]]
+# assign class names as categories (levels)
+nlcdclass <- c("Water", "Developed", "Barren", "Forest", "Shrubland", "Herbaceous", "Cultivated", "Wetlands")
+classdf <- data.frame(value = c(1,2,3,4,5,7,8,9), names = nlcdclass)
+levels(nlcd2011) <- classdf
+# colors (as hexidecimal codes)
+classcolor <- c("#5475A8", "#B50000", "#D2CDC0", "#38814E", "#AF963C", "#D1D182", "#FBF65D", "#C8E6F8")
+# plot the locations on top of the original nlcd raster
+plot(nlcd2011, col=classcolor)
+ptlonlat <- project(ptsamp, crs(nlcd2011))
+points(ptlonlat)
+
+```
+
+
 https://rspatial.org/terra/rs/5-supclassification.html
+
+## Accuracy metrics and map comparisons
+
+
+
