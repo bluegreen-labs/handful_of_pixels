@@ -2,6 +2,26 @@
 
 ## Introduction
 
-## Scope
+In the previous chapters we've seen how the development of vegetation throughout the season, or phenology, is determined by temperature, and therefore through the lapse rate to topography. Although these chapters give you an intuition on how phenology might change under global heating (where every degree of heating would move the season forward by an average XYZ days, as deduced via the lapse rate), it does not provide a mechanistic model for predicting phenology.
 
-## Demo
+Luckily the science around phenology is old, not only have people been observing vegetation phenology for thousands of years (blossoms REFERENCE), there is a good understanding of how phenology is triggered in spring and how this can be captured using (mechanistic) models. The most basic principle uses the concept of growing degree days and first mentions go back to xyz by de Reaumur (REFERENCE). The growing degree days stipulates that spring phenology depends on the accumulation over time of growing days, i.e. days which exceed a certain threshold temperature. If a set number of growing degree days are reached, spring phenology will happen.
+
+## Growing degree day model optimization
+
+We can translate this growing degree day model to a mathematical formulation.
+
+> Show figure of days to sum and over which period (starting period). There is no stop at the beginning, only defined by the in-situ observation or MCD12Q2 data. Just plot. Then move on to specifying the full model. Demonstrate which parameters lead to a singular result. Then scale, what if we have 10 observations? How to pick the best parameters.
+
+### Phenology model optimization
+
+When we want to estimate a general set of parameters for our growing degree day function we need to optimize them across a wide range of observations. In particular, we want to miinimize the error between the model results (for a given set of parameters) and our observed data. If you've taking any introduction to statistical or machine learning this problem will sound fairly familiar. For example, in a linear model one optimizes two parameters an intercept and a slope to minimize the difference between observed and modelled (linear) model results. In our example, we do not have a linear model but a more complex one with three parameters - however the same concept applies. 
+
+Estimating these parameters efficiently can be done using various parameter optimization methods. Examples of such methods include simulated annealing (using the GenSA package REFERENCE), bayesian optimization methods such as BayesianTools. For simplicity I'll use the GenSA package and simulated annealing method to illustrate the estimation of model parameters.
+
+## Spatial scaling
+
+### Statistical downscaling of course data
+
+### Scaling model results
+
+### Remote sensing comparison
