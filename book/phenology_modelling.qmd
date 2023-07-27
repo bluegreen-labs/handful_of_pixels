@@ -13,27 +13,28 @@ library(GenSA)
 #harvard_phenocam_phenology <- readRDS("")
 
 # read DAYMET gridded data
-ma_nh_temp <- terra::rast("../data/daymet_mean_temperature.tif")
+ma_nh_temp <- terra::rast("../data/daymet_mean_temperature.tif") |>
+  terra::trim()
 
 # read harvard forest GCC time series and matching
 # DAYMET data
-harvard_phenocam_data <- read.table(
+harvard_phenocam_data <- readr::read_csv(
   "../data-raw/harvard_DB_1000_3day.csv",
-  sep = ",",
-  header = TRUE,
-  skip = 3
+  comment = "#"
   )
 
 # read derived phenology metrics
-harvard_phenology <- read.table(
+harvard_phenology <- readr::read_csv(
   "../data-raw/harvard_DB_1000_3day_transition_dates.csv",
-  sep = ",",
-  header = TRUE
-) |>
+  comment = "#") |>
   filter(
     direction == "rising",
     gcc_value == "gcc_90"
   )
+
+# optim parameters 4000 calls
+# hardcoded for speed
+optim_par <- c(7.993938, 18.185416)
 ```
 
 ## Introduction
@@ -77,23 +78,20 @@ phenocamr::download_phenocam(
   out_dir = tempdir()
   )
 
-harvard_phenocam_data <- read.table(
+harvard_phenocam_data <- readr::read_csv(
   file.path(tempdir(), "harvard_DB_1000_3day.csv"), 
-  sep = ",",
-  header = TRUE,
-  skip = 3
+  comment = "#"
   )
 
 # reading in harvard phenology only retaining
 # spring (rising) phenology for the GCC 90th
 # percentile time series (the default)
-harvard_phenology <- read.table(
+harvard_phenology <- readr::read_csv(
   file.path(
     tempdir(),
     "harvard_DB_1000_3day_transition_dates.csv"
     ),
-  sep = ",",
-  header = TRUE
+  comment = "#"
 ) |>
   filter(
     direction == "rising",
@@ -162,12 +160,19 @@ harvard_temp <- harvard_phenocam_data |>
   ) |>
   ungroup()
 
-# convert the harvard phenology data
+# convert the harvard phenology data and only
+# retain required data
 harvard_phenology <- harvard_phenology |>
   mutate(
-    doy = format(as.Date(transition_25),"%j"),
-    year = format(as.Date(transition_25),"%Y")
-  )
+    doy = as.numeric(format(as.Date(transition_25),"%j")),
+    year = as.numeric(format(as.Date(transition_25),"%Y"))
+  ) |>
+  select(
+    year,
+    doy,
+    transition_25,
+    threshold_25
+    )
 ```
 
 ```{r warning=FALSE}
@@ -314,7 +319,9 @@ gdd_model <- function(data, par) {
   # degree days exceeds the minimum value
   # required for leaf development, only
   # return the first value
-  return(which(gdd >= accumulated_days)[1])
+  doy <- unlist(which(gdd >= accumulated_days)[1])
+  
+  return(doy)
 }
 ```
 
@@ -323,47 +330,75 @@ This model (function) requires a temperature data, and vector of parameter value
 ```{r}
 # confirm that the model function
 # returns expected results (i.e. DOY 114)
-harvard_temp |>
+# (we filter out the year 2010, but
+# removing the filter would run the
+# model for all years!)
+prediction <- harvard_temp |>
   filter(
     year == 2010
   ) |>
-  select(tmean) |>
-  gdd_model(
+  group_by(year) |>
+  summarize(
+   pred = gdd_model(
+    data = tmean,
     par = c(5, 30)
-  ) |>
-  print()
+  )  
+  )
 
+print(prediction)
 ```
 
-This model can now be used to generalize phenology dynamics across years for a given site, and/or across multiple sites using a model optimization or parameterizations.
+This model can now be used to generalize phenology dynamics across years for a given site, and/or across multiple sites using a model optimization/parameterizations.
 
 ### Phenology model optimization
 
-When we want to estimate a general set of parameters for our growing degree day model we need to optimize them across a wide range of observations (sites and or years). In particular, we want to miinimize the error between the model results (for a given set of parameters, i.e. the temperature threshold and accumulated days when phenolog happens) and our observed data. If you've taking any introduction to statistical or machine learning this problem will sound fairly familiar. For example, in a linear model one optimizes two parameters an intercept and a slope to minimize the difference between observed and modelled (linear) model results. In our example, we do not have a linear model but a more complex one with two parameters - however the same concept applies. 
+When we want to estimate a general set of parameters for our growing degree day model we need to optimize them across a wide range of observations (sites and or years). In particular, we want to miinimize the error (a cost function) between the model results (for a given set of parameters, i.e. the temperature threshold and accumulated days when phenolog happens) and our observed data. If you've taking any introduction to statistical or machine learning this problem will sound fairly familiar. For example, in a linear model one optimizes two parameters an intercept and a slope to minimize the difference between observed and modelled (linear) model results. In our example, we do not have a linear model but a more complex one with two parameters - however the same concept applies. 
 
 Estimating these parameters efficiently can be done using various parameter optimization methods. Examples of such methods include simulated annealing (`GenSA` R package), bayesian optimization methods (`BayesianTools` R package). For simplicity I will use the `GenSA` R package which relies on simulated annealing method to illustrate the estimation of model parameters.
 
-The optimization minimizes a cost function which in this example is defined as the root mean squared error (RMSE) between the observed and the predicted values.
+In this example the optimization minimizes a cost function which in this example is defined as the root mean squared error (RMSE) between the observed and the predicted values.
 
-```{r}
+```{r eval = FALSE}
 # run model and compare to true values
 # returns the RMSE
-rmse_gdd <- function(data, par) {
+rmse_gdd <- function(par, data) {
   
- # grab observed values
- obs <- as.vector(data$observed)
- 
- # calculate phenology predictions
- pred <- as.vector(gdd_model(par = par, data = data))
- 
- # calculate rmse
- RMSE <- sqrt(mean((obs - pred)^2, na.rm = TRUE))
- 
- # return RMSE value
- return(RMSE)
+  # split out data
+  drivers <- data$drivers
+  validation <- data$validation
+  
+  # calculate phenology predictions
+  # and put in a data frame
+  predictions <- drivers |>
+    group_by(year) |>
+    summarise(
+      predictions = gdd_model(
+        data = tmean,
+        par = par
+      )
+    )
+  
+  predictions <- left_join(predictions, validation)
+  
+  rmse <- predictions |>
+    summarise(
+      sqrt(mean((predictions - doy)^2, na.rm = TRUE))
+    ) |>
+    unlist()
+  
+  # return rmse value
+  return(rmse)
 }
-
 ```
+
+::: callout-warning
+### Warning
+
+Both the cost function as the growing degree day function are not optimized for speed. Both functions are written with clarity in mind to teach the basic concepts of model optimization/parameterization. Model optimization relies on iteratively searching for the best parameter by running the model thousands of times. Slow code can make it impossible to converge on a solution as time requirements grow beyond what is workable.
+
+Within the context of this worked example speed is not a concern. However, when implementing your own code, take care to optimize both functions for speed by vectorization and other techniques. 
+
+:::
 
 In the final optimization will iteratively step through the parameter space, running the cost function (which in terms calls the main model), and find an optimal solution to the problem (i.e. minimize the RMSE). Often starting model parameters and limits to the parameter space are required. Defining the limits of your parameter space well can significantly reduce the time needed to converge upon a solution, and is often bound by the physical constraints of the model (i.e. it is unlikely that spring will happen after the accumulation of 180 growing degree days). Similarly, temperature thresholds fall within a -10 to 45 $^\circ$C range, the physical limits of plant growth.
 
@@ -384,22 +419,76 @@ data <- list(
   )
 
 # optimize the model parameters
-optim.par = GenSA(
+optim_par = GenSA::GenSA(
  par = par,
  fn = rmse_gdd,
- data = data,
  lower = lower,
  upper = upper,
- control = list(temperature = 4000)
-)
+ control = list(
+   max.call = 4000
+   ),
+ data = data
+)$par
 ```
 
-More advanced models exist, which include not only temperature but also radiation, precipitation and or temporal lags or other requirements such as frost during the preceding winter depending on the vegetation type or assumptions made (REFERENCES). In this chapter I will demonstrate the concept using the most basic growing degree day model and I refer to @basler_evaluating_2016 and @hufkens_integrated_2018 for an overview of models and their implementation.
+After an optimization routine (calling the cost function 4000 times) the optimal parameters were determined to be `r optim_par` for the temperature threshold and number of accumulation days respectively. We can now plug these values back into our model and run it across all available years. When looking at this small dataset for Harvard forest we see a reasonable agreement between observed and predicted values (@fig-phenology-model). Obviously, including more sites and years would increase the model performance.
 
+
+```{r}
+# run the model for all years
+# to get the phenology predictions
+predictions <- harvard_temp |>
+  group_by(year) |>
+  summarize(
+   prediction = gdd_model(
+    data = tmean,
+    par = optim_par
+  )  
+  )
+```
+
+```{r message = FALSE, warning = FALSE}
+#| code-fold: true
+#| label: fig-phenology-model
+#| fig-cap: "Scatterplot of observed and predicted leaf phenology as day-of-year (DOY). A linear regression is overplot as a full dark grey line with confidence intervals shown as a light grey envelope."
+#| fig-align: "center"
+#| out-width: "75%"
+#| fig-width: 5
+#| fig-height: 5
+
+# join predicted with observed data
+validation <- left_join(predictions, harvard_phenology)
+
+ggplot(validation) +
+  geom_smooth(
+    aes(
+      doy,
+      prediction
+    ),
+    colour = "grey25",
+    method = "lm"
+  ) +
+  geom_point(
+    aes(
+      doy,
+      prediction
+    )
+  ) +
+  labs(
+    x = "Observed leaf phenology (DOY)",
+    y = "Predicted leaf phenology (DOY)"
+  ) +
+  theme_bw()  +
+  theme(
+    legend.position = "none"
+  )
+```
+
+More advanced models exist, which include not only temperature but also radiation, precipitation and or temporal lags or other requirements such as frost during the preceding winter depending on the vegetation type or assumptions made. For an overview of these more advanced models I refer to @basler_evaluating_2016 and @hufkens_integrated_2018.
 
 ## Spatial scaling
 
-With a basic parameterized model you can explore how well it scales across a wider area. Here I will use DAYMET tiled data to scale the results spatially (relying on the same driver data as used during parameterization). First I download both minimum and maximum temperature data and average them to a mean daily value (as previously used).
+With a basic model parameterized you can explore if and how the relationship between observed and predicted values scale across a larger landscape. I will use DAYMET tiled data to scale the results spatially (relying on the same driver data as used during parameterization). First I download both minimum and maximum temperature data and average them to a mean daily value (as previously used), using the `daymetr` R package [@hufkens_integrated_2018].
 
 ```{r eval = FALSE}
 # Download daily data
@@ -437,18 +526,24 @@ ma_nh_temp <- terra::subset(
 )
 ```
 
-One can then apply the model to this raster (cube) using the the `terra::app()` function and an appropriately formulated function. I refer to the `terra::app()` for the specifics on how to ensure your functions are compatible with raster processing (GENERAL RULES).
+One can then apply the model to this raster (cube) using the the `terra::app()` function and an appropriately formulated function, i.e. our growing degree day model `gdd_model()`. I refer to the `terra::app()` for the specifics on how to ensure your functions are compatible with raster processing, but the general rule is that the data argument comes first in the function applied (with all other parameters forwarded by name).
 
-```{r eval = FALSE}
+```{r}
 predicted_phenology <- terra::app(
   ma_nh_temp,
-  fun = gdd_model(),
-  par = par
+  fun = gdd_model,
+  par = optim_par
 )
 ```
 
-```{r eval = FALSE}
+Plotting these results show a diverse response across the landscape, with higher elevation locations in the north west of the scene having a later leaf out date (in DOY) then coastal or urban areas (i.e. the greater Boston areas south east in the scene). This is both a reflection of the lapse rate as discussed in @sec-phenology-trends and the urban heat island effect [@Zhang2004].
+
+```{r}
 #| code-fold: true
+#| label: fig-spatial-scaling
+#| fig-cap: "Interactive map of the spatially scaled optimized growing degree model using DAYMET daily mean temperature data for tile 11935, including the greater Boston area in the south-east to the White Mountains in the north-west."
+#| fig-align: "center"
+#| out-width: "100%"
 
 library(leaflet)
 
@@ -474,16 +569,11 @@ leaflet() |>
   addLayersControl(
     baseGroups = c("World Imagery","World Topo"),
     position = "topleft",
-    options = layersControlOptions(collapsed = FALSE)
+    options = layersControlOptions(collapsed = FALSE),
+    overlayGroups = c("Phenology model results")
     ) |>
   addLegend(
     pal = pal,
     values = values(predicted_phenology),
     title = "DOY")
 ```
-
-### Scaling model results
-
-### Statistical downscaling of course data
-
-## Remote sensing comparison
