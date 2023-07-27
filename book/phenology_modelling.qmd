@@ -10,7 +10,6 @@ library(GenSA)
 
 # preloading data
 # for fast processing
-#harvard_phenocam_phenology <- readRDS("")
 
 # read DAYMET gridded data
 ma_nh_temp <- terra::rast("../data/daymet_mean_temperature.tif") |>
@@ -19,13 +18,13 @@ ma_nh_temp <- terra::rast("../data/daymet_mean_temperature.tif") |>
 # read harvard forest GCC time series and matching
 # DAYMET data
 harvard_phenocam_data <- readr::read_csv(
-  "../data-raw/harvard_DB_1000_3day.csv",
+  "../data/harvard_DB_1000_3day.csv",
   comment = "#"
   )
 
 # read derived phenology metrics
 harvard_phenology <- readr::read_csv(
-  "../data-raw/harvard_DB_1000_3day_transition_dates.csv",
+  "../data/harvard_DB_1000_3day_transition_dates.csv",
   comment = "#") |>
   filter(
     direction == "rising",
