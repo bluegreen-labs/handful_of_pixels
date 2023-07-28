@@ -6,7 +6,7 @@ execute:
   freeze: auto
 
 book:
-  title: "A Handfull of Pixels"
+  title: "A Handful of Pixels"
   subtitle: "big science using small data"
   author: "Koen Hufkens"
   date: "2023/03/28"
@@ -23,7 +23,7 @@ book:
       - phenology_trends.qmd
       - phenology_algorithms.qmd
 #      - land_cover_classification.qmd
-#      - phenology_modelling.qmd
+      - phenology_modelling.qmd
     - exercises.qmd
     - references.qmd
   appendices:

@@ -86,13 +86,12 @@ df <- readRDS(here::here("data/lai_time_series.rds"))
 We first multiply the data with their required scaling factor, and transform the date values to a formal date format and split out the individual year (from the date).
 
 ```{r}
-# scale values appropriately
-df$value <- df$value * as.numeric(df$scale)
-
 # convert dates to proper date formats and
 # convert the date to a single year
 df <- df |>
   mutate(
+    # scale the values correctly
+    value =  value * as.numeric(scale),
     date = as.Date(calendar_date),
     year = as.numeric(format(date, "%Y")) 
   ) |>
