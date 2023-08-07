@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>A Handful of Pixels - 7&nbsp; Exercises</title>
+<title>A Handful of Pixels - 8&nbsp; Exercises</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -31,7 +31,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./references.html" rel="next">
-<link href="./phenology_modelling.html" rel="prev">
+<link href="./land_cover_classification.html" rel="prev">
 <link href="./figures/favicon.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -77,7 +77,7 @@ ul.task-list li input[type="checkbox"] {
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<meta name="twitter:title" content="A Handful of Pixels - 7&nbsp; Exercises">
+<meta name="twitter:title" content="A Handful of Pixels - 8&nbsp; Exercises">
 <meta name="twitter:description" content="">
 <meta name="twitter:card" content="summary">
 </head>
@@ -133,7 +133,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./exercises.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Exercises</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./exercises.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Exercises</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -215,12 +215,18 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Phenology modelling</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./land_cover_classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Land-Cover classification</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./exercises.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Exercises</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Exercises</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -268,11 +274,11 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#phenology-trends-and-algorithms" id="toc-phenology-trends-and-algorithms" class="nav-link active" data-scroll-target="#phenology-trends-and-algorithms"><span class="header-section-number">7.1</span> Phenology trends and algorithms</a>
+  <li><a href="#phenology-trends-and-algorithms" id="toc-phenology-trends-and-algorithms" class="nav-link active" data-scroll-target="#phenology-trends-and-algorithms"><span class="header-section-number">8.1</span> Phenology trends and algorithms</a>
   <ul class="collapse">
-  <li><a href="#physical-geography-and-phenology" id="toc-physical-geography-and-phenology" class="nav-link" data-scroll-target="#physical-geography-and-phenology"><span class="header-section-number">7.1.1</span> Physical geography and phenology</a></li>
-  <li><a href="#temporal-and-spatial-anomalies" id="toc-temporal-and-spatial-anomalies" class="nav-link" data-scroll-target="#temporal-and-spatial-anomalies"><span class="header-section-number">7.1.2</span> Temporal and spatial anomalies</a></li>
-  <li><a href="#scaling-the-calculation-of-phenology-metrics" id="toc-scaling-the-calculation-of-phenology-metrics" class="nav-link" data-scroll-target="#scaling-the-calculation-of-phenology-metrics"><span class="header-section-number">7.1.3</span> Scaling the calculation of phenology metrics</a></li>
+  <li><a href="#physical-geography-and-phenology" id="toc-physical-geography-and-phenology" class="nav-link" data-scroll-target="#physical-geography-and-phenology"><span class="header-section-number">8.1.1</span> Physical geography and phenology</a></li>
+  <li><a href="#temporal-and-spatial-anomalies" id="toc-temporal-and-spatial-anomalies" class="nav-link" data-scroll-target="#temporal-and-spatial-anomalies"><span class="header-section-number">8.1.2</span> Temporal and spatial anomalies</a></li>
+  <li><a href="#scaling-the-calculation-of-phenology-metrics" id="toc-scaling-the-calculation-of-phenology-metrics" class="nav-link" data-scroll-target="#scaling-the-calculation-of-phenology-metrics"><span class="header-section-number">8.1.3</span> Scaling the calculation of phenology metrics</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -282,7 +288,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-exercises" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Exercises</span></span></h1>
+<h1 class="title"><span id="sec-exercises" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Exercises</span></span></h1>
 </div>
 
 
@@ -297,11 +303,11 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="phenology-trends-and-algorithms" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="phenology-trends-and-algorithms"><span class="header-section-number">7.1</span> Phenology trends and algorithms</h2>
+<section id="phenology-trends-and-algorithms" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="phenology-trends-and-algorithms"><span class="header-section-number">8.1</span> Phenology trends and algorithms</h2>
 <p>These exercises cover all materials up to <a href="phenology_algorithms.html"><span>Chapter&nbsp;5</span></a>. A proper understanding of these chapters is required to complete these exercises. Exercises are at times formulated in long form, not simple bullet points, in order to partially mimic formal descriptions as you would find in a methods section of an academic journal, or a reference manual.</p>
-<section id="physical-geography-and-phenology" class="level3" data-number="7.1.1">
-<h3 data-number="7.1.1" class="anchored" data-anchor-id="physical-geography-and-phenology"><span class="header-section-number">7.1.1</span> Physical geography and phenology</h3>
+<section id="physical-geography-and-phenology" class="level3" data-number="8.1.1">
+<h3 data-number="8.1.1" class="anchored" data-anchor-id="physical-geography-and-phenology"><span class="header-section-number">8.1.1</span> Physical geography and phenology</h3>
 <p>Interpret the results of <a href="phenology_trends.html#sec-regression"><span>Section&nbsp;4.3</span></a> and the fit model as shown in the collapsed note at the end of the section.</p>
 <ul>
 <li>What does the intercept indicate?</li>
@@ -312,17 +318,17 @@ ul.task-list li input[type="checkbox"] {
 </ul></li>
 </ul>
 </section>
-<section id="temporal-and-spatial-anomalies" class="level3" data-number="7.1.2">
-<h3 data-number="7.1.2" class="anchored" data-anchor-id="temporal-and-spatial-anomalies"><span class="header-section-number">7.1.2</span> Temporal and spatial anomalies</h3>
-<p>For a location near the Adirondacks in the North-Eastern United States (<a href="#fig-leaflet-adirondacks">Figure&nbsp;<span>7.1</span></a>) gather phenology data on both the greenup and maximum canopy development of a location centered on 43.5<span class="math inline">\(^\circ\)</span>N and 74.5<span class="math inline">\(^\circ\)</span>W. Gather data for all pixels 100 km around this location for years 2001 to 2010. Similarly, download land cover data for the year 2010 for the same spatial extent, and only consider IGBP broadleaf and mixed forest classes in your analysis.</p>
+<section id="temporal-and-spatial-anomalies" class="level3" data-number="8.1.2">
+<h3 data-number="8.1.2" class="anchored" data-anchor-id="temporal-and-spatial-anomalies"><span class="header-section-number">8.1.2</span> Temporal and spatial anomalies</h3>
+<p>For a location near the Adirondacks in the North-Eastern United States (<a href="#fig-leaflet-adirondacks">Figure&nbsp;<span>8.1</span></a>) gather phenology data on both the greenup and maximum canopy development of a location centered on 43.5<span class="math inline">\(^\circ\)</span>N and 74.5<span class="math inline">\(^\circ\)</span>W. Gather data for all pixels 100 km around this location for years 2001 to 2010. Similarly, download land cover data for the year 2010 for the same spatial extent, and only consider IGBP broadleaf and mixed forest classes in your analysis.</p>
 <p>For the years 2001 - 2009 calculate the long term mean (LTM) and standard deviation (SD) of the phenology metrics. Calculate location with an early greenup for 2010 (&lt; LTM - 1 SD) and locations with late maturity (&gt; LTM + 1 SD).</p>
 <p>Describe the observed patterns and speculate about the underlying reasons. In addition, download a digital elevation map for the United States (30s resolution), and compare differences in altitude (e.g.&nbsp;a boxplot) across locations where you do or do not see any patterns in phenology.</p>
 <div class="cell" data-layout-align="center">
 <div id="fig-leaflet-adirondacks" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
-<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-22c1cf7d814ee5f66021" style="width:100%;height:288px;"></div>
-<script type="application/json" data-for="htmlwidget-22c1cf7d814ee5f66021">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[43.5,-74.5],6,[]],"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[43.5,-74.5,null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},"Adirondacks",null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[43.5,43.5],"lng":[-74.5,-74.5]}},"evals":[],"jsHooks":[]}</script>
-<figcaption class="figure-caption">Figure&nbsp;7.1: The location of the Adirondack mountains in the North-Eastern United States</figcaption>
+<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-06cde8b318d6bbc6b3d7" style="width:100%;height:288px;"></div>
+<script type="application/json" data-for="htmlwidget-06cde8b318d6bbc6b3d7">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[43.5,-74.5],6,[]],"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[43.5,-74.5,null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},"Adirondacks",null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[43.5,43.5],"lng":[-74.5,-74.5]}},"evals":[],"jsHooks":[]}</script>
+<figcaption class="figure-caption">Figure&nbsp;8.1: The location of the Adirondack mountains in the North-Eastern United States</figcaption>
 </figure>
 </div>
 </div>
@@ -340,8 +346,8 @@ Note
 </div>
 </div>
 </section>
-<section id="scaling-the-calculation-of-phenology-metrics" class="level3" data-number="7.1.3">
-<h3 data-number="7.1.3" class="anchored" data-anchor-id="scaling-the-calculation-of-phenology-metrics"><span class="header-section-number">7.1.3</span> Scaling the calculation of phenology metrics</h3>
+<section id="scaling-the-calculation-of-phenology-metrics" class="level3" data-number="8.1.3">
+<h3 data-number="8.1.3" class="anchored" data-anchor-id="scaling-the-calculation-of-phenology-metrics"><span class="header-section-number">8.1.3</span> Scaling the calculation of phenology metrics</h3>
 <p>In this exercise you will be required to download external data manually. First you will have to sign up for a <a href="https://www.earthdata.nasa.gov/">NASA EarthData login</a> to access the required data. The NASA EarthData login provides access to a wide range of data products.</p>
 <p>Once signed in, <a href="https://lpdaac.usgs.gov/products/mod13c1v006/">download the data MCD13C1 product</a> for the year 2022. The MCD13C1 product provides vegetation indices (VI), such as the Enhanced Vegetation Index (EVI) and Normalized Difference Vegetation Index (NDVI) data products on a down-sampled climate model grid (CMG, at 0.05<span class="math inline">\(^\circ\)</span> or ~5km resolution). This down-sampled data product reduces the volume of data to download and process, but should allow you to explore broad continental scale patterns when calculating vegetation (or land surface) phenology metrics.</p>
 <p>With all data downloaded:</p>
@@ -732,8 +738,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./phenology_modelling.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Phenology modelling</span></span>
+      <a href="./land_cover_classification.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Land-Cover classification</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
