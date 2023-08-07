@@ -351,9 +351,9 @@ This model can now be used to generalize phenology dynamics across years for a g
 
 ### Phenology model optimization
 
-When we want to estimate a general set of parameters for our growing degree day model we need to optimize them across a wide range of observations (sites and or years). In particular, we want to miinimize the error (a cost function) between the model results (for a given set of parameters, i.e. the temperature threshold and accumulated days when phenolog happens) and our observed data. If you've taking any introduction to statistical or machine learning this problem will sound fairly familiar. For example, in a linear model one optimizes two parameters an intercept and a slope to minimize the difference between observed and modelled (linear) model results. In our example, we do not have a linear model but a more complex one with two parameters - however the same concept applies. 
+When we want to estimate a general set of parameters for our growing degree day model we need to optimize them across a wide range of observations (sites and or years). In particular, we want to minimize the error (a cost function) between the model results (for a given set of parameters, i.e. the temperature threshold and accumulated days when phenology happens) and our observed data. If you've taking any introduction to statistical or machine learning this problem will sound fairly familiar. For example, in a linear model one optimizes two parameters an intercept and a slope to minimize the difference between observed and modelled (linear) model results. In our example, we do not have a linear model but a more complex one with two parameters - however the same concept applies. 
 
-Estimating these parameters efficiently can be done using various parameter optimization methods. Examples of such methods include simulated annealing (`GenSA` R package), bayesian optimization methods (`BayesianTools` R package). For simplicity I will use the `GenSA` R package which relies on simulated annealing method to illustrate the estimation of model parameters.
+Estimating these parameters efficiently can be done using various parameter optimization methods. Examples of such methods include simulated annealing (`GenSA` R package), Bayesian optimization methods (`BayesianTools` R package). For simplicity I will use the `GenSA` R package which relies on simulated annealing method to illustrate the estimation of model parameters.
 
 In this example the optimization minimizes a cost function which in this example is defined as the root mean squared error (RMSE) between the observed and the predicted values.
 
@@ -490,6 +490,8 @@ More advanced models exist, which include not only temperature but also radiatio
 With a basic model parameterized you can explore if and how the relationship between observed and predicted values scale across a larger landscape. I will use DAYMET tiled data to scale the results spatially (relying on the same driver data as used during parameterization). First I download both minimum and maximum temperature data and average them to a mean daily value (as previously used), using the `daymetr` R package [@hufkens_integrated_2018].
 
 ```{r eval = FALSE}
+library(daymetr)
+
 # Download daily data
 daymetr::download_daymet_tiles(
   tiles = 11935,
