@@ -94,9 +94,6 @@ df <- df |>
     value =  value * as.numeric(scale),
     date = as.Date(calendar_date),
     year = as.numeric(format(date, "%Y")) 
-  ) |>
-  filter(
-    year > 2002
   )
 ```
 
@@ -377,7 +374,7 @@ lai_2012 <- MODISTools::mt_subset(
   product = "MCD15A3H",
   lat = 46.6756,
   lon = 7.85480,
-  band = c("Lai_500m"),
+  band = "Lai_500m",
   start = "2012-01-01",
   end = "2012-12-31",
   km_lr = 100,
