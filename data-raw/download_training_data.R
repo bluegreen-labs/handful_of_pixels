@@ -170,11 +170,11 @@ status_nbar <- rs_request_batch(
   time_out = 14400
 )
  
-status_lst <- rs_request_batch(
-  request = task_lst,
-  workers = 10,
-  user = "khufkens",
-  path = "data/lulc/",
-  verbose = TRUE,
-  time_out = 14400
-)
+# status_lst <- rs_request_batch(
+#   request = task_lst,
+#   workers = 10,
+#   user = "khufkens",
+#   path = "data/lulc/",
+#   verbose = TRUE,
+#   time_out = 14400
+# )
