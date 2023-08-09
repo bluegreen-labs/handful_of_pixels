@@ -1,41 +1,41 @@
 # Phenology algorithms {#sec-algorithms}
 
-The example above illustrating Hopkin's law and the explicit temperature sensitivity of vegetation phenology to changes in temperature shows the importance of monitoring these changes within the context of climate change. In the previous example we have used an operational land surface vegetation phenology product.
+The example above, illustrating Hopkin's law and the explicit temperature sensitivity of vegetation phenology to  temperature, shows the importance of monitoring these changes within the context of climate change. In the previous example, we have used an operational land surface vegetation phenology data product.
 
-Many products exist, depending on the remote sensing platform or data used, and cover a wide range of spatial scales. For example the [HR-VPP product](https://land.copernicus.eu/pan-european/biophysical-parameters/high-resolution-vegetation-phenology-and-productivity) allows for continuous vegetation monitoring using 10m resolution Sentinel-2 data, while the previous example relies on 500m resolution MODIS data. While MODIS provides a landscape wide measure of vegetation phenology the spatial scale of Sentinel-2 and near real time data allows for fine grained assessments of crop growth.
+Many products exist, depending on the remote sensing platform or data used, and cover a wide range of spatial scales. For example, the [HR-VPP product](https://land.copernicus.eu/pan-european/biophysical-parameters/high-resolution-vegetation-phenology-and-productivity) allows for continuous vegetation monitoring using 10 m resolution Sentinel-2 data, while the previous example relies on 500 m resolution MODIS data. While MODIS provides a landscape-wide measure of vegetation phenology, the spatial scale of Sentinel-2 and its near real time data availability (low latency) allows for fine-grained assessments of crop growth.
 
 ## Algorithms
 
 ### Vegetation indices and time series
 
-Most phenology products rely on a limited set of algorithms, or various iterations of them, operating on time series of vegetation indices. Throughout scientific literature we can divide most methods used in two categories:
+Most phenology data products rely on a limited set of algorithms, or various iterations of them, operating on time series of vegetation greenness indices. Throughout the scientific literature, we can divide most methods for detection of phenological dates used in two categories:
 
 - curve fitting
-- threshold based methods
+- threshold-based methods
 
-The curve fitting approach fits a prescribed model structure to the data, by varying a number of parameters. This functional description of the vegetation growth can then be used to derive phenology metrics by considering various inflection points of this function. Common approaches here are to use the first or second derivative of a fitted function (and zero crossings) to determine when large changes in vegetation phenology happen.
+The curve fitting approach fits a prescribed model structure to the data, by varying a number of parameters. This functional description of the vegetation growth can then be used to derive phenology metrics by considering various inflection points of this function. Common approaches are to use the first or second derivative of a fitted function (and zero crossings) to determine the timing of the most rapid change in vegetation phenology.
 
 ```{r}
 #| label: fig-threshold
-#| fig-cap: "Example of a threshold based phenology algorithm, by [Stanimorova et al. 2019](https://www.mdpi.com/2072-4292/11/19/2201/htm)"
+#| fig-cap: "Example of a threshold-based phenology algorithm, by [Stanimorova et al. 2019](https://www.mdpi.com/2072-4292/11/19/2201/htm)"
 #| fig-align: "left"
 #| out-width: "100%"
 #| echo: FALSE
 knitr::include_graphics("https://www.mdpi.com/remotesensing/remotesensing-11-02201/article_deploy/html/images/remotesensing-11-02201-g002.png")
 ```
 
-The most simple approach around, used with or without explicit curve fitting, is the use of a simple threshold based method. Here, a phenology event is registered if a given vegetation index threshold is exceeded (@fig-threshold). Although scaling these products for global coverage is challenging creating your own algorithm and implementing it on a local or regional scale is fairly simple. Below I will show you how to calculate phenology for a vegetation index time series, for the region outlined in @sec-phenology-trends .
+The simplest approach, used with or without explicit curve-fitting, is the use of a simple threshold-based method. Here, a phenology event is registered if a given vegetation index threshold is crossed (@fig-threshold). Although scaling these products for global coverage is challenging, creating your own algorithm and implementing it on a local or regional scale is fairly simple. Below, it will be demonstrated how to calculate phenology for a vegetation index time series, for the region outlined in @sec-phenology-trends .
 
-These methods are mostly applied to various vegetation indices, which link spectral characteristics as measured by satellites to the physical development of the canopy [@Myneni1995; @Huete2002]. For example, the Normalized Vegetation Index (NDVI) uses both the red and near-infrared spectral domain (@fig-spectral-bands) to sense the state of the vegetation, while the Enhanced Vegetation Index (EVI, @fig-threshold) does the same while accounting for the saturation of the signal over dense canopies. This multi-spectral nature of satellite remote sensing data, as well as their temporal dynamics, can be leveraged using a veritable zoo of indices tailored to specific properties and research needs [@zeng_optical_2022]. An in depth analysis on how to use this multi-spectral data in a different context is given in @sec-land-cover .
+These methods are mostly applied to various vegetation indices, which link spectral characteristics as measured by satellites to the physical development of the canopy [@Myneni1995; @Huete2002]. For example, the Normalized Vegetation Index (NDVI) uses both the red and near-infrared spectral domain (@fig-spectral-bands) to sense the state of the vegetation, while the Enhanced Vegetation Index (EVI, @fig-threshold) does the same while accounting for the saturation of the signal over dense canopies. This multi-spectral nature of satellite remote sensing data, as well as their temporal dynamics, can be leveraged using a veritable zoo of indices tailored to specific properties and research needs [@zeng_optical_2022]. An in-depth analysis on how to use these multi-spectral data in a different context is given in @sec-land-cover .
 
 ::: callout-note
 ### Note
 
-Given the non-continuous nature of the spectral bands used on most satellite platforms one calls these kinds of data **multi-spectral**, this in contrast to hyperspectral data which is quasi-continuous throughout a large spectral domain (@fig-spectral-bands). More on how to leverage the spectral domain characteristics to create indices will be provided in upcoming chapters where I cover band selection using densely sampled (hyper-spectral) data.
+Given the non-continuous nature of the spectral bands used on most satellite platforms one calls these kinds of data **multi-spectral**. This in contrast to hyperspectral data which is quasi-continuous throughout a large spectral domain (@fig-spectral-bands). More on how to leverage the spectral domain characteristics to create indices will be provided in upcoming chapters where I cover band selection using densely sampled (hyper-spectral) data.
 
 ```{r}
 #| label: fig-spectral-bands
-#| fig-cap: "According to @zeng_optical_2022: 'Satellite sensors, the vegetation and the soil spectrum across wavelengths. Top: the spectral response range in the atmospheric window of a few widely used satellites109. The coloured blocks and vertical lines illustrate the spectral band range or bandpass for each satellite sensor. Bottom: reflectance of vegetation and soil. These spectral features of vegetation and soil are the foundation of the rationale of vegetation indices and support the design of various vegetation indices.' (if no image is shown you do not have institutional access to the original article content)"
+#| fig-cap: "Figure from @zeng_optical_2022: 'Satellite sensors, the vegetation and the soil spectrum across wavelengths. Top: the spectral response range in the atmospheric window of a few widely used satellites109. The coloured blocks and vertical lines illustrate the spectral band range or bandpass for each satellite sensor. Bottom: reflectance of vegetation and soil. These spectral features of vegetation and soil are the foundation of the rationale of vegetation indices and support the design of various vegetation indices.' (if no image is shown you do not have institutional access to the original article content)"
 #| fig-align: "center"
 #| out-width: "100%"
 #| echo: FALSE
@@ -70,7 +70,7 @@ df <- MODISTools::mt_subset(
 
 Many data products have data quality flags, which allow you to screen your data for spurious values. However, in this example I will skip this step as the interpretation/use of these quality control flags is rather complex. The below methodology is therefore a toy example and further developing this algorithm would require taking into account these quality control metrics. Instead a general smoothing of the data will be applied.
 
-## Data smoothing / interpollation
+## Data smoothing and interpolation
 
 ```{r include = FALSE}
 library(signal)
@@ -83,7 +83,7 @@ library(ggplot2)
 df <- readRDS(here::here("data/lai_time_series.rds"))
 ```
 
-We first multiply the data with their required scaling factor, and transform the date values to a formal date format and split out the individual year (from the date).
+We first multiply the data with their required scaling factor, transform the date values to a formal date format, and extract the individual year from the date.
 
 ```{r}
 # convert dates to proper date formats and
@@ -97,7 +97,7 @@ df <- df |>
   )
 ```
 
-Smoothing can be achieved using various algorithms, such as splines, loess regressions, and other techniques. In this case, I will use the [Savitsky-Golay filter](https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter), a common algorithm used across various vegetation phenology products. Luckily the methodology is already implemented in the `signal` package.
+Smoothing can be achieved using various algorithms, such as splines, LOESS regressions, and other techniques. In this case, I will use the [Savitsky-Golay filter](https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter), a common algorithm used across various vegetation phenology products. Luckily the methodology is already implemented in the `signal` package.
 
 ```{r}
 # load the signal library
@@ -111,9 +111,9 @@ df <- df |>
   )
 ```
 
-Note that the `sgolayfilt()` does not allow for NA values to be present to function properly. As such, we operate on the full data set at its original time step. Since data is only provided at a 8-day time interval you would be limited to this time resolution in determining final phenology metrics when using a threshold based approach.
+Note that the `sgolayfilt()` does not allow for NA values to be present to function properly. Therefore, we operate on the full data set at its original time step. Since data is only provided at a 8-day time interval, you would be limited to this time resolution in determining final phenology metrics when using a threshold-based approach.
 
-To get estimates close to a daily time step we need to expand the data to a daily time-step and merge the original smoothed data.
+To get estimates close to a daily time step, we need to expand the data to a daily time-step and merge the original smoothed data.
 
 ```{r message=FALSE}
 # expand the time series to a daily time step
@@ -188,7 +188,7 @@ ggplot(df) +
 
 ## Phenology estimation {#sec-phenology-estimates}
 
-With all data prepared we can use an arbitrary threshold to estimate a transition in LAI values for a given year. In the below example we use a LAI value of 3 to mark if the season has started or ended. To show the response to heterogeneous time series, I halved the values for the year 2004.
+With all data prepared we can use an arbitrary threshold to estimate a transition in LAI values for a given year. In the example below, we use a LAI value of 3 to mark if the season has started or ended. To show the response to heterogeneous time series, I halved the values for the year 2004.
 
 ```{r}
 # half the values for 2004
@@ -261,7 +261,7 @@ ggplot(df) +
   theme_bw()
 ```
 
-Obviously this does not translate well to other locations, when vegetation types and densities vary from place to place. This is illustrated in @fig-smooth-phen, using an artificially lowered signal in the year 2004, where years not meeting the absolute threshold will not produce accurate phenology estimates. Scaling the time series between 0 and 1 will **regularize responses across time series** and years and resolves this issue.
+Obviously, this does not translate well to other locations, when vegetation types and densities vary from place to place. This is illustrated in @fig-smooth-phen, using an artificially lowered signal in the year 2004, where years not meeting the absolute threshold will not produce accurate phenology estimates. Scaling the time series between 0 and 1 will **regularize responses across time series** and years and resolves this issue.
 
 ```{r}
 # potential issues?
@@ -278,9 +278,9 @@ df <- df |>
   )
 ```
 
-Now we can use a relative amplitude (0 - 1) across locations. This ensures a consistent interpretation of what phenology represents. In case of a threshold of 0.5, this would represent the halfway point between a winter baseline and a summer maximum (leaf development). Commonly, one uses multiple thresholds to characterize different phases of the vegetation development. For example, a low threshold (~0.25) characterizes the start of the growing season, while a higher (~0.85) threshold marks the end of vegetation development toward summer.
+Now, we can use a relative amplitude (0 - 1) across locations and years. This ensures a consistent interpretation of what phenology represents. In case of a threshold of 0.5, this would represent the halfway point between a winter baseline and a summer maximum (leaf development) of a specific year and location. Commonly, one uses multiple thresholds to characterize different phases of the vegetation development. For example, a low threshold (~0.25) characterizes the start of the growing season, while a higher (~0.85) threshold marks the end of vegetation development toward summer.
 
-As before, we can now apply relative thresholds (of 0.25 and 0.85) to our time series, to mark the start of the season and maximum crown development. We can reverse this logic, and use the same thresholds on the latter part of the seasonal trajectory and calculate the start of leaf senesence (death) and full leaf loss.
+As before, we can now apply relative thresholds (of 0.25 and 0.85) to our time series to mark the start of the season (SOS) and the maximum crown development (MAX). We can reverse this logic and use the same thresholds on the latter part of the seasonal trajectory and calculate the start of leaf senesence (SEN) and full leaf loss, or the end-of-season (EOS).
 
 ```{r}
 # calculate phenology dates
@@ -298,7 +298,7 @@ phenology <- df |>
   )
 ```
 
-Plotting these results for a limited set of years shows how phenology dates for different years and phenology metrics (thresholds). Note that using the scaled (yearly) data estimates for the year 2004 are accurate, in contrast to previous results as shown in @fig-smooth-phen.
+Plotting these results for a limited set of years shows phenology dates for different years and phenology metrics (thresholds). Note that using the scaled (yearly) data estimates for the year 2004 yield robust phenology dates in spite of the artefactual multiplicative scaling that was introduced. This is in contrast to previous results as shown in @fig-smooth-phen.
 
 ```{r warning=FALSE, message=FALSE}
 #| code-fold: true
@@ -513,7 +513,7 @@ phenology_map[phenology_map > 180] <- NA
 phenology_raster[phenology_raster > 180] <- NA
 ```
 
-The generated dynamic map @fig-phenology-dyn shows you the result of the algorithm, and allows you to explore some of the underlying reasons for the observed patterns. For example, meadows and agricultural fields often show early leaf development, while forested areas are later. This new "product" shows differences with MODIS (MCD12Q2) phenology product, which can be attributed to methodological choices.
+The generated dynamic map @fig-phenology-dyn shows the result of the algorithm and allows us to explore some of the underlying reasons for the observed patterns. For example, meadows and agricultural fields often show early leaf development, while forested areas exhibit later phenology dates. Our own new "product" shows differences with the MODIS (MCD12Q2) phenology product, which can be attributed to methodological choices.
 
 ::: callout-tip
 # Exercise
