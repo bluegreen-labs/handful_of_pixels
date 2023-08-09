@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Phenology is broadly defined as seasonally recurring life cycle events, ranging from migration to seasonal plant growth. Land surface phenology is a first order control on the exchange of water and energy between the biosphere and atmosphere [@cleland_shifting_2007; @lieth_phenology_2013; @piao_plant_2019; @Richardson2010]. With phenology being sensitive to temperature, it can be considered an indicator of climate change [@Penuelas2009]. Plant phenology has historically been recorded for many centuries [@Menzel2005]. More recently plant phenology (and its changes) have been recorded by networks of observers [@Crimmins2017], near-surface cameras [@richardson_tracking_2018; @richardson_tracking_2018-1] and not in the least by global satellite monitoring [@Zhang2003; @Ganguly2010a].
+Phenology is broadly defined as seasonally recurring life cycle events, ranging from migration to seasonal plant growth. Land surface phenology is a first order control on the exchange of water and energy between the biosphere and atmosphere [@cleland_shifting_2007; @lieth_phenology_2013; @piao_plant_2019; @Richardson2010]. With phenology being sensitive to temperature, it can be considered an indicator of climate change [@Penuelas2009]. Plant phenology has historically been recorded for many centuries [@Menzel2005]. More recently, plant phenology (and its changes) have been recorded by networks of observers [@Crimmins2017], near-surface cameras [@richardson_tracking_2018; @richardson_tracking_2018-1], and by global satellite monitoring [@Zhang2003; @Ganguly2010a].
 
 ```{r}
 #| label: fig-canopy-change
@@ -13,13 +13,13 @@ Phenology is broadly defined as seasonally recurring life cycle events, ranging 
 knitr::include_graphics("./images/canopy_change.jpg")
 ```
 
-All these (remote sensing) measurements have provided us with insights in how climate change has altered plant phenology. Overall, climate change moves phenology forward (from spring toward winter) at a rate of ~ 1 - 5 days per decade, with rates varying depending on locality and altitude [@wang_has_2015; @Vitasse2009; @Menzel2006].
+All these (remote sensing) measurements have provided us with insights in how climate change has altered plant phenology. Overall, climate change drives temperatures up, and moves the phenology of leaf-unfolding by deciduous trees in winter-cold climates (temperate and boreal forest ecosystems) forward in time (from spring toward winter) at a rate of ~ 1 - 5 days per decade, with rates varying depending on locality and altitude [@wang_has_2015; @Vitasse2009; @Menzel2006].
 
-Consequences are many, such as exposing early blooming or leafing plants to increased frosts risks and carbon losses through an explicit opportunity cost [@Hufkens2012f; @augspurger_reconstructing_2013; @Gu2008]. In short, changes to plant and land surface phenology have a profound effect on both the carbon balance and all (co-) dependent processes [@Hufkens2012f]. Therefore, it is key that we can quantify how phenology changes in response to year-to-year variability, climate change and global heating [@Richardson2010; @Penuelas2009].
+Consequences are manyfold, such as exposing early blooming or leafing plants to an increased risk of late frost events and related damage to leaves [@Hufkens2012f; @augspurger_reconstructing_2013; @Gu2008]. In short, changes to plant and land surface phenology have a profound effect on both the carbon balance and all (co-) dependent processes [@Hufkens2012f]. Therefore, it is key that we can detect and quantify how phenology changes in response to year-to-year variability in temperatures, and long-term trends related to anthropogenic climate change and global heating [@Richardson2010; @Penuelas2009].
 
-Remote sensing products provide these insights for almost four decades [@Zhang2003; @Hufkens2012e]. Remote sensing, and land surface phenology  products they produce have a number of advantages. They provide wall-to-wall coverage, with relative consistency and known (methodological) biases. I will cover several aspects of developing a small research project using the remote sensing of phenology as it's basis, using small data sets (a handfull of pixels). 
+Satellite remote sensing data products provide these insights for almost four decades [@Zhang2003; @Hufkens2012e]. Remote sensing products of land surface phenology provide wall-to-wall coverage with a relatively high level of data consistency across space and time and well-studied known (methodological) biases. This chapter covers several aspects of developing a small research project using remote sensing data of surface phenology, gathered for a small set of locations (a handfull of pixels). 
 
-In this chapter (@sec-phenology-trends) I will highlight how to detect landscape wide trends in phenology and how they relate to physical geography. This knowledge can then be used to infer some broad, cross-cutting, properties of vegetation phenology. In @sec-algorithms I will demonstrate how you can detect phenology from vegetation time series yourself, using a simple algorithm, and scale this regionally and globally.
+This chapter (@sec-phenology-trends) highlights how to detect landscape-wide trends in phenology and how they relate to topography (elevation, aspect) and land cover type. This knowledge can then be used to infer some general properties of vegetation phenology. Chapter @sec-algorithms demonstrates how you can detect phenological dates (timing of leaf-unfolding) from vegetation time series yourself, using a simple algorithm, and scale this regionally and globally.
 
 Now, let's get started!
 
@@ -40,13 +40,14 @@ land_cover <- readRDS(here::here("data/land-cover_2012.rds"))
 
 ## Getting the required data
 
-Our first forays into phenology research will require both topography and phenology data. If we want to download topographic data to quantify the influence of topography on phenology. Various sources can be found online but the easiest is to use the `geodata` package which provides a way to access Shuttle Radar Topography Mission (SRTM) elevation data easily.
+To detect and quantify relationships between phenology and topography, we require relevant data sources. Various sources can be found online but the easiest is to use the `geodata` package which provides a way to access Shuttle Radar Topography Mission (SRTM) elevation data (digital elevation model, DEM) easily.
 
 ```{r eval = FALSE}
 # load libraries
 library(geodata)
 
 # download SRTM data
+# This stores file srtm_38_03.tif in tempdir()
 geodata::elevation_3s(
     lat = 46.6756,
     lon = 7.85480,
@@ -64,9 +65,9 @@ dem <- terra::rast(
 )
 ```
 
-In this exercise I will rely on the [MODIS land surface phenology product (MCD12Q2)](https://www.bu.edu/lcsc/data-documentation/). This remote sensing based data product quantifies land surface phenology and is a good trade-off between data coverage (global) and precision (on a landscape scale).
+In this exercise, we will rely on the [MODIS land surface phenology product (MCD12Q2)](https://www.bu.edu/lcsc/data-documentation/). This remote sensing-based data product quantifies land surface phenology and is a good trade-off between data coverage (global) and precision (on a landscape scale).
 
-To gather this data I will use the `MODISTools` package. For an in depth discussion on gathering data using APIs and this API in particular I refer to @sec-accessing-data.
+To access this data, we will use the `MODISTools` package. See Chapter @sec-accessing-data for an in depth discussion on accessing data using APIs and the `MODISTools` API in particular. Data is downloaded here for the same location as used for the elevation data above. 
 
 ```{r eval = FALSE}
 # load libraries
@@ -93,7 +94,7 @@ phenology <- MODISTools::mt_subset(
 
 It is always important to understand the data products you use. Find information on who produced the product, track down the latest literature in this respect and note what the limitations of the product are.
 
-- What does the band name stand for (mathematically)? 
+- What does the band name stand for? 
 - How does this relate to other bands within this product?
 - What are the characteristics of the downloaded data?
   - is post-processing required?
@@ -108,9 +109,9 @@ The downloaded phenology data and the topography data need post-processing in ou
 3. DEM data extent is larger than MODIS coverage
 4. Two non-matching grids (DEM ~ MODIS)
 
-Given that data downloaded using `MODISTools` is formatted as tidy data we can change corrupt or missing values into a consistent format. In the case of the MCD12Q2 product all values larger than 32665 can be classified as `NA` (not available).
+Given that data downloaded using `MODISTools` is formatted as tidy data we can change corrupt or missing values into a consistent format. In the case of the MCD12Q2 product, all values larger than 32665 can be classified as `NA` (not available).
 
-The documentation of the product also shows that phenology metrics are dates as days counted from January 1st 1970. In order to ease interpretation we will convert these integer values, counted from 1970, to day-of-year values (using `as.Date()` and `format()`). We only consider phenological events in the first 200 days of the year, as we focus on spring. Later dates are most likely spurious.
+The documentation of the product also shows that phenology metrics are dates as days counted from January 1st 1970. In order to ease interpretation, we will convert these integer values, counted from 1970, to day-of-year values (using `as.Date()` and `format()`). We only consider phenological events in the first 200 days of the year, as we focus on spring. Later dates are most likely spurious.
 
 ```{r eval = TRUE}
 # screening of data
@@ -122,7 +123,7 @@ phenology <- phenology |>
   )
 ```
 
-Both datasets, the DEM and MODIS data, come in two different data formats. For the ease of computation we convert the tidy data to a geospatial (`terra` SpatRast) format.
+Both datasets, the DEM and MODIS data, come in two different data formats. For the ease of computation, we convert the tidy data to a geospatial (`terra` SpatRast) format.
 
 ```{r eval = TRUE}
 phenology_raster <- MODISTools::mt_to_terra(
@@ -149,7 +150,7 @@ ggplot() +
 
 ```
 
-We can now compare both data sets in a spatially explicit way, e.g. compute overlap, reproject or resample data. For example, to limit computational time it is often wise to restrict the region of interest to an overlapping section between both data sets. This allows data to be as large as required but as small as possible. We therefore crop the DEM data to correspond to the size of the coverage of the MODIS phenology data.
+We can now compare both data sets in a spatially explicit way, e.g. compute overlap, reproject or resample data. For example, to limit computational time, it is often wise to restrict the region of interest to an overlapping section between both data sets. This allows data to be as large as required but as small as possible. We therefore crop the DEM data to correspond to the size of the coverage of the MODIS phenology data.
 
 ```{r eval = FALSE}
 # crop the dem
@@ -159,7 +160,7 @@ dem <- terra::crop(
 )
 ```
 
-The grid of the DEM and MODIS data do not align and so resampling of the data is required. We use the highest resolution data for this resampling, taking the average across the extent of a MODIS pixel.
+The grid of the DEM and MODIS data do not align. Therefore, resampling of the data to a common grid is required. We use the grid of the highest resolution data as a template for this resampling, taking the average across the extent of a MODIS pixel.
 
 ```{r eval = TRUE}
 # resample the dem using
@@ -181,7 +182,7 @@ dem <- terra::mask(
 
 ```
 
-To provide some context to our results it might be useful to look at different responses by land cover class. In addition to phenology data we can therefore also download the MODIS land cover data product for 2012.
+To provide some context to our results, it might be useful to look at different responses by land cover class. In addition to phenology data, we can therefore also download the MODIS land cover data product for 2012.
 
 ```{r eval = FALSE}
 # download and save land cover data
@@ -200,7 +201,7 @@ land_cover <- MODISTools::mt_subset(
 )
 ```
 
-Now convert this data to geospatial format as before.
+Now, convert this data to a geospatial format as before.
 
 ```{r}
 land_cover_raster <- MODISTools::mt_to_terra(
@@ -211,7 +212,7 @@ land_cover_raster <- MODISTools::mt_to_terra(
 
 ## Phenology trends {#sec-regression}
 
-With all data processed we can explore some of the trends in phenology in relation to topography. Plotting the data side by side already provides some insight into expected trends.
+With all data processed, we can explore some of the trends in phenology in relation to topography. Plotting the data side by side already provides some insight into expected trends.
 
 ```{r warning = FALSE}
 #| code-fold: true
@@ -248,7 +249,7 @@ p + p2 +
     )
 ```
 
-We can plot the relation between topography and the start of the season (phenology) across the scene (where data is available). Plotting this non-spatially will show a clear relation between topography (altitude) and the start of the season. With an increasing altitude we see the start of the season being delayed. The effect is mild below 1000m and increases above this.
+We can plot the relation between topography and the start of the season (phenology) across the scene (where data is available). Plotting this non-spatially will show a clear relation between topography (altitude) and the start of the season. With an increasing altitude, we see the start of the season being delayed. The effect is mild below 1000m and increases above this.
 
 ```{r warning = FALSE, message= FALSE}
 #| code-fold: true
@@ -275,7 +276,7 @@ ggplot(
     )
   ) +
   geom_hex() +
-  scale_fill_viridis_c() +
+  scale_fill_viridis_c(trans="log10") +
   geom_smooth(
     method = "lm",
     se = FALSE,
