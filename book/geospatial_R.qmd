@@ -12,9 +12,9 @@ set.seed(131)
 r <- terra::rast(here::here("data/demo_data.nc"))
 ```
 
-Geospatial data procesing in `R` follows the standard raster vs. vector data model dichotomy as seen throughout most geographic information systems (GIS, @fig-datatypes). Here, raster data represent continuous data on a (fixed) grid, while vector data describe geographic features using points, lines and polygons (shapes). The main difference between both types is their sensitivity to resolution, which is predetermined in the case of raster data, while undetermined using a vector topology. 
+Geospatial data procesing in `R` follows the standard raster vs. vector data model dichotomy as seen throughout most geographic information systems (GIS, @fig-datatypes). Here, raster data represent data on a regular grid, while vector data describe geographic features using points, lines and polygons (shapes). The main difference between both types is their sensitivity to resolution, which is predetermined in the case of raster data, while undetermined using a vector topology. 
 
-This difference in data models used also determines the advantages and disadvantages of both models, where vector topology is resolution independent data efficient in storage the handling if mathematical (topological) operations can be computationally expensive. On the other hand raster data has a fixed lower limit to its resolution, while often being computationally efficient when modelling.
+This difference in data models used also determines the advantages and disadvantages of both models. Vector topology is resolution-independent and data efficient in storage. However, the handling of mathematical (topological) operations can be computationally expensive. In contrast, raster data has a fixed resolution and enables computationally efficient data transformations.
 
 ```{r}
 #| label: fig-datatypes
@@ -25,19 +25,19 @@ This difference in data models used also determines the advantages and disadvant
 knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/c/c2/Raster_vector_tikz.svg")
 ```
 
-Most geospatial data handling in `R` happens using lower level GDAL/OGR bindings. The [GDAL/OGR library](https://gdal.org/) is an open source framework for geospatial processing and is used across programming languages and geospatial frameworks or GIS systems (e.g. QGIS).
+Most geospatial data handling in `R` happens uses lower-level GDAL/OGR bindings. The [GDAL/OGR library](https://gdal.org/) library is an open source framework for geospatial processing and is used across programming languages and geospatial frameworks or GIS systems (e.g. QGIS).
 
 ## The R geospatial ecosystem
 
-Spatio-temporal data often comes in the form of dense arrays, with space and time being array dimensions. Examples include socio-economic or demographic data, series of satellite images with multiple spectral bands, spatial simulations, and climate or weather model output.
+Spatio-temporal data often comes in the form of arrays, with space and time being array dimensions. Examples include socio-economic or demographic data, series of satellite images with multiple spectral bands, spatial simulations, and climate or weather model output.
 
-A number of libraries (packages) make the use of this spatio-temporal data, and geo-computational work in R easy. However, the ecosystem has grown rapidly and therefore is continuously shifting. Unlike other processing environments this makes it at times hard to keep track of what or when to use a particular package.
+A number of libraries (packages) make the use of this spatio-temporal data, and geo-computational work in R easy. However, the ecosystem has grown rapidly and is therefore continuously shifting. Unlike other processing environments, this makes it at times hard to keep track of what or when to use a particular package.
 
-Here, I give a quick overview of the basic functionality and their uses cases of all these packages, finally there will be a brief overview of some basic geospatial operations using `terra` and `sf` libraries (see @sec-terra and @sec-sf). For a more extensive, deep dive, of all these packages I refer to @lovelace_geocomputation_2019 .
+Here, a quick overview of the basic functionality and uses cases of different geospatial R packages is provided, and a brief overview of some basic geospatial operations using `terra` and `sf` libraries is given (see @sec-terra and @sec-sf). For a more deeper dive into these packages, see @lovelace_geocomputation_2019 .
 
 ### The terra package {#sec-terra}
 
-The `terra` package is the successor of the older `raster` package, but with a simpler interface. This package deals with both geographic raster and vector data, with the explicit requirement that raster data represent spatially continuous processes on a fixed (rectangular) grid.
+The `terra` package is the successor of the older `raster` package and provides a simpler interface. This package deals with both geographic raster and vector data, with the explicit requirement that raster data represent spatially continuous processes on a fixed (rectangular) grid.
 
 #### Reading and inspecting data {.unnumbered}
 ```{r eval = FALSE}
@@ -58,7 +58,7 @@ We can inspect the meta data by calling the object:
 print(r)
 ```
 
-Or you can visualize the data by plotting the data (e.g. using `plot()`). Note that @fig-demo-nc is generated using the `ggplot2` library and is a bit more pleasing to the eye than the default `plot()` routine. You can also plot an interactive map using the `terra` function `plet()`, allowing you to scroll and zoom, while including various background tiles (such as satellite imagery, or topographic data).
+Or you can visualize the data by plotting the data (e.g., using `plot()`). Note that @fig-demo-nc is generated using the `ggplot2` library and is a bit more pleasing to the eye than the default `plot()` routine. You can also plot an interactive map using the `terra` function `plet()`, allowing you to scroll and zoom, while including various background tiles (such as satellite imagery, or topographic data).
 
 ```{r message=FALSE, warning=FALSE}
 #| code-fold: true
@@ -73,7 +73,7 @@ ggplot() +
   tidyterra::geom_spatraster(data = r) +
   scale_fill_viridis_c(
     na.value = NA,
-    name = "Temperature (K) \n"
+    name = "2 m temp. (K) \n"
     ) +
   theme_bw() +
   theme(
@@ -117,7 +117,7 @@ leaflet() |>
   addLegend(
     pal = pal,
     values = values(r),
-    title = "2m Temp (K)")
+    title = "2 m temp. (K)")
 ```
 
 ::: callout-note
@@ -126,7 +126,7 @@ leaflet() |>
 Dynamic maps with the `plet()` function in `terra` leverages the `leaflet` library and [Leafletjs javascript framework](https://rstudio.github.io/leaflet/). To use dynamic maps straight from `terra` you require the latest `leaflet` package version. You can install this version by using `remotes::install_github('rstudio/leaflet')`. The above example shows a more advanced example, using two base maps and the demo raster data.
 :::
 
-Dedicated functions exist to extract the layer names (`names()`) and the time stamps (`time()`) if there is a time component to the data. These functions allow you to extract these data and use them in analysis.
+Dedicated functions exist to extract the layer names (`names()`) and the time stamps (`time()`) if there is a time component to the data. These functions allow you to extract these data and use them in analyses.
 
 ```{r}
 time(r)
@@ -154,7 +154,7 @@ ggplot() +
   tidyterra::geom_spatraster(data = r_c) +
   scale_fill_viridis_c(
     na.value = NA,
-    name = "Temperature (C) \n"
+    name = "2 m temp. (deg. C) \n"
     ) +
   theme_bw() +
   theme(
@@ -199,7 +199,7 @@ r_m <- terra::mask(r_c, m, maskvalue = FALSE)
 ```{r message=FALSE, warning=FALSE}
 #| code-fold: true
 #| label: fig-demo-mask-C
-#| fig-cap: "Temperature in Celsius (C), with values lower than 5C masked."
+#| fig-cap: "Temperature in Celsius (C), with values lower than 5 degrees C masked."
 #| fig-align: "center"
 #| out-width: "100%"
 #| fig-width: 5
@@ -209,7 +209,7 @@ ggplot() +
   tidyterra::geom_spatraster(data = r_m) +
   scale_fill_viridis_c(
     na.value = NA,
-    name = "Temperature (C) \n"
+    name = "Temperature (deg. C) \n"
     ) +
   theme_bw() +
   theme(
@@ -225,7 +225,7 @@ Geospatial data often consists of multiple layers of information, either represe
 # create a multi-layer object
 # by combining objects
 # here the correcte (t2m in C)
-# and the masked values (>5C)
+# and the masked values (>5 C)
 # are combined
 multi_layer <- c(r_c, r_m)
 
@@ -255,7 +255,7 @@ ggplot() +
   tidyterra::geom_spatraster(data = multi_layer_mean) +
   scale_fill_viridis_c(
     na.value = NA,
-    name = "Temperature (C) \n"
+    name = "Temperature (deg. C) \n"
     ) +
   theme_bw() +
   theme(
@@ -300,7 +300,7 @@ A lot of GIS vector data comes as [shapefiles](https://en.wikipedia.org/wiki/Sha
 library(sf)
 
 # load included shapefile
-nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
+nc <- sf::st_read(system.file("shape/nc.shp", package = "sf"))
 ```
 
 When printing the object you will be provided with an overview, when plotting the spatial data (using `plot()`) will be visualized (similar to the raster data above).
@@ -326,7 +326,7 @@ You can extract basic information such as the overall bounding box of the vector
 st_bbox(nc)
 ```
 
-The `sf` framework uses a tidy data approach, as such you can use operations upon the list items stored within the larger data set by calculating the bounding box for each geometry.
+The `sf` framework uses a tidy data approach. you can use operations on the list items stored within the larger data set by calculating the bounding box for each geometry.
 ```{r}
 nc |> 
     mutate(
@@ -358,7 +358,7 @@ camden <- nc |>
 plot(camden)
 ```
 
-Most common operations on vector data are area based logical operations. Such as taking the intersection or union of features, which only retains the outline of a polygon. These operations can be executed on features themselves or should be mediated by geometric binary operations which can be used for filtering the original data.
+Most common operations on vector data are area-based logical operations. Examples include taking the intersection or union of features, which only retains the outline of a polygon. These operations can be executed on features themselves or should be mediated by geometric binary operations which can be used for filtering the original data.
 
 For example the `st_intersection()` function calculates where and how frequent simple features overlap (interesect) with each other. The results are again a tidy simple feature which can be sorted or filtered using the standard `filter()` function.
 
@@ -406,7 +406,7 @@ ggplot() +
   theme_bw()
 ```
 
-Other functions allow you to group overlapping features. For example grouping of intersecting features can be done using `st_union()`, which only returns the outermost boundary of a feature.
+Other functions allow you to group overlapping features. For example, grouping of intersecting features can be done using `st_union()`, which only returns the outermost boundary of a feature.
 
 ```{r}
 u <- st_union(i)
@@ -443,7 +443,7 @@ sf::st_write(nc, file.path(tempdir(), "nc.shp"))
 
 ### The stars package
 
-The [`stars` package](https://r-spatial.github.io/stars/) is another geospatial `R` package you should take note of. In contrast to `terra` it is specifically tailored to dealing with data cubes. These are arrays of data on which one axis is time.
+The [`stars` package](https://r-spatial.github.io/stars/) is another geospatial `R` package you should take note of. In contrast to `terra`, it is specifically tailored to dealing with data cubes. These are arrays of data on which one axis is time.
 
 ```{r}
 #| label: fig-datacube
@@ -454,7 +454,7 @@ The [`stars` package](https://r-spatial.github.io/stars/) is another geospatial 
 knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/cube1.png")
 ```
 
-Unlike the `terra` package the grid should not be regular, but can be of a different sort such as curvi-linear data (@fig-datagrid).
+Unlike for the `terra` package, grids in the `stars` package don't have to be regular and rectangular, but can be of a different sort, such as curvi-linear data (@fig-datagrid).
 
 ```{r}
 #| label: fig-datagrid
@@ -469,6 +469,6 @@ Some other distinctions should be made, such as the fast summarizing of raster d
 
 ### Other noteworthy packages
 
-Other critical packages are [`ncdf4`](https://cirrus.ucsd.edu/~pierce/ncdf/) which will be installed by default, but the included functions allow for the manipulation (reading and writing) of the common netCDF format. The [`rstac` package](https://brazil-data-cube.github.io/rstac/) which provides a convenient way to browse Spatio-Temporal Asset Catalogues (STAC), a format commonly used to organize remote sensing images online. The [`sits` package](https://e-sensing.github.io/sitsbook/) which was created by the Brazilian National Institute for Space Research (INPE) and provides tools for machine learning on data cubes.
+Other critical packages are [`ncdf4`](https://cirrus.ucsd.edu/~pierce/ncdf/) which will be installed by default, but the included functions allow for the manipulation (reading and writing) of the common netCDF format. The [`rstac` package](https://brazil-data-cube.github.io/rstac/) which provides a convenient way to browse Spatio-Temporal Asset Catalogues (STAC), a format commonly used to organize remote sensing images online. The [`sits` package](https://e-sensing.github.io/sitsbook/) was created by the Brazilian National Institute for Space Research (INPE) and provides tools for machine learning on data cubes.
 
-Note that R (or python for that matter) is infinitely flexible, and many packages exist to address niche problems within the context of geospatial data manipulation. Although often tapping into the power of the GDAL framework these packages are very powerful in their own right but outside the scope of this basic introduction. For more in depth discussion I refer to the list of resources at the end of this book.
+Note that R (or Python) is infinitely flexible, and many packages exist to address niche problems within the context of geospatial data manipulation. While they most often tap into the the GDAL framework, these packages can be very powerful for certain applications which are outside the scope of this basic introduction. For more in-depth discussion, the reader is referred to the list of resources at the end of this book.
