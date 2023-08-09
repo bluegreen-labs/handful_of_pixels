@@ -26,7 +26,7 @@ harvard_phenocam_data <- readr::read_csv(
 harvard_phenology <- readr::read_csv(
   "../data/harvard_DB_1000_3day_transition_dates.csv",
   comment = "#") |>
-  filter(
+  dplyr::filter(
     direction == "rising",
     gcc_value == "gcc_90"
   )
@@ -38,11 +38,11 @@ optim_par <- c(7.993938, 18.185416)
 
 ## Introduction
 
-In the previous chapters (@sec-phenology-trends, @sec-algorithms) you have seen how the development of vegetation throughout the season, or phenology, is determined by temperature, and therefore through the lapse rate to topography. Although these chapters give you an intuition on how phenology might change under global heating, it does not provide a (pseudo) mechanistic model for predicting phenology.
+In the previous chapters (@sec-phenology-trends, @sec-algorithms), we investigated how the development of vegetation greenness throughout the seasons (that is, phenology) is associated with altitutde, and therefore with temperature altitude, following the characteristic lapse rate. Although these preceeding chapters give an intuition on how phenology might change with global heating, they did not provide a model for *predicting* phenology as a function of temperature.
 
-Luckily the science around phenology is old. People been observing vegetation phenology for hundreds of years with observations of cherry blossoms in Kyoto going back to the 9th century [@aono_phenological_2008]. Furthermore, there is a good understanding of how phenology is triggered in spring and how this can be captured using (mechanistic) models. The most basic principle uses the concept of growing degree days (GDD) and first mentions go back to the 18th century as described by @DeReaumur1735. 
+Luckily the science on phenology has a long tradition and has yielded a rich body of literature. People have been observing vegetation phenology for hundreds of years, for example through observations of cherry blossom dates in Kyoto going back to the 9th century [@aono_phenological_2008]. Furthermore, there is a good understanding of how phenology is triggered in spring and how this can be modelled. The most basic principle uses the concept of growing degree days (GDD, see (@sec-phenocam)) and first mentions go back to the 18th century as described by @DeReaumur1735.
 
-This growing degree day concept stipulates that spring phenology depends on the accumulation over time of growing days, i.e. days which exceed a certain threshold temperature. If a set number of growing degree days are reached it will trigger spring phenology. 
+This growing degree day concept stipulates that spring phenology depends on the accumulated temperature above a certain threshold. If a set number of growing degree days are reached it will trigger spring phenology. A model that predicts the spring phenology (leaf unfolding) as a function of a temperature time series can be considered a *dynamic mechanistic model* - a mathematical description of how elements of a system are connected and how processes operate (see [Introduction Chapter in Applied Geodata Science](https://geco-bern.github.io/agds/introduction.html#a-new-modelling-paradigm)). GDD-based phenology models can be considered *dynamic* since the temporal structure (sequence of dates in the time series) matters and a starting date and value for the temperature summation has to be specified. 
 
 ::: callout-note
 ### Note
@@ -55,7 +55,7 @@ This is a very dense chapter, covering both the concepts of constructing a (pseu
 
 To illustrate the use of growing degree days in modelling spring phenology I will use PhenoCam data. The [PhenoCam network](https://phenocam.nau.edu/webcam/) [@richardson_tracking_2018; @richardson_tracking_2018-1] uses network connected cameras to collect seasonal trajectories of vegetation greenness, as characterized with green chromatic coordinate (GCC) values. PhenoCam data can be downloaded using the [`phenocamr` R package](https://bluegreen-labs.github.io/phenocamr/) [@hufkens_integrated_2018].
 
-The `phenocamr` R package uses the PhenoCam API to access the latest GCC time series and derive phenology using a threshold based methodology similar to that described in @sec-algorithms. The data in @fig-phenocam-harvard should therefore be familiar. The `phenocamr` API call also downloads [DAYMET data](https://daymet.ornl.gov/), which includes both daily minimum and maximum data. This ancillary data will be used in this basic modelling example below.
+The `phenocamr` R package uses the PhenoCam API to access the latest GCC time series and derive phenology using a threshold-based methodology similar to that described in @sec-algorithms. The data in @fig-phenocam-harvard should therefore be familiar. The `phenocamr` API call also downloads [DAYMET data](https://daymet.ornl.gov/), which includes both daily minimum and maximum data. This ancillary data will be used in this basic modelling example below.
 
 ```{r message = FALSE, eval = FALSE}
 # I will use the phenocamr package which 
@@ -92,7 +92,7 @@ harvard_phenology <- readr::read_csv(
     ),
   comment = "#"
 ) |>
-  filter(
+  dplyr::filter(
     direction == "rising",
     gcc_value == "gcc_90"
   )
@@ -101,7 +101,7 @@ harvard_phenology <- readr::read_csv(
 ```{r}
 #| code-fold: true
 #| label: fig-phenocam-harvard
-#| fig-cap: "A time series of the 90th percentile 3-daily green chromatic coordinate (GCC) values for the Harvard forest EMS tower PhenoCam as a dark grey line, with threshold based (25% seasonal amplitude) derived phenology marked as black dots."
+#| fig-cap: "A time series of the 90th percentile 3-daily green chromatic coordinate (GCC) values for the Harvard forest EMS tower. PhenoCam GCC data are shown by the dark grey line, with threshold based (25% seasonal amplitude) derived phenology marked as black dots."
 #| fig-align: "center"
 #| out-width: "100%"
 #| fig-width: 6
@@ -133,13 +133,11 @@ ggplot(harvard_phenocam_data) +
 
 ```
 
-Growing degree days are at it's most basic specified as the cumulative sum of the days above a certain (preset) temperature. Here a growing degree day x for a temperature threshold (t) is defined as:
+Growing degree days are defined as the cumulative sum of temperatures above a specified threshold ($T_0$, most commonly $T_0 = 5^\circ$C).
 
-$x = \left\{ \begin{array}{cl} 1 & : \ x \geq t \\ 0 & : \ x < t \end{array} \right.$
+$\text{GDD}_{T_0,j}=\sum_{i=M}^j \max(T_i-T_0, 0)$. 
 
-$GDD_k=\sum_{i=1}^k x_i$. 
-
-Where k is the number of growing degree days for a daily time step i. In `R` this equation is simplified to `cumsum(temperature >= 5)` with temperature a vector of temperature values and threshold of 5 $^\circ$C. Using this knowledge we can quickly calculate and plot all days which adhere to this criteria and their cumulative sum @fig-gdd.
+$M$ is the date at which the summation is initiated, and GDD$_{T_0,M-1} = 0$. In `R`, this can be implemented as shown below.
 
 ```{r}
 # return mean daily temperature as well
@@ -147,9 +145,11 @@ Where k is the number of growing degree days for a daily time step i. In `R` thi
 harvard_temp <- harvard_phenocam_data |>
   group_by(year) |>
   dplyr::mutate(
+    tmean = (tmax..deg.c. + tmin..deg.c.)/2
+  ) |> 
+  dplyr::mutate(
     date = as.Date(date),
-    tmean = (tmax..deg.c. + tmin..deg.c.)/2,
-    gdd = cumsum(tmean >= 5)
+    gdd = cumsum(ifelse(tmean >= 5, tmean - 5, 0))
   ) |>
   dplyr::select(
     date,
@@ -174,10 +174,12 @@ harvard_phenology <- harvard_phenology |>
     )
 ```
 
+Using this knowledge, we can plot plot the temperatures of all days, distinguishing between days where the temperature threshold is exceeded or not, and calculate the cumulative temperature sum of days at which the temperature was above the specified threshold @fig-gdd.
+
 ```{r warning=FALSE}
 #| code-fold: true
 #| label: fig-gdd
-#| fig-cap: "Example of the growing degree day (GDD) concept, showing both a temperature time series with days with a mean temperature below 5C in blue, those above as red (a), and the growing degree days (GDD) as the cummulative sum of warm (red) days in the bottom panel (b). The observed spring phenology (leaf out) is marked with a vertical black line, which corresponds to ~30 accumulated growing degree days as marked by the dashed horizontal line."
+#| fig-cap: "Example of the growing degree day (GDD) concept, showing both a temperature time series with days with a mean temperature below 5 degrees C in blue, those above as red (a), and the growing degree days (GDD) as the cummulative temperature sum of warm (red) days in the bottom panel (b). The observed spring phenology date (leaf out) and the corresponding GDD is marked with a vertical and horizontal black lines, respectively."
 #| fig-align: "center"
 #| out-width: "100%"
 #| fig-width: 6
@@ -185,12 +187,12 @@ harvard_phenology <- harvard_phenology |>
 
 # grab only the 2010 value of spring phenology
 harvard_phenology_2010 <- harvard_phenology |>
-  filter(
+  dplyr::filter(
     year == 2010
   )
 
 harvard_gdd_value <- harvard_temp |>
-  filter(
+  dplyr::filter(
     date == harvard_phenology_2010$transition_25
   )
 
@@ -223,7 +225,7 @@ p <- ggplot(harvard_temp) +
   ) +
   labs(
     x = "",
-    y = "temperature"
+    y = "Temperature (deg. C)"
   ) +
   xlim(
     c(
@@ -272,7 +274,7 @@ p2 <- ggplot(harvard_temp) +
     ) +
   labs(
     x = "",
-    y = "GDD (#)"
+    y = "GDD (deg. C)"
   ) +
   xlim(
     c(
@@ -280,7 +282,7 @@ p2 <- ggplot(harvard_temp) +
     as.Date("2010-06-30")
     )
   ) +
-  ylim(c(0, 120)) +
+  ylim(c(0, 1000)) +
   theme_bw()  +
   theme(
     legend.position = "none"
@@ -297,34 +299,34 @@ p + p2 +
 
 ```
 
-In @fig-gdd you can see how growing degree days (in red) accumulate when the season progresses. Spring leaf development in 2010 happens on day-of-year (DOY) 114, where for this scenario (with a temperature threshold of 5$^\circ$C) happens after the accumulation of approximately 30 growing degree days. For this particular year one can say, that given a temperature threshold of 5$^\circ$C to calculate growing degree days spring will happen after 30 such days. However, due to interannual variability it is not guaranteed that this model which, relies on both a temperature threshold and a number accumulated days (often referred to as F* in literature), will work for every given year. There is a need to generalize our model, and pick the right parameters (temperature threshold, number of accumulated days) to predict phenology. Generalizing this concept is our next step to formulate a true phenology model.
+@fig-gdd shows how GDD increases during days when temperatures are above the threshold, as the season progresses. Spring leaf development in 2010 was observed on day-of-year (DOY) 114. According to the temperature record and our calculation of GDD, we found a GDD of 130.44$^\circ$C on that day. The simplest model for the leaf-out date may thus be formulated as the day when a GDD of 130.44$^\circ$C is reached. However, it is not guaranteed that the choice of this particular critical GDD value as the a parameter in our leaf-out model (often referred to as F* in literature) yields accurate predictions of leaf-out dates for multiple years and/or for multiple locations. To generalize our model, we have to pick a suitable value for the critical GDD (F*) such that the leaf-out date is accurately predicted across a larger set of years and/or sites when comparing to observations. Finding such a generalization is the next step in our development of a phenology model.
 
 ## Growing degree day model optimization
 
-The simple statement for a single year as characterized by the behaviour of a simple cumulative sum `cumsum(temperature >= 5)` can be rewritten as:
+Our GDD-based leaf-out model can be written in the form of a function that takes the temperature time series as its first argument, and as two parameters the temperature threshold above which temperatures are accumulated, and the critical GDD that determines the DOY at which leaf-out is predicted.
 
 ```{r}
-gdd_model <- function(data, par) {
+gdd_model <- function(temp, par) {
   # split out parameters from a simple
   # vector of parameter values
-  threshold <- par[1]
-  accumulated_days <- par[2]
+  temp_threshold <- par[1]
+  gdd_crit <- par[2]
   
   # accumulate growing degree days for
   # temperature data
-  gdd <- cumsum(data >= threshold)
+  gdd <- cumsum(ifelse(temp > temp_threshold, temp - temp_threshold, 0))
   
   # figure out when the number of growing
   # degree days exceeds the minimum value
   # required for leaf development, only
   # return the first value
-  doy <- unlist(which(gdd >= accumulated_days)[1])
+  doy <- unlist(which(gdd >= gdd_crit)[1])
   
   return(doy)
 }
 ```
 
-This model (function) requires a temperature data, and vector of parameter values. Running the model on the original 2010 data with the previously observed values and parameters 5 and 30, for the temperature threshold and accumulated days respectively, should yield an estimated spring phenology at DOY 114.
+Running the model on the original 2010 data with the previously observed values and parameters 5$\circ$C for the temperature threshold and 130.44$\circ$C for the critical GDD, should yield a predicted leaf-out date that compares well with the observed leaf-out date of 114.
 
 ```{r}
 # confirm that the model function
@@ -333,29 +335,29 @@ This model (function) requires a temperature data, and vector of parameter value
 # removing the filter would run the
 # model for all years!)
 prediction <- harvard_temp |>
-  filter(
+  dplyr::filter(
     year == 2010
   ) |>
   group_by(year) |>
   summarize(
-   pred = gdd_model(
-    data = tmean,
-    par = c(5, 30)
-  )  
+    pred = gdd_model(
+      temp = tmean,
+      par = c(5, 130.44)
+    )  
   )
 
 print(prediction)
 ```
 
-This model can now be used to generalize phenology dynamics across years for a given site, and/or across multiple sites using a model optimization/parameterizations.
+Here, we picked the GDD at which the leaf-out was observed. The predicted leaf-out date, generated by a model that uses the observed GDD of the leaf-out date as its parameter for the critical GDD threshold is thus perfectly accurate. The prediction corresponds to the observed leaf-out date. However, will this parameter choice also generate accurate predictions for other years and/or sites?
 
-### Phenology model optimization
+### Phenology model calibration
 
-When we want to estimate a general set of parameters for our growing degree day model we need to optimize them across a wide range of observations (sites and or years). In particular, we want to minimize the error (a cost function) between the model results (for a given set of parameters, i.e. the temperature threshold and accumulated days when phenology happens) and our observed data. If you've taking any introduction to statistical or machine learning this problem will sound fairly familiar. For example, in a linear model one optimizes two parameters an intercept and a slope to minimize the difference between observed and modelled (linear) model results. In our example, we do not have a linear model but a more complex one with two parameters - however the same concept applies. 
+To obtain accurate predictions across a larger set of years and sites, we estimate a general set of parameters for our growing degree day model, i.e., we calibrate the model parameters. To do so, we want to minimize the error (a cost function) between the model results (for a given set of parameters, i.e. the temperature threshold and critical GDD) and our observed data obtained for multiple sites and years. If you've taken any introduction to statistical or machine learning, this problem will sound fairly familiar. For example, in a least squares regression model calibrates two parameters - an intercept and a slope - to minimize the difference between observed and predicted values. In our example, we do not have a linear model but a more complex one with two parameters. Nevertheless, the same concept to model calibration (parameter optimization) applies. 
 
-Estimating these parameters efficiently can be done using various parameter optimization methods. Examples of such methods include simulated annealing (`GenSA` R package), Bayesian optimization methods (`BayesianTools` R package). For simplicity I will use the `GenSA` R package which relies on simulated annealing method to illustrate the estimation of model parameters.
+Estimating parameters efficiently for an arbitrary model (formulated as a function with the model parameters as one argument) can be done using various parameter optimization methods. Examples of such methods include simulated annealing (`GenSA` R package), or Bayesian optimization methods (`BayesianTools` R package). For simplicity, we will use the `GenSA` R package which relies on the simulated annealing method to illustrate the estimation of model parameters.
 
-In this example the optimization minimizes a cost function which in this example is defined as the root mean squared error (RMSE) between the observed and the predicted values.
+In this example, the optimization minimizes a cost function which is defined as the root mean squared error (RMSE) between the observed and the predicted values.
 
 ```{r eval = FALSE}
 # run model and compare to true values
@@ -372,18 +374,18 @@ rmse_gdd <- function(par, data) {
     group_by(year) |>
     summarise(
       predictions = gdd_model(
-        data = tmean,
+        temp = tmean,
         par = par
       )
     )
   
-  predictions <- left_join(predictions, validation)
+  predictions <- left_join(predictions, validation, by = "year")
   
   rmse <- predictions |>
     summarise(
-      sqrt(mean((predictions - doy)^2, na.rm = TRUE))
+      rmse = sqrt(mean((predictions - doy)^2, na.rm = TRUE))
     ) |>
-    unlist()
+    pull(rmse)
   
   # return rmse value
   return(rmse)
@@ -393,21 +395,21 @@ rmse_gdd <- function(par, data) {
 ::: callout-warning
 ### Warning
 
-Both the cost function as the growing degree day function are not optimized for speed. Both functions are written with clarity in mind to teach the basic concepts of model optimization/parameterization. Model optimization relies on iteratively searching for the best parameter by running the model thousands of times. Slow code can make it impossible to converge on a solution as time requirements grow beyond what is workable.
+Both the cost function as the growing degree day function are not optimized for computational efficiency. Both functions are written with clarity in mind to teach the basic concepts of model optimization/parameterization. Model optimization relies on iteratively searching for the best parameter by running the model thousands of times. Slow code can make it practically impossible to converge on a solution as time requirements grow beyond what is workable.
 
-Within the context of this worked example speed is not a concern. However, when implementing your own code, take care to optimize both functions for speed by vectorization and other techniques. 
+Within the context of this worked example, computational efficiency is not a concern. However, when implementing your own code, take care to optimize both functions for efficiency by vectorization and other techniques. 
 
 :::
 
-In the final optimization will iteratively step through the parameter space, running the cost function (which in terms calls the main model), and find an optimal solution to the problem (i.e. minimize the RMSE). Often starting model parameters and limits to the parameter space are required. Defining the limits of your parameter space well can significantly reduce the time needed to converge upon a solution, and is often bound by the physical constraints of the model (i.e. it is unlikely that spring will happen after the accumulation of 180 growing degree days). Similarly, temperature thresholds fall within a -10 to 45 $^\circ$C range, the physical limits of plant growth.
+During parameter optimization, we iteratively step through the parameter space, running the cost function (which in turn calls the main model, here `gdd_model()`), and find an optimal set of parameters that minimize the RMSE. Often, starting model parameters and limits to the parameter space are required. Defining the limits of the parameter space well can significantly reduce the time needed to converge on a solution, and is often bound by the physical constraints of the model. Similarly, temperature thresholds fall within a range that is determined by physiological limits of plant activity.
 
 ```{r eval = FALSE}
 # starting model parameters
-par = c(0, 30)
+par = c(0, 130)
 
 # limits to the parameter space
 lower <- c(-10,0)
-upper <- c(45,180)
+upper <- c(45,200)
 
 # data needs to be provided in a consistent
 # single data file, a nested data structure
@@ -430,7 +432,7 @@ optim_par = GenSA::GenSA(
 )$par
 ```
 
-After an optimization routine (calling the cost function 4000 times) the optimal parameters were determined to be `r optim_par` for the temperature threshold and number of accumulation days respectively. We can now plug these values back into our model and run it across all available years. When looking at this small dataset for Harvard forest we see a reasonable agreement between observed and predicted values (@fig-phenology-model). Obviously, including more sites and years would increase the model performance.
+After an optimization routine (calling the cost function 4000 times) the optimal parameters were determined to be `r optim_par` for the temperature threshold and number of accumulation days respectively. We can now plug these values back into our model and run it across all available years. When looking at this small dataset for Harvard forest, we see a reasonable agreement between observed and predicted values (@fig-phenology-model). Obviously, including more sites and years would increase the model performance.
 
 
 ```{r}
@@ -440,7 +442,7 @@ predictions <- harvard_temp |>
   group_by(year) |>
   summarize(
    prediction = gdd_model(
-    data = tmean,
+    temp = tmean,
     par = optim_par
   )  
   )
@@ -449,7 +451,7 @@ predictions <- harvard_temp |>
 ```{r message = FALSE, warning = FALSE}
 #| code-fold: true
 #| label: fig-phenology-model
-#| fig-cap: "Scatterplot of observed and predicted leaf phenology as day-of-year (DOY). A linear regression is overplot as a full dark grey line with confidence intervals shown as a light grey envelope."
+#| fig-cap: "Scatterplot of observed and predicted leaf-out dates as day-of-year (DOY). A linear regression is overplot as a full dark grey line with confidence intervals shown as a light grey envelope."
 #| fig-align: "center"
 #| out-width: "75%"
 #| fig-width: 5
@@ -474,8 +476,8 @@ ggplot(validation) +
     )
   ) +
   labs(
-    x = "Observed leaf phenology (DOY)",
-    y = "Predicted leaf phenology (DOY)"
+    x = "Observed leaf-out date (DOY)",
+    y = "Predicted leaf-out date (DOY)"
   ) +
   theme_bw()  +
   theme(
@@ -483,11 +485,11 @@ ggplot(validation) +
   )
 ```
 
-More advanced models exist, which include not only temperature but also radiation, precipitation and or temporal lags or other requirements such as frost during the preceding winter depending on the vegetation type or assumptions made. For an overview of these more advanced models I refer to @basler_evaluating_2016 and @hufkens_integrated_2018.
+More advanced models exist. Such models may include not only temperature but also radiation, precipitation and or temporal lags or so-called chilling requirements, frost during the preceding winter months. For an overview of these more advanced models I refer to @basler_evaluating_2016 and @hufkens_integrated_2018.
 
 ## Spatial scaling
 
-With a basic model parameterized you can explore if and how the relationship between observed and predicted values scale across a larger landscape. I will use DAYMET tiled data to scale the results spatially (relying on the same driver data as used during parameterization). First I download both minimum and maximum temperature data and average them to a mean daily value (as previously used), using the `daymetr` R package [@hufkens_integrated_2018].
+With a basic model parameterized you can explore if and how the relationship between observed and predicted values scale across a larger landscape. I will use DAYMET raster data to scale the results spatially (relying on the same driver data as used during parameterization). First I download both minimum and maximum temperature data and average them to a mean daily value (as previously used), using the `daymetr` R package [@hufkens_integrated_2018].
 
 ```{r eval = FALSE}
 library(daymetr)
@@ -498,20 +500,20 @@ daymetr::download_daymet_tiles(
   start = 2012,
   end = 2012,
   param = c("tmin","tmax"),
-  path = "data-raw/",
+  path = paste0(here::here(), "/data-raw/"),
   silent = TRUE
   )
 
 # calculate the daily mean values
 r <- daymetr::daymet_grid_tmean(
-  path = "data-raw",
+  path = paste0(here::here(), "/data-raw/"),
   product = 11935,
   year = 2012,
   internal = TRUE
 )
 ```
 
-For convenience I reproject the data to geographic coordinates, and limit the data to the first 180 days (layers) of the dataset to reduce the memory footprint of the calculations.
+For convenience I reproject the data to geographic coordinates and limit the data to the first 180 days (layers) of the dataset to reduce the memory footprint of the calculations.
 
 ```{r eval = FALSE}
 # reproject to lat lon
