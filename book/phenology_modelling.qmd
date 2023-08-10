@@ -4,6 +4,7 @@
 library(geodata)
 library(terra)
 library(dplyr)
+library(here)
 library(ggplot2)
 library(patchwork)
 library(GenSA)
@@ -12,19 +13,19 @@ library(GenSA)
 # for fast processing
 
 # read DAYMET gridded data
-ma_nh_temp <- terra::rast("../data/daymet_mean_temperature.tif") |>
+ma_nh_temp <- terra::rast(here::here("data/daymet_mean_temperature.tif")) |>
   terra::trim()
 
 # read harvard forest GCC time series and matching
 # DAYMET data
 harvard_phenocam_data <- readr::read_csv(
-  "../data/harvard_DB_1000_3day.csv",
+  here::here("data/harvard_DB_1000_3day.csv"),
   comment = "#"
   )
 
 # read derived phenology metrics
 harvard_phenology <- readr::read_csv(
-  "../data/harvard_DB_1000_3day_transition_dates.csv",
+  here::here("data/harvard_DB_1000_3day_transition_dates.csv"),
   comment = "#") |>
   dplyr::filter(
     direction == "rising",
@@ -33,7 +34,7 @@ harvard_phenology <- readr::read_csv(
 
 # optim parameters 4000 calls
 # hardcoded for speed
-optim_par <- c(7.993938, 18.185416)
+optim_par <- c(3.489597, 195.709193)
 ```
 
 ## Introduction
@@ -42,7 +43,7 @@ In the previous chapters (@sec-phenology-trends, @sec-algorithms), we investigat
 
 Luckily the science on phenology has a long tradition and has yielded a rich body of literature. People have been observing vegetation phenology for hundreds of years, for example through observations of cherry blossom dates in Kyoto going back to the 9th century [@aono_phenological_2008]. Furthermore, there is a good understanding of how phenology is triggered in spring and how this can be modelled. The most basic principle uses the concept of growing degree days (GDD, see (@sec-phenocam)) and first mentions go back to the 18th century as described by @DeReaumur1735.
 
-This growing degree day concept stipulates that spring phenology depends on the accumulated temperature above a certain threshold. If a set number of growing degree days are reached it will trigger spring phenology. A model that predicts the spring phenology (leaf unfolding) as a function of a temperature time series can be considered a *dynamic mechanistic model* - a mathematical description of how elements of a system are connected and how processes operate (see [Introduction Chapter in Applied Geodata Science](https://geco-bern.github.io/agds/introduction.html#a-new-modelling-paradigm)). GDD-based phenology models can be considered *dynamic* since the temporal structure (sequence of dates in the time series) matters and a starting date and value for the temperature summation has to be specified. 
+This growing degree day concept stipulates that spring phenology depends on the accumulated temperature above a certain threshold. If a set number of growing degree days are reached it will trigger spring phenology. A model that predicts the spring phenology (leaf unfolding) as a function of a temperature time series can be considered a *dynamic mechanistic model* - a mathematical description of how elements of a system are connected and how processes operate. GDD-based phenology models can be considered *dynamic* since the temporal structure (sequence of dates in the time series) matters and a starting date and value for the temperature summation has to be specified. 
 
 ::: callout-note
 ### Note
@@ -395,9 +396,9 @@ rmse_gdd <- function(par, data) {
 ::: callout-warning
 ### Warning
 
-Both the cost function as the growing degree day function are not optimized for computational efficiency. Both functions are written with clarity in mind to teach the basic concepts of model optimization/parameterization. Model optimization relies on iteratively searching for the best parameter by running the model thousands of times. Slow code can make it practically impossible to converge on a solution as time requirements grow beyond what is workable.
+Both the cost function as the growing degree day function are not optimized for computational efficiency. 
 
-Within the context of this worked example, computational efficiency is not a concern. However, when implementing your own code, take care to optimize both functions for efficiency by vectorization and other techniques. 
+Both functions are written with clarity in mind to teach the basic concepts of model optimization/parameterization. Model optimization relies on iteratively searching for the best parameter by running the model thousands of times. Slow code can make it practically impossible to converge on a solution as time requirements grow beyond what is workable. Within the context of this worked example, computational efficiency is not a concern. However, when implementing your own code, take care to optimize both functions for efficiency by vectorization and other techniques. 
 
 :::
 
@@ -432,7 +433,7 @@ optim_par = GenSA::GenSA(
 )$par
 ```
 
-After an optimization routine (calling the cost function 4000 times) the optimal parameters were determined to be `r optim_par` for the temperature threshold and number of accumulation days respectively. We can now plug these values back into our model and run it across all available years. When looking at this small dataset for Harvard forest, we see a reasonable agreement between observed and predicted values (@fig-phenology-model). Obviously, including more sites and years would increase the model performance.
+After an optimization routine (calling the cost function 4000 times) the optimal parameters were determined to be `r optim_par`, for the temperature threshold and number of accumulation days respectively. We can now plug these values back into our model and run it across all available years. When looking at this small dataset for Harvard forest, we see a reasonable agreement between observed and predicted values (@fig-phenology-model). Obviously, including more sites and years would increase the model performance.
 
 
 ```{r}
