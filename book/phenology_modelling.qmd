@@ -52,7 +52,7 @@ This is a very dense chapter, covering both the concepts of constructing a (pseu
 
 :::
 
-## PhenoCam validation data
+## PhenoCam validation data {#sec-phenocam}
 
 To illustrate the use of growing degree days in modelling spring phenology I will use PhenoCam data. The [PhenoCam network](https://phenocam.nau.edu/webcam/) [@richardson_tracking_2018; @richardson_tracking_2018-1] uses network connected cameras to collect seasonal trajectories of vegetation greenness, as characterized with green chromatic coordinate (GCC) values. PhenoCam data can be downloaded using the [`phenocamr` R package](https://bluegreen-labs.github.io/phenocamr/) [@hufkens_integrated_2018].
 
