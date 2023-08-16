@@ -396,9 +396,7 @@ rmse_gdd <- function(par, data) {
 ::: callout-warning
 ### Warning
 
-Both the cost function as the growing degree day function are not optimized for computational efficiency. 
-
-Both functions are written with clarity in mind to teach the basic concepts of model optimization/parameterization. Model optimization relies on iteratively searching for the best parameter by running the model thousands of times. Slow code can make it practically impossible to converge on a solution as time requirements grow beyond what is workable. Within the context of this worked example, computational efficiency is not a concern. However, when implementing your own code, take care to optimize both functions for efficiency by vectorization and other techniques. 
+Both the cost function as the growing degree day function are not optimized for computational efficiency. Both functions are written with clarity in mind to teach the basic concepts of model optimization/parameterization. Model optimization relies on iteratively searching for the best parameter by running the model thousands of times. Slow code can make it practically impossible to converge on a solution as time requirements grow beyond what is workable. Within the context of this worked example, computational efficiency is not a concern. However, when implementing your own code, take care to optimize both functions for efficiency by vectorization and other techniques. 
 
 :::
 
