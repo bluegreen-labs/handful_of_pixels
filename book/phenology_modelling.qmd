@@ -34,16 +34,16 @@ harvard_phenology <- readr::read_csv(
 
 # optim parameters 4000 calls
 # hardcoded for speed
-optim_par <- c(3.489597, 195.709193)
+optim_par <- c(2.811523, 228.278440)
 ```
 
 ## Introduction
 
-In the previous chapters (@sec-phenology-trends, @sec-algorithms), we investigated how the development of vegetation greenness throughout the seasons (that is, phenology) is associated with altitutde, and therefore with temperature altitude, following the characteristic lapse rate. Although these preceeding chapters give an intuition on how phenology might change with global heating, they did not provide a model for *predicting* phenology as a function of temperature.
+In the previous chapters (@sec-phenology-trends, @sec-algorithms), we investigated how the development of vegetation greenness throughout the seasons (that is, phenology) is associated with altitutde, and therefore with temperature, following the characteristic lapse rate. Although these preceeding chapters give an intuition on how phenology might change with global heating, they did not provide a model for *predicting* phenology as a function of temperature.
 
-Luckily the science on phenology has a long tradition and has yielded a rich body of literature. People have been observing vegetation phenology for hundreds of years, for example through observations of cherry blossom dates in Kyoto going back to the 9th century [@aono_phenological_2008]. Furthermore, there is a good understanding of how phenology is triggered in spring and how this can be modelled. The most basic principle uses the concept of growing degree days (GDD, see (@sec-phenocam)) and first mentions go back to the 18th century as described by @DeReaumur1735.
+Luckily, the science on phenology has a long tradition and has yielded a rich body of literature. People have been observing vegetation phenology for hundreds of years, for example through observations of cherry blossom dates in Kyoto going back to the 9th century [@aono_phenological_2008]. Furthermore, there is a good understanding of how phenology is triggered in spring and how this can be modelled. The most basic principle uses the concept of growing degree days (GDD, see below) and first mentions go back to the 18th century as described by @DeReaumur1735.
 
-This growing degree day concept stipulates that spring phenology depends on the accumulated temperature above a certain threshold. If a set number of growing degree days are reached it will trigger spring phenology. A model that predicts the spring phenology (leaf unfolding) as a function of a temperature time series can be considered a *dynamic mechanistic model* - a mathematical description of how elements of a system are connected and how processes operate. GDD-based phenology models can be considered *dynamic* since the temporal structure (sequence of dates in the time series) matters and a starting date and value for the temperature summation has to be specified. 
+This growing degree day concept stipulates that spring phenology depends on the accumulated temperature above a certain threshold. If a set amount of temperature accumulation is reached, it will trigger spring phenology (leaf unfolding). A model that predicts the spring phenology as a function of a temperature time series can be considered a *mechanistic model* - a mathematical description of how elements of a system are connected and how processes operate (see [Introduction Chapter in Applied Geodata Science](https://geco-bern.github.io/agds/introduction.html#a-new-modelling-paradigm)). GDD-based phenology models can be considered *dynamic* since the temporal structure (sequence of dates in the time series) matters and a starting date and value for the temperature summation has to be specified. 
 
 ::: callout-note
 ### Note
@@ -54,7 +54,7 @@ This is a very dense chapter, covering both the concepts of constructing a (pseu
 
 ## PhenoCam validation data {#sec-phenocam}
 
-To illustrate the use of growing degree days in modelling spring phenology I will use PhenoCam data. The [PhenoCam network](https://phenocam.nau.edu/webcam/) [@richardson_tracking_2018; @richardson_tracking_2018-1] uses network connected cameras to collect seasonal trajectories of vegetation greenness, as characterized with green chromatic coordinate (GCC) values. PhenoCam data can be downloaded using the [`phenocamr` R package](https://bluegreen-labs.github.io/phenocamr/) [@hufkens_integrated_2018].
+To illustrate the use of growing degree days in modelling spring phenology, I will use PhenoCam data. The [PhenoCam network](https://phenocam.nau.edu/webcam/) [@richardson_tracking_2018; @richardson_tracking_2018-1] uses network connected cameras to collect seasonal trajectories of vegetation greenness, as characterized with green chromatic coordinate (GCC) values. PhenoCam data can be downloaded using the [`phenocamr` R package](https://bluegreen-labs.github.io/phenocamr/) [@hufkens_integrated_2018].
 
 The `phenocamr` R package uses the PhenoCam API to access the latest GCC time series and derive phenology using a threshold-based methodology similar to that described in @sec-algorithms. The data in @fig-phenocam-harvard should therefore be familiar. The `phenocamr` API call also downloads [DAYMET data](https://daymet.ornl.gov/), which includes both daily minimum and maximum data. This ancillary data will be used in this basic modelling example below.
 
@@ -138,7 +138,7 @@ Growing degree days are defined as the cumulative sum of temperatures above a sp
 
 $\text{GDD}_{T_0,j}=\sum_{i=M}^j \max(T_i-T_0, 0)$. 
 
-$M$ is the date at which the summation is initiated, and GDD$_{T_0,M-1} = 0$. In `R`, this can be implemented as shown below.
+$M$ is the date at which the summation is initiated, and $\text{GDD}_{T_0,M-1} = 0$. In `R`, this can be implemented as shown below.
 
 ```{r}
 # return mean daily temperature as well
@@ -175,7 +175,7 @@ harvard_phenology <- harvard_phenology |>
     )
 ```
 
-Using this knowledge, we can plot plot the temperatures of all days, distinguishing between days where the temperature threshold is exceeded or not, and calculate the cumulative temperature sum of days at which the temperature was above the specified threshold @fig-gdd.
+Using this knowledge, we can plot plot the temperature time series of all days, distinguishing between days where the temperature threshold is exceeded or not, and calculate the cumulative temperature sum of days at which the temperature was above the specified threshold @fig-gdd.
 
 ```{r warning=FALSE}
 #| code-fold: true
@@ -327,7 +327,7 @@ gdd_model <- function(temp, par) {
 }
 ```
 
-Running the model on the original 2010 data with the previously observed values and parameters 5$\circ$C for the temperature threshold and 130.44$\circ$C for the critical GDD, should yield a predicted leaf-out date that compares well with the observed leaf-out date of 114.
+Running the model on the original 2010 data with the previously observed values and parameters 5$^\circ$C for the temperature threshold and 130.44$^\circ$C for the critical GDD, should yield a predicted leaf-out date that matches the observed leaf-out date of 114.
 
 ```{r}
 # confirm that the model function
@@ -356,7 +356,7 @@ Here, we picked the GDD at which the leaf-out was observed. The predicted leaf-o
 
 To obtain accurate predictions across a larger set of years and sites, we estimate a general set of parameters for our growing degree day model, i.e., we calibrate the model parameters. To do so, we want to minimize the error (a cost function) between the model results (for a given set of parameters, i.e. the temperature threshold and critical GDD) and our observed data obtained for multiple sites and years. If you've taken any introduction to statistical or machine learning, this problem will sound fairly familiar. For example, in a least squares regression model calibrates two parameters - an intercept and a slope - to minimize the difference between observed and predicted values. In our example, we do not have a linear model but a more complex one with two parameters. Nevertheless, the same concept to model calibration (parameter optimization) applies. 
 
-Estimating parameters efficiently for an arbitrary model (formulated as a function with the model parameters as one argument) can be done using various parameter optimization methods. Examples of such methods include simulated annealing (`GenSA` R package), or Bayesian optimization methods (`BayesianTools` R package). For simplicity, we will use the `GenSA` R package which relies on the simulated annealing method to illustrate the estimation of model parameters.
+Estimating parameters efficiently for an arbitrary model (formulated as a function with the model parameters as one argument) can be done using various parameter optimization methods. In `R`, the most basic parameter optimization is implemented by the base-R `nls()` function, which implements a square error minimization for any (non-linear) function. Other examples include simulated annealing (`GenSA` R package), or Bayesian optimization methods (e.g., the `BayesianTools` R package). Here, we will use the `GenSA` R package which relies on the simulated annealing method to illustrate the estimation of model parameters.
 
 In this example, the optimization minimizes a cost function which is defined as the root mean squared error (RMSE) between the observed and the predicted values.
 
@@ -410,7 +410,7 @@ par = c(0, 130)
 
 # limits to the parameter space
 lower <- c(-10,0)
-upper <- c(45,200)
+upper <- c(45,500)
 
 # data needs to be provided in a consistent
 # single data file, a nested data structure
@@ -433,7 +433,7 @@ optim_par = GenSA::GenSA(
 )$par
 ```
 
-After an optimization routine (calling the cost function 4000 times) the optimal parameters were determined to be `r optim_par`, for the temperature threshold and number of accumulation days respectively. We can now plug these values back into our model and run it across all available years. When looking at this small dataset for Harvard forest, we see a reasonable agreement between observed and predicted values (@fig-phenology-model). Obviously, including more sites and years would increase the model performance.
+After an optimization routine (calling the cost function 4000 times) the optimal parameters were determined to be `r optim_par` for the temperature threshold and number of accumulation days respectively. We can now plug these values back into our model and run it across all available years. When looking at this small dataset for Harvard forest, we see a reasonable agreement between observed and predicted values (@fig-phenology-model). Obviously, including more sites and years would increase the model performance.
 
 
 ```{r}
@@ -476,6 +476,11 @@ ggplot(validation) +
       prediction
     )
   ) +
+  geom_abline(
+    intercept=0, 
+    slope=1, 
+    linetype="dotted"
+    ) +
   labs(
     x = "Observed leaf-out date (DOY)",
     y = "Predicted leaf-out date (DOY)"
