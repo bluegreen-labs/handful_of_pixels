@@ -14,6 +14,8 @@ if (!file.exists("data/validation_sites.rds")) {
   validation_sites <- readr::read_csv(
     "https://zenodo.org/record/6572482/files/Global%20LULC%20reference%20data%20.csv?download=1"
   )
+  
+  saveRDS(validation_sites, "data/validation_sites.rds", compress = "xz")
 } else {
   validation_sites <- readRDS("data/validation_sites.rds")
 }
@@ -36,7 +38,7 @@ if (!file.exists("data/validation_selection.rds")) {
       LC1
     ) |>
     sample_n(
-      min(n(), 100)
+      min(n(), 50)
     ) |>
     ungroup()
  
@@ -170,11 +172,11 @@ status_nbar <- rs_request_batch(
   time_out = 14400
 )
  
-status_lst <- rs_request_batch(
-  request = task_lst,
-  workers = 10,
-  user = "khufkens",
-  path = "data/lulc/",
-  verbose = TRUE,
-  time_out = 14400
-)
+# status_lst <- rs_request_batch(
+#   request = task_lst,
+#   workers = 10,
+#   user = "khufkens",
+#   path = "data/lulc/",
+#   verbose = TRUE,
+#   time_out = 14400
+# )
