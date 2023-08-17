@@ -173,6 +173,25 @@ df <- read.table(
 )
 ```
 
+When dealing with large amounts of files, or files which are large in size, it might be useful to rely on the [{vroom} R package](https://vroom.r-lib.org/). This package has the ability to read a lists of similar files (rectangular data) into a single dataframe, or deal with large data files, through lazy loading. Keep this in mind if you come across many and/or large CSV files.
+
+```{r}
+# a list of two identical files, but
+# can be a large list of random files
+file_list <- c(
+  file.path(tempdir(), "your_file.csv"),
+  file.path(tempdir(), "your_file.csv")
+)
+
+# read data into a single data frame
+# using the file list and the vroom
+# package
+vroom_df <- vroom::vroom(
+  file_list,
+  show_col_types = FALSE
+  )
+```
+
 All digital data which is not represented as text characters can be considered binary data. One of the advantages of binary data is that it is an efficient representation of data, saving space. This comes at the cost of requiring a dedicated software (i.e. libraries), other than a text editor, to manipulate the data.
 
 In geography and environmental sciences particular (geospatial) file formats dominate the field. Some of these file formats relate to the content of the data, some of these formats are legacy formats due to the history of the field itself. Below you find a list some of the most common formats you will encounter. For the use of (geo-spatial) libraries I refer to @sec-libraries and @sec-geospatial .
@@ -259,7 +278,7 @@ knitr::include_graphics("./images/filter_data.png")
 Any other configuration is considered "messy data", but therefore not invalid or "bad". Certain messy data formats might be more memory efficient.
 :::
 
-### Tidy data conversions
+### Tidy data conversions {#sec-tidy-pivots}
 
 Although both long or wide data formats have their advantages and drawbacks, the use of long (row oriented) data allows us to use the `dplyr` library to iterate over data quickly and transparently (see @fig-filterrows). However, large amounts of data are provided as "messy data" which is not rowwise oriented. An understanding of conversions from a wide to a long data format are therefore critical throughout this manual.
 
