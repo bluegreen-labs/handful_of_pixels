@@ -1,0 +1,73 @@
+<mxfile host="app.diagrams.net" modified="2023-08-17T12:53:47.709Z" agent="Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/116.0" etag="dot2vgqDxJvPBGWqN34n" version="21.6.8" type="device">
+  <diagram name="Page-1" id="uQgGTdc3giXhQAKu545p">
+    <mxGraphModel dx="667" dy="517" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="RB8qNKSh1jgMERsBhP3i-14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;shape=flexArrow;fillColor=#000000;" edge="1" parent="1" source="RB8qNKSh1jgMERsBhP3i-2" target="RB8qNKSh1jgMERsBhP3i-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RB8qNKSh1jgMERsBhP3i-2" value="Estimate ensemble DTs for GlobCover training data" style="rounded=0;whiteSpace=wrap;html=1;flipH=1;flipV=1;" vertex="1" parent="1">
+          <mxGeometry x="290" y="110" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RB8qNKSh1jgMERsBhP3i-15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;shape=flexArrow;fillColor=#000000;" edge="1" parent="1" source="RB8qNKSh1jgMERsBhP3i-3" target="RB8qNKSh1jgMERsBhP3i-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RB8qNKSh1jgMERsBhP3i-18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;shape=flexArrow;fillColor=#000000;" edge="1" parent="1" source="RB8qNKSh1jgMERsBhP3i-3" target="RB8qNKSh1jgMERsBhP3i-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RB8qNKSh1jgMERsBhP3i-3" value="Apply boosted DTs to global data" style="rounded=0;whiteSpace=wrap;html=1;flipH=1;flipV=1;" vertex="1" parent="1">
+          <mxGeometry x="290" y="205" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RB8qNKSh1jgMERsBhP3i-16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;shape=flexArrow;fillColor=#000000;" edge="1" parent="1" source="RB8qNKSh1jgMERsBhP3i-4" target="RB8qNKSh1jgMERsBhP3i-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RB8qNKSh1jgMERsBhP3i-19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;shape=flexArrow;fillColor=#000000;" edge="1" parent="1" source="RB8qNKSh1jgMERsBhP3i-4" target="RB8qNKSh1jgMERsBhP3i-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RB8qNKSh1jgMERsBhP3i-4" value="Adjust sample bias, apply weighted priors via Bayes&#39; Rule" style="rounded=0;whiteSpace=wrap;html=1;flipH=1;flipV=1;" vertex="1" parent="1">
+          <mxGeometry x="290" y="300" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RB8qNKSh1jgMERsBhP3i-17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;shape=flexArrow;fillColor=#000000;" edge="1" parent="1" source="RB8qNKSh1jgMERsBhP3i-5" target="RB8qNKSh1jgMERsBhP3i-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RB8qNKSh1jgMERsBhP3i-20" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;shape=flexArrow;fillColor=#000000;" edge="1" parent="1" source="RB8qNKSh1jgMERsBhP3i-5" target="RB8qNKSh1jgMERsBhP3i-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RB8qNKSh1jgMERsBhP3i-5" value="Stabilize classification results across three year window" style="rounded=0;whiteSpace=wrap;html=1;flipH=1;flipV=1;" vertex="1" parent="1">
+          <mxGeometry x="290" y="395" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RB8qNKSh1jgMERsBhP3i-21" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;shape=flexArrow;fillColor=#000000;" edge="1" parent="1" source="RB8qNKSh1jgMERsBhP3i-6" target="RB8qNKSh1jgMERsBhP3i-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RB8qNKSh1jgMERsBhP3i-6" value="Cross-Walk to other classifications" style="rounded=0;whiteSpace=wrap;html=1;flipH=1;flipV=1;" vertex="1" parent="1">
+          <mxGeometry x="290" y="490" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RB8qNKSh1jgMERsBhP3i-13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;shape=flexArrow;fillColor=#000000;" edge="1" parent="1" source="RB8qNKSh1jgMERsBhP3i-7" target="RB8qNKSh1jgMERsBhP3i-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RB8qNKSh1jgMERsBhP3i-7" value="Extract exemplars from site database" style="rounded=0;whiteSpace=wrap;html=1;flipH=1;flipV=1;" vertex="1" parent="1">
+          <mxGeometry x="90" y="110" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RB8qNKSh1jgMERsBhP3i-8" value="Class-conditional probability for each class at each pixel " style="rounded=0;whiteSpace=wrap;html=1;flipH=1;flipV=1;" vertex="1" parent="1">
+          <mxGeometry x="90" y="205" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RB8qNKSh1jgMERsBhP3i-9" value="Posterior probability for each class at each pixel" style="rounded=0;whiteSpace=wrap;html=1;flipH=1;flipV=1;" vertex="1" parent="1">
+          <mxGeometry x="90" y="300" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RB8qNKSh1jgMERsBhP3i-10" value="Final IGBP classification for each year" style="rounded=0;whiteSpace=wrap;html=1;flipH=1;flipV=1;" vertex="1" parent="1">
+          <mxGeometry x="90" y="395" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RB8qNKSh1jgMERsBhP3i-11" value="1st and 2th most likely IGBP and confidence; UMP, BGC, LAI/FPAR PFT " style="rounded=0;whiteSpace=wrap;html=1;flipH=1;flipV=1;" vertex="1" parent="1">
+          <mxGeometry x="90" y="490" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RB8qNKSh1jgMERsBhP3i-22" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#FF0000;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="80" y="100" width="340" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="RB8qNKSh1jgMERsBhP3i-24" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeWidth=2;strokeColor=#FF0000;" vertex="1" parent="1">
+          <mxGeometry x="280" y="190" width="140" height="90" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
