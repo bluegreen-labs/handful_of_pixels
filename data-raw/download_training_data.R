@@ -30,9 +30,9 @@ if (!file.exists("data/validation_sites.rds")) {
 if (!file.exists("data/validation_selection.rds")) {
   validation_selection <- validation_sites |>
     filter(
-      competition == 4,
+      (competition == 4 | competition == 1),
       perc1 > 80,
-      confidence_LC <= 10
+      confidence_LC <= 30
     ) |>
     group_by(
       LC1
@@ -158,18 +158,18 @@ status_altitude <- rs_request_batch(
   request = task_dem,
   workers = 10,
   user = "khufkens",
-  path = "data/lulc/",
+  path = "data/lulc/dem",
   verbose = TRUE,
-  time_out = 14400 
+  time_out = 28800
 )
 
 status_nbar <- rs_request_batch(
   request = task_nbar,
   workers = 10,
   user = "khufkens",
-  path = "data/lulc/",
+  path = "data/lulc/nbar",
   verbose = TRUE,
-  time_out = 14400
+  time_out = 28800
 )
  
 # status_lst <- rs_request_batch(
