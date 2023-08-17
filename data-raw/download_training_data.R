@@ -32,13 +32,14 @@ if (!file.exists("data/validation_selection.rds")) {
     filter(
       (competition == 4 | competition == 1),
       perc1 > 80,
-      confidence_LC <= 30
+      confidence_LC <= 30,
+      lat > 0
     ) |>
     group_by(
       LC1
     ) |>
     sample_n(
-      min(n(), 50)
+      min(n(), 150)
     ) |>
     ungroup()
  
@@ -74,7 +75,7 @@ task_nbar <- lapply(validation_selection, function(x){
         subtask = as.character(.$pixelID),
         latitude = .$lat,
         longitude = .$lon,
-        start = "2010-01-01",
+        start = "2012-01-01",
         end = "2012-12-31",
         product = product,
         layer = as.character(layer)
@@ -107,7 +108,7 @@ task_lst <- lapply(validation_selection, function(x){
         subtask = as.character(.$pixelID),
         latitude = .$lat,
         longitude = .$lon,
-        start = "2010-01-01",
+        start = "2012-01-01",
         end = "2012-12-31",
         product = product,
         layer = as.character(layer)
@@ -133,7 +134,7 @@ task_dem <- lapply(validation_selection, function(x){
     subtask = as.character(x$pixelID),
     latitude = x$lat,
     longitude = x$lon,
-    start = "2010-01-01",
+    start = "2012-01-01",
     end = "2012-12-31",
     product = "NASADEM_NC.001",
     layer = c(
@@ -151,14 +152,14 @@ task_dem <- lapply(validation_selection, function(x){
 })
 
 #--- schedule all downloads in batches of 10 ----
- 
+
 # request the task to be executed
 # 4h (in seconds) time-out per request (~40h total)
 status_altitude <- rs_request_batch(
   request = task_dem,
   workers = 10,
   user = "khufkens",
-  path = "data/lulc/dem",
+  path = "./data/lulc/dem",
   verbose = TRUE,
   time_out = 28800
 )
@@ -167,7 +168,7 @@ status_nbar <- rs_request_batch(
   request = task_nbar,
   workers = 10,
   user = "khufkens",
-  path = "data/lulc/nbar",
+  path = "./data/lulc/nbar",
   verbose = TRUE,
   time_out = 28800
 )
