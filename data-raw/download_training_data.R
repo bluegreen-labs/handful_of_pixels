@@ -172,12 +172,46 @@ status_nbar <- rs_request_batch(
   verbose = TRUE,
   time_out = 28800
 )
- 
-# status_lst <- rs_request_batch(
-#   request = task_lst,
-#   workers = 10,
-#   user = "khufkens",
-#   path = "data/lulc/",
-#   verbose = TRUE,
-#   time_out = 14400
-# )
+
+#--- download regional data for model run ----
+
+
+# load the required libraries
+library(terra)
+
+# create a SpatRaster ROI from the terra demo file
+roi <- terra::rast("./data/LAI.tiff")
+
+product <- "MCD43A4.061"
+layer <- c(
+  paste0("Nadir_Reflectance_Band", 1:7)
+)
+
+df <- data.frame(
+  task = "raster_download",
+  subtask = "swiss",
+  start = "2012-01-01",
+  end = "2012-12-31",
+  product = product,
+  layer = as.character(layer)
+)
+
+# build the area based request/task
+# rename the task name so data will
+# be saved in the "raster" folder
+# as defined by the task name
+df$task <- "raster"
+task <- rs_build_task(
+  df = df,
+  roi = roi,
+  format = "geotiff"
+)
+
+# request the task to be executed
+rs_request(
+  request = task,
+  user = "khufkens",
+  transfer = TRUE,
+  path = "data/lulc/raster/",
+  verbose = TRUE
+)
