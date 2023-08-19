@@ -19,10 +19,10 @@ library(MODISTools)
 lc_r <- readRDS(here::here("data/land-cover_2012.rds")) |>
   mt_to_terra(reproject = TRUE)
 
-# lc <- lc |>
+# lc <- readRDS(here::here("data/land-cover_2012.rds")) |>
 #   mutate(
 #     date = as.Date(calendar_date),
-#     year = as.numeric(format(date, "%Y")) 
+#     year = as.numeric(format(date, "%Y"))
 #   ) |>
 #   rename(
 #     lc = "value"
@@ -33,12 +33,13 @@ lc_r <- readRDS(here::here("data/land-cover_2012.rds")) |>
 #     lc
 #   )
 # 
-# # read in LAI
+# # # read in LAI
 # lai <- readRDS(here::here("data/lai_2012.rds")) |>
 #   mutate(
 #     date = as.Date(calendar_date),
 #     year = as.numeric(format(date, "%Y")),
-#     value = value * as.numeric(scale)
+#     value = value * as.numeric(scale),
+#     value = ifelse(value >= 25, NA, value)
 #   ) |>
 #   rename(
 #     lai = "value"
@@ -54,12 +55,12 @@ lc_r <- readRDS(here::here("data/land-cover_2012.rds")) |>
 # df <- left_join(lai, lc, by = c("pixel", "year"))
 # 
 # # get mean and sd for dbf locations
-# dbf <- df |> 
-#   filter(lc == 4) |> 
-#   group_by(date) |> 
+# dbf <- df |>
+#   filter(lc == 4) |>
+#   group_by(date) |>
 #   summarize(
-#     mean = mean(lai),
-#     sd = sd(lai)
+#     mean = mean(lai, na.rm = TRUE),
+#     sd = sd(lai, na.rm = TRUE)
 #     )
 # 
 # saveRDS(
@@ -69,12 +70,12 @@ lc_r <- readRDS(here::here("data/land-cover_2012.rds")) |>
 #   )
 # 
 # # get mean and sd for barren locations
-# snow <- df |> 
-#   filter(lc == 15) |> 
-#   group_by(date) |> 
+# snow <- df |>
+#   filter(lc == 15) |>
+#   group_by(date) |>
 #   summarize(
-#     mean = mean(lai),
-#     sd = sd(lai)
+#     mean = mean(lai, na.rm = TRUE),
+#     sd = sd(lai, na.rm = TRUE)
 #     )
 # 
 # saveRDS(
@@ -86,7 +87,6 @@ lc_r <- readRDS(here::here("data/land-cover_2012.rds")) |>
 snow <- readRDS(here::here("data/snow_lai_profile.rds"))
 dbf <- readRDS(here::here("data/dbf_lai_profile.rds"))
 ```
-
 
 ```{r}
 #| label: fig-lai-dbf-snow
@@ -115,6 +115,7 @@ p <- ggplot(dbf) +
     x = "",
     y = "LAI"
   ) +
+  coord_cartesian(ylim=c(0, 7)) +
   theme_bw()
 
 p2 <- ggplot(snow) +
@@ -136,6 +137,7 @@ p2 <- ggplot(snow) +
     x = "",
     y = "LAI"
   ) +
+  coord_cartesian(ylim=c(0, 7)) +
   theme_bw()
 
 p + p2 +  
@@ -465,7 +467,7 @@ test <- rsample::testing(ml_df_split)
 
 With both a true training and testing dataset in place we can start to implement our supervised machine learning model. In this example I will use a "tidy" machine learning  modelling approach. Similar to the data management practices described in @sec-basic-R, a tidy modelling approach relies on sentence like commands using a pipe (|>) and workflows (recipes). This makes formulating models and their evaluation more intuitive for many. For an in depth discussion on tidy modelling in R I refer to [REFERENCE]. So, let's get started.
 
-#### Model structure
+#### Model structure and workflow {.unnumbered}
 
 To specify our model I will use the {parsnip} R package which goal it is "... to provide a tidy, unified interface to models that can be used to try a range of models without getting bogged down in the syntactical minutiae of the underlying packages". Parsnip therefore will remove some of the complexity of using a package such as {xgboost} might present. It also allows you to switch between different model structures with ease, by only swapping a few arguments. Parsnip will take care of making sure that model parameters are correctly populated and forwarded.
 
@@ -479,8 +481,10 @@ There are many more hyperparameters. For the sake of brevity and speed these are
 ```{r eval = FALSE}
 # load the parsnip package
 # for tidy machine learning
-# modelling
+# modelling and workflows
+# to manage workflows
 library(parsnip)
+library(workflows)
 
 # specify our model structure
 # the model to be used and the
@@ -499,58 +503,83 @@ model_settings <- parsnip::boost_tree(
   ) |>
   set_engine("xgboost") |>
   set_mode("classification")
-```
 
-#### Hyperparameter tuning
-
-
-
-```{r eval = FALSE}
-
-library(dials)
-library(dplyr)
-library(workflows)
-library(tune)
-hyperparameter_grid <- dials::grid_latin_hypercube(
-  tree_depth(),
-  #min_n(),
-  #loss_reduction(),
-  #learn_rate(),
-  size = 5
-)
-```
-
-#### The workflow
-
-```{r eval = FALSE}
-xgb_wf <- workflows::workflow() |>
+# create a workflow compatible with
+# the {tune} package which combines
+# model settings with the desired
+# model structure (data / formula)
+xgb_workflow <- workflows::workflow() |>
   add_formula(as.factor(LC1) ~ .) |>
-  add_model(xgb_spec)
-
+  add_model(model_settings)
 ```
 
-#### Cross validation and model selection
+#### Hyperparameter settings  {.unnumbered}
+
+To optimize our model we need to configure (tune) the hyperparameters which were left variable in the model settings. How we select these hyperparameters is determined by sampling a parameter space, defined in our example by [latin hypercube sampling](https://en.wikipedia.org/wiki/Latin_hypercube_sampling). The {dials} R package provides tidymodels compatible functions to support building latin hypercubes.
 
 ```{r eval = FALSE}
+# load the dials package
+# responsible for (hyper) parameter
+# sampling schemes to tune
+# parameters
+library(dials)
+
+hp_settings <- dials::grid_latin_hypercube(
+  tree_depth(),
+  size = 3
+)
+```
+
+#### Parameter estimation and cross-validation {.unnumbered}
+
+With the above settings we can move on to the actual model calibration. To ensure robustness of our model (hyper) parameters across the training dataset the code below also implements a [cross-validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics)) to rotate through our training data using different subsets. The below code tunes the model parameters across the cross-validation folds and returns all the results. 
+
+```{r eval = FALSE}
+# load the tune library
+# which deals with tuning
+# model (hyper) parameters
+# across grids (see dials)
+library(tune)
+
+# set the folds (division into different)
+# cross-validation training datasets
 folds <- rsample::vfold_cv(train, v = 3)
-xgb_res <- tune::tune_grid(
-  xgb_wf,
+
+# optimize the model (hyper) parameters
+# using the:
+# 1. workflow (i.e. model)
+# 2. the cross-validation across training data
+# 3. the (hyper) parameter specifications
+# all data are saved for evaluation
+xgb_results <- tune::tune_grid(
+  xgb_workflow,
   resamples = folds,
-  grid = xgb_grid,
-  control = tune::control_grid(save_pred=T)
+  grid = hp_settings,
+  control = tune::control_grid(save_pred = TRUE)
 )
 
-best_auc <- tune::select_best(
-  xgb_res,
-  "roc_auc"
+# select the best model based upon
+# the root mean squared error
+xgb_best <- tune::select_best(
+  xgb_results,
+  metric = "rmse"
   )
 
-final_xgb <- tune::finalize_workflow(
-  xgb_wf,
-  best_auc
+# cook up a model using finalize_workflow
+# which takes workflow (model) specifications
+# and combines it with optimal model
+# parameters into a functional model
+xgb_model <- tune::finalize_workflow(
+  xgb_workflow,
+  xgb_best
 )
+```
 
-last_fit <- fit(final_xgb, train)
+### Model evaluation
+
+```{r eval = FALSE}
+train_fit <- fit(xgb_model, train)
+test_fit <- fit(xgb_model, train)
 ```
 
 ### Model scaling
@@ -558,7 +587,6 @@ last_fit <- fit(final_xgb, train)
 The training data for our land-cover mapping exercise will rely on multi-spectral band data, mainly bands 1 through 7. We first define a regions of interest covering an area similar to the previous exercises, roughly spanning the canton of Bern, Switzerland, covering a wide variety of land-cover types. 
 
 ```{r eval = FALSE}
-
 files <- list.files(
   "data/lulc/raster",
   "*Reflectance*",
@@ -590,10 +618,12 @@ probs_r <- terra::predict(r, last_fit, type = "prob")
 lulc_map <- terra::app(probs_r, which.max)
 ```
 
+```{r include = FALSE}
+# return probabilities
+probs_r <- rast(here::here("data/xgboost_spatial_probabilities.tif"))
+lulc_map <- terra::app(probs_r, which.max)
 
-
-```{r eval = FALSE}
-modis_lulc <- readRDS("data/land-cover_2012.rds") |>
+modis_lulc <- readRDS(here::here("data/land-cover_2012.rds")) |>
   dplyr::mutate_at(vars(matches("value")),
             function(x) case_when(
               x <= 5  ~ 1,
@@ -608,15 +638,23 @@ modis_lulc <- readRDS("data/land-cover_2012.rds") |>
               x == 17 ~ 10
             )) |>
   mt_to_terra()
+```
+
+```{r}
+#| code-fold: true
+#| label: fig-spatial-lulc
+#| fig-cap: ""
+#| fig-align: "center"
+#| out-width: "100%"
 
 classes <- c(
     "Tree Cover",
     "Shrub Cover",
-    "Herbaceous Vegetation / Grassland",
+    "Herbaceous Vegetation & Grassland",
     "Cultivated and Managed",
-    "Mosaic: Cultivated and Managed / Natural Vegetation",
-    "Regularly Flooded / Wetland",
-    "Urban / Built Up",
+    "Mosaic: Managed & Natural Vegetation",
+    "Regularly Flooded & Wetland",
+    "Urban & Built Up",
     "Snow and Ice",
     "Barren",
     "Open Water"
@@ -636,6 +674,7 @@ palcol <- colorFactor(
     "#f9ffa4",
     "#1c0dff"
     ),
+  na.color = NA,
   domain = 1:10
 )
 
@@ -669,7 +708,5 @@ leaflet() |>
     labels = classes,
     title = "LULC"
   )
-
-
 ```
 
