@@ -1,5 +1,10 @@
 # Land-Cover classification {#sec-land-cover}
 
+::: callout-warning
+### Warning
+Under development...
+:::
+
 In previous sections I've explained how seasonality in vegetation canopy density (leaf area inxed, or LAI) or phenology can be detected, and how it varies depending on the geography of the region, and its ties to the exchange of carbon (C) and water between the biosphere and the atmosphere (@sec-phenology-trends). A small, first principles, example was provided on how to write your own phenology detection algorithm (@sec-algorithms).
 
 However, many satellite platforms provide information in various spectral bands (and not only one product in the temporal domain). One can say the data are multi-dimensional, having both a temporal, spatial and spectral component (see @fig-spectral-bands). These various bands, or locations in the spectral domain, provide key insights into the state of the land surface (throughout the year).
@@ -8,12 +13,16 @@ For example the combination of information in the red and near-infrared bands (s
 
 When we plot a time series of a deciduous forest you note the steady seasonal changes when switching between winter, with low LAI values, and summer with high LAI values. However, different vegetation and land-use and land-cover types have different temporal NDVI signals. For example, a glacier will have permanent snow and no seasonal LAI signal. We can therefore discriminate between non-vegetative locations and vegetation based upon the combine spectral and temporal profile of a location.
 
-```{r include=FALSE}
+```{r include = FALSE}
 library(terra)
 library(dplyr)
 library(ggplot2)
 library(patchwork)
 library(MODISTools)
+
+# for reproducibilty and stability
+# of kmeans results (and colours)
+set.seed(0)
 
 # read land cover map
 lc_r <- readRDS(here::here("data/land-cover_2012.rds")) |>
@@ -164,7 +173,7 @@ Classification of data in different classes (or clustering) can be accomplished 
 
 We can use an unsupervised machine learning approach such as k-means clustering to divide the dataset into two or more classes. These classes are clustered in a way which minimizes within-cluster variances, i.e. it ensures that pixels will look similar to eachother (given a target number of clusters `k` to divide the dataset into).
 
-```{r include=FALSE}
+```{r include = FALSE}
 # load buffered data, not shown in render
 r <- terra::rast(here::here("data/LAI.tiff"))
 ```
@@ -204,13 +213,13 @@ clusters <- kmeans(
 # use the original raster layout as
 # a template for the new map (only
 # using a single layer)
-r_clusters <- rast(r, nlyr=1)
+kmeans_map <- terra::rast(r, nlyr=1)
 
 # assign to each cell value (location) of this
 # new map using the previously exported cell
 # values (NA values are omitted so a 1:1
 # mapping would not work)
-r_clusters[df$cell] <- clusters$cluster
+kmeans_map[df$cell] <- clusters$cluster
 ```
 
 ```{r warning = FALSE,  message = FALSE}
@@ -224,7 +233,7 @@ library(leaflet)
 
 # set te colour scale manually
 palcol <- colorFactor(
-  c("#000000", "#FFFFFF"),
+  c("#78d203", "#f9ffa4"),
   domain = 1:2,
   na.color = "transparent"
   )
@@ -234,7 +243,7 @@ leaflet() |>
   addProviderTiles(providers$Esri.WorldImagery, group = "World Imagery") |>
   addProviderTiles(providers$Esri.WorldTopoMap, group = "World Topo") |>
   addRasterImage(
-    r_clusters,
+    kmeans_map,
     colors = palcol,
     opacity = 0.5,
     method = "ngb",
@@ -254,9 +263,9 @@ leaflet() |>
     )
 ```
 
-As this is an unsupervised classification we do not know what land cover types are included in this map. However, a quick visual inspection shows that zone 2 predominantly includes glaciers, water bodies, and urban areas (@fig-kmeans-map). The (seasonal) differences in LAI were used in the k-means analysis to minimize the (seasonal) variance between pixels. In particular, our analysis with two classes separates areas with a seasonal dynamic from those without one.
+As this is an unsupervised classification we do not know what land cover types are included in this map. The model that we generate is therefore purely data informed. However, a quick visual inspection shows that for a `k` of 2 the split between the clusters divides vegetation from glaciers, water bodies, and urban areas (@fig-kmeans-map). The (seasonal) differences in LAI were used in the k-means analysis to minimize the (seasonal) variance between pixels. In particular, our analysis with two classes separates areas with a seasonal dynamic from those without one.
 
-Note that k-means clustering provides a clustered output only and not a model which can be scaled to other locations. The representation of k-means clustering is therefore dependent on the dataset. Furthermore, a simple index as an NDVI or LAI alone does not provide sufficient information to distinguish between more subtle vegetation or land-cover classes (e.g. evergreen forests and or mixed forest types). In short, we need more data and a more sophisticated model driven approach to create an informed model which scales easily to different land cover types.
+Note that k-means clustering provides a clustered output only and not a model which can be scaled to other locations. The representation of k-means clustering is therefore dependent on the dataset. Furthermore, a simple index as the NDVI or LAI alone does not provide sufficient information to distinguish between more subtle land-use or land-cover classes (e.g. evergreen forests and or mixed forest types). In short, we need more data and a more sophisticated model approach to create an informed model which scales easily to different land cover types and new locations.
 
 ## supervised machine learning
 
@@ -355,7 +364,7 @@ task_nbar <- lapply(validation_selection, function(x){
         start = "2012-01-01",
         end = "2012-12-31",
         product = "MCD43A4.061",
-        layer = paste0("Nadir_Reflectance_Band", 1:7)
+        layer = paste0("Nadir_Reflectance_Band", 1:4)
       )
     }) |>
     dplyr::ungroup()
@@ -443,7 +452,7 @@ ml_df <- left_join(nbar_wide, sites)
 
 ### Model training
 
-This example will try to follow the original MODIS MCD12Q1 workflow closely and therefore calls for a boosted regression classification approach [@Friedl2010]. This is a method allows for the use of a combination of weak learners [fractional models with limited predictive power across the whole domain but good performance in a specific part of the domain] to be combined into a single robust classification model [ADD REFERENCES]. The in depth discussion of the algorithm is beyond the scope of this course and I refer to specialized literature [REFERENCES] for more details. Some notes will be included as reminders though.
+This example will try to follow the original MODIS MCD12Q1 workflow closely and therefore calls for a boosted regression classification approach [@Friedl2010]. This is a method allows for the use of a combination of weak learners [fractional models with limited predictive power across the whole domain but good performance in a specific part of the domain] to be combined into a single robust classification model [REFERENCES]. The in depth discussion of the algorithm is beyond the scope of this course and I refer to specialized literature [REFERENCES] for more details. Some notes will be included as reminders though.
 
 To properly evaluate or model we need to split our data in a true training dataset, and a test dataset. The test dataset will be used in model evaluation, where samples are independent of those contained within the training dataset.
 
@@ -465,17 +474,17 @@ train <- rsample::training(ml_df_split)
 test <- rsample::testing(ml_df_split)
 ```
 
-With both a true training and testing dataset in place we can start to implement our supervised machine learning model. In this example I will use a "tidy" machine learning  modelling approach. Similar to the data management practices described in @sec-basic-R, a tidy modelling approach relies on sentence like commands using a pipe (|>) and workflows (recipes). This makes formulating models and their evaluation more intuitive for many. For an in depth discussion on tidy modelling in R I refer to [REFERENCE]. So, let's get started.
+With both a true training and testing dataset in place we can start to implement our supervised machine learning model. In this example I will use a "tidy" machine learning  modelling approach. Similar to the data management practices described in @sec-basic-r, a tidy modelling approach relies on sentence like commands using a pipe (|>) and workflows (recipes). This makes formulating models and their evaluation more intuitive for many. For an in depth discussion on tidy modelling in R I refer to [REFERENCES]. So, let's get started.
 
 #### Model structure and workflow {.unnumbered}
 
 To specify our model I will use the {parsnip} R package which goal it is "... to provide a tidy, unified interface to models that can be used to try a range of models without getting bogged down in the syntactical minutiae of the underlying packages". Parsnip therefore will remove some of the complexity of using a package such as {xgboost} might present. It also allows you to switch between different model structures with ease, by only swapping a few arguments. Parsnip will take care of making sure that model parameters are correctly populated and forwarded.
 
-Following [@Friedl2010] we will implement a boosted regression (classification) regression tree using the {xgboost} R package, via the convenient {parsnip} R package interface. The model allows for a number of hyperparameters, i.e. parameters which do not define the base {xgboost} algorithm but the implementation and structure of it. In this example hyperparameters for the number of trees is fixed at 50, while the tree depth is flexible (tuned, see below).
+Following [@Friedl2010] we will implement a boosted regression (classification) regression tree using the {xgboost} R package, via the convenient {parsnip} R package interface. The model allows for a number of hyper-parameters, i.e. parameters which do not define the base {xgboost} algorithm but the implementation and structure of it. In this example hyper-parameters for the number of trees is fixed at 50, while the tree depth is flexible (tuned, see below).
 
 ::: callout-note
 ### Note
-There are many more hyperparameters. For the sake of brevity and speed these are kept at a minimum. However, model performance might increase when tuning hyperparameters more extensively.
+There are many more hyper-parameters. For the sake of brevity and speed these are kept at a minimum. However, model performance might increase when tuning hyper-parameters more extensively.
 :::
 
 ```{r eval = FALSE}
@@ -497,8 +506,6 @@ library(workflows)
 model_settings <- parsnip::boost_tree(
   trees = 50,
   tree_depth = tune(),
-  # min_n = tune(),
-  # loss_reduction = tune(),
   # learn_rate = tune()
   ) |>
   set_engine("xgboost") |>
@@ -515,7 +522,7 @@ xgb_workflow <- workflows::workflow() |>
 
 #### Hyperparameter settings  {.unnumbered}
 
-To optimize our model we need to configure (tune) the hyperparameters which were left variable in the model settings. How we select these hyperparameters is determined by sampling a parameter space, defined in our example by [latin hypercube sampling](https://en.wikipedia.org/wiki/Latin_hypercube_sampling). The {dials} R package provides tidymodels compatible functions to support building latin hypercubes.
+To optimize our model we need to configure (tune) the hyper-parameters which were left variable in the model settings. How we select these hyper-parameters is determined by sampling a parameter space, defined in our example by [latin hypercube sampling](https://en.wikipedia.org/wiki/Latin_hypercube_sampling). The {dials} R package provides a "tidymodels" compatible functions to support building latin hypercubes.
 
 ```{r eval = FALSE}
 # load the dials package
@@ -526,13 +533,14 @@ library(dials)
 
 hp_settings <- dials::grid_latin_hypercube(
   tree_depth(),
+  # learn_rate = tune(),
   size = 3
 )
 ```
 
 #### Parameter estimation and cross-validation {.unnumbered}
 
-With the above settings we can move on to the actual model calibration. To ensure robustness of our model (hyper) parameters across the training dataset the code below also implements a [cross-validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics)) to rotate through our training data using different subsets. The below code tunes the model parameters across the cross-validation folds and returns all the results. 
+With the above settings we can move on to the actual model calibration. To ensure robustness of our model (hyper-) parameters across the training dataset the code below also implements a [cross-validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics)) to rotate through our training data using different subsets. The below code tunes the model parameters across the cross-validation folds and returns all the results. 
 
 ```{r eval = FALSE}
 # load the tune library
@@ -569,7 +577,7 @@ xgb_best <- tune::select_best(
 # which takes workflow (model) specifications
 # and combines it with optimal model
 # parameters into a functional model
-xgb_model <- tune::finalize_workflow(
+xgb_best_model <- tune::finalize_workflow(
   xgb_workflow,
   xgb_best
 )
@@ -577,51 +585,102 @@ xgb_model <- tune::finalize_workflow(
 
 ### Model evaluation
 
+In the case of land-use and land-cover mapping classifications results are often reported as an error matrix and their associated metrics, and the Kappa coefficient. The error matrix tells us something about accuracy, while the Kappa coefficient allows us the compare the accuracy (across maps).
+
+```{r include = FALSE}
+xgb_model <- readRDS(here::here("data/xgboost_model.rds"))
+```
+
 ```{r eval = FALSE}
-train_fit <- fit(xgb_model, train)
-test_fit <- fit(xgb_model, train)
+test_fit <- fit(xgb_model, test)
+table(test$LC1, test_fit)
 ```
 
 ### Model scaling
 
-The training data for our land-cover mapping exercise will rely on multi-spectral band data, mainly bands 1 through 7. We first define a regions of interest covering an area similar to the previous exercises, roughly spanning the canton of Bern, Switzerland, covering a wide variety of land-cover types. 
+#### Data download {.unnumbered}
+
+The training data for our land-cover mapping exercise will rely on multi-spectral band data, mainly bands 1 through 7. We first define a regions of interest covering an area similar to the previous exercises, roughly spanning the canton of Bern, Switzerland, covering a wide variety of land-cover types.
+
+```{r eval = FALSE}
+# We can define an appeears
+# download task using a simple
+# dataframe and a map from which
+# an extent is extracted
+task_df <- data.frame(
+  task = "raster_download",
+  subtask = "swiss",
+  start = "2012-01-01",
+  end = "2012-12-31",
+  product = "MCD43A4.061",
+  layer = paste0("Nadir_Reflectance_Band", 1:4)
+)
+
+# build the area based request/task
+# using the extent of our previous
+# kmeans map, export all results
+# as geotiff (rather than netcdf)
+task <- rs_build_task(
+  df = task_df,
+  roi = kmeans_map,
+  format = "geotiff"
+)
+
+# request the task to be executed
+# with results stored in a
+# temporary location (can be changed)
+rs_request(
+  request = task,
+  user = "your_api_id",
+  transfer = TRUE,
+  path = tempdir(),
+  verbose = TRUE
+)
+```
+
+#### Model execution {.unnumbered}
 
 ```{r eval = FALSE}
 files <- list.files(
-  "data/lulc/raster",
+  tempdir(),
   "*Reflectance*",
   recursive = TRUE,
   full.names = TRUE
 )
 
-# select only the desired bands as in the training data
-files <- files[grepl("Band1|Band2|Band3|Band4", files)]
-r <- terra::rast(files)
+# load this spatial data to run the model
+# spatially
+swiss_multispec_data <- terra::rast(files)
 
-# the model only works when variable names are consistent
-n <- data.frame(
-  name = names(r)
+# the model only works when variable names
+# are consistent we therefore rename them
+band_names <- data.frame(
+  name = names(swiss_multispec_data)
 ) |>
   mutate(
     date = as.Date(substr(name, 40, 46), format = "%Y%j"),
     name = paste(substr(name, 1, 35), date, sep = "_"),
     name = gsub("\\.","_", name)
   )
-names(r) <- n$name
 
-# return probabilities
-probs_r <- terra::predict(r, last_fit, type = "prob")
-#terra::writeRaster(probs_r, "data/xgboost_spatial_probabilities.tif")
+# reassign the names of the terra image stack
+names(swiss_multispec_data) <- band_names$name
 
-# generate the map by selecting maximum probabilities
-# from the model output
-lulc_map <- terra::app(probs_r, which.max)
+# return probabilities, where each class is
+# associated with a layer in an image stack
+# and the probabilities reflect the probabilities
+# of the classification for said layer
+lulc_probabilities <- terra::predict(
+  swiss_multispec_data,
+  xgb_best_model,
+  type = "prob"
+)
 ```
 
 ```{r include = FALSE}
 # return probabilities
-probs_r <- rast(here::here("data/xgboost_spatial_probabilities.tif"))
-lulc_map <- terra::app(probs_r, which.max)
+lulc_probabilities <- rast(here::here("data/xgboost_spatial_probabilities.tif"))
+lulc_map <- terra::app(lulc_probabilities, which.max)
 
 modis_lulc <- readRDS(here::here("data/land-cover_2012.rds")) |>
   dplyr::mutate_at(vars(matches("value")),
@@ -638,6 +697,36 @@ modis_lulc <- readRDS(here::here("data/land-cover_2012.rds")) |>
               x == 17 ~ 10
             )) |>
   mt_to_terra()
+```
+
+```{r warning = FALSE}
+#| code-fold: true
+#| label: fig-classification-probs
+#| fig-cap: "Classification probabilities"
+#| fig-align: "center"
+#| out-width: "100%"
+
+ggplot() +
+  tidyterra::geom_spatraster(data = lulc_probabilities) +
+  scale_fill_viridis_c(
+    na.value = NA,
+    name = "Class probabilities",
+    option = "magma"
+    ) +
+  scale_x_continuous(breaks = seq(-180, 180, 2)) +
+  theme_bw() +
+  theme(
+    legend.position = "bottom"
+    ) +
+  facet_wrap(~lyr)
+```
+
+Reducing the probabilities to classes.
+
+```{r}
+# generate the map by selecting maximum probabilities
+# from the model output
+lulc_map <- terra::app(lulc_probabilities, which.max)
 ```
 
 ```{r}
