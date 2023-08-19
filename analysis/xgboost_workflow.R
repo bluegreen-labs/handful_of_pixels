@@ -10,7 +10,7 @@ library(rsample)
 library(tune)
 library(dplyr)
 
-df <- readRDS("data/training_data.rds") |>
+ml_df <- readRDS("data/training_data.rds") |>
   dplyr::select(
     LC1,
     contains("band1"),
@@ -21,16 +21,16 @@ df <- readRDS("data/training_data.rds") |>
 
 # create a data split across
 # land cover classes
-parts <- caret::createDataPartition(
-  df$LC1,
-  p = 0.8,
-  list = FALSE
+ml_df <- rsample::initial_split(
+  data = ml_df,
+  strata = LC1,
+  prop = 0.8
 )
 
 # select training and testing
 # data based on this split
-train <- df[parts, ]
-test <- df[-parts, ]
+train <- rsample::training(parts)
+test <- rsample::testing(parts)
 
 ## Tune and train model.
 xgb_spec <- parsnip::boost_tree(
@@ -38,8 +38,6 @@ xgb_spec <- parsnip::boost_tree(
   tree_depth = tune(),
   # min_n = tune(),
   # loss_reduction = tune(),
-  # sample_size = tune(),
-  # mtry = tune(),
   # learn_rate = tune()
   ) |>
   set_engine("xgboost") |>
@@ -49,11 +47,6 @@ xgb_grid <- dials::grid_latin_hypercube(
   tree_depth(),
   #min_n(),
   #loss_reduction(),
-  #sample_size=sample_prop(),
-  # finalize(
-  #   mtry(), 
-  #   dplyr::select(train, -LC1)
-  #   ),
   #learn_rate(),
   size = 5
 )

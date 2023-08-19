@@ -6,7 +6,7 @@ However, many satellite platforms provide information in various spectral bands 
 
 For example the combination of information in the red and near-infrared bands (spectral domains) provides key information to calculate the Normalized Difference Vegetation Index (NDVI) [@Huete2002]. Other band combinations and or models lead to other indices with varying properties, tailored to specific ecological, geo-morphological or other purposes [@zeng_optical_2022].
 
-When we plot a time series of a deciduous forest you note the steady seasonal changes when switching between winter, with low LAI values, and summer with high LAI values. However, different vegetation and land cover types have different temporal NDVI signals. For example, a glacier will have permanent snow and no seasonal LAI signal. We can therefore discriminate between non-vegetative locations and vegetation based upon the combine spectral and temporal profile of a location.
+When we plot a time series of a deciduous forest you note the steady seasonal changes when switching between winter, with low LAI values, and summer with high LAI values. However, different vegetation and land-use and land-cover types have different temporal NDVI signals. For example, a glacier will have permanent snow and no seasonal LAI signal. We can therefore discriminate between non-vegetative locations and vegetation based upon the combine spectral and temporal profile of a location.
 
 ```{r include=FALSE}
 library(terra)
@@ -16,10 +16,8 @@ library(patchwork)
 library(MODISTools)
 
 # read land cover map
-lc <- readRDS(here::here("data/land-cover_2012.rds")) 
-
-# export a raster version for plotting
-lc_r <- lc |> mt_to_terra(reproject = TRUE)
+lc_r <- readRDS(here::here("data/land-cover_2012.rds")) |>
+  mt_to_terra(reproject = TRUE)
 
 # lc <- lc |>
 #   mutate(
@@ -149,6 +147,13 @@ p + p2 +
     )
 ```
 
+::: callout-note
+### Note
+
+Land-Use and Land-Cover (LULC) mapping is often mentioned as one concept. However, it is important to note the difference between Land-Use and Land-Cover. Land-Use is determined by human activities, while Land-Cover is the consequence of the natural biotic and abiotic environment. Although in an age of climate change (and global rising CO^2 levels and temperatures) few places are truly free of human influence this nuance remains noteworthy. In this chapter I will focus mostly on the Land-Cover aspect (the natural environment).
+
+:::
+
 ## Unsupervised machine learning
 
 As such, we can use this (temporal) information across vegetation types to classify the Swiss alpine scene into locations which have little seasonality and those which have some (e.g. @fig-lai-dbf-snow). For example you can calculate the mean and standard deviation of a full year and see how much variability you see across a year. Regions with a low NDVI signal with little variability are most likely not associated with vegetation (e.g. glaciers, see @fig-lai-dbf-snow).
@@ -216,9 +221,9 @@ r_clusters[df$cell] <- clusters$cluster
 library(leaflet)
 
 # set te colour scale manually
-bin <- colorFactor(
+palcol <- colorFactor(
   c("#000000", "#FFFFFF"),
-  domain = unique(values(r_clusters)),
+  domain = 1:2,
   na.color = "transparent"
   )
 
@@ -228,8 +233,9 @@ leaflet() |>
   addProviderTiles(providers$Esri.WorldTopoMap, group = "World Topo") |>
   addRasterImage(
     r_clusters,
-    colors = bin,
+    colors = palcol,
     opacity = 0.5,
+    method = "ngb",
     group = "k-means cluster results"
     ) |>
   addLayersControl(
@@ -239,12 +245,431 @@ leaflet() |>
     overlayGroups = c("k-means cluster results")
     ) |>
   addLegend(
-    pal = bin,
+    colors = palcol(1:2),
     values = c(1, 2),
-    title = "cluster"
+    title = "cluster",
+    labels = c(1, 2)
     )
 ```
 
 As this is an unsupervised classification we do not know what land cover types are included in this map. However, a quick visual inspection shows that zone 2 predominantly includes glaciers, water bodies, and urban areas (@fig-kmeans-map). The (seasonal) differences in LAI were used in the k-means analysis to minimize the (seasonal) variance between pixels. In particular, our analysis with two classes separates areas with a seasonal dynamic from those without one.
 
-Note that kmeans clustering provides a clustered output and not a model which can be scaled to other locations. The representation of k-means clustering is therefore dependent on the dataset. Furthermore, a simple index as an NDVI or LAI alone does not provide sufficient information to distinguish between more subtle vegetation or land-cover classes (e.g. evergreen forests and or mixed forest types). In short, we need more data and a more sophisticated model driven approach to create an informed model which scales easily to different land cover types.
+Note that k-means clustering provides a clustered output only and not a model which can be scaled to other locations. The representation of k-means clustering is therefore dependent on the dataset. Furthermore, a simple index as an NDVI or LAI alone does not provide sufficient information to distinguish between more subtle vegetation or land-cover classes (e.g. evergreen forests and or mixed forest types). In short, we need more data and a more sophisticated model driven approach to create an informed model which scales easily to different land cover types.
+
+## supervised machine learning
+
+In contrast to k-means, one can use supervised classification of data where reference data is used as a benchmark on which to train a machine learning algorithm. A supervised machine learning algorithm will try to minimize the classification error on a known training or validation dataset. The methodology, model complexity and parameters are dependent on the provided data, the complexity of the problem and at times the available computational resources.
+
+For example the MODIS land-cover and land-use product (MCD12Q2) use >1500 validation locations, three years of temporal data and multiple spectral bands, as well as ancillary data (topography, view angle geometry) to train their boosted classification tree [@Friedl2002, @Friedl2010]. In the below example I will try to recreate a reduced part of the MCD12Q2 LULC workflow (red boxes, @fig-classification-workflow). A full introduction to machine learning is beyond the scope of this course and I refer to @boehmke_hands-machine_2020 and @stocker_applied_2023 for an introduction in machine learning using R.
+
+```{r}
+#| label: fig-classification-workflow
+#| fig-cap: "The full MODIS MCD12Q1 LULC classification workflow (after Friedl et al. 2010). The red boxes highlights the section covered in the worked example."
+#| fig-align: "center"
+#| out-width: "50%"
+#| echo: FALSE
+knitr::include_graphics("./images/Friedl_2010.svg")
+```
+
+### Validation data
+
+Critical in our exercise is the reference data we use to classify different land-use and land-cover types. Generally ground truth data is used in order to create a training dataset. This ground truth data are locations which are visually validated to belong to a particular land-use or land-cover class. These data are gathered by *in-situ* surveys, or leverage high(er) resolution data and visual interpretation to confirm the the land-use or land-cover type. 
+
+For example, the LUCAS database of the European Commission Joint Research Center provides three-yearly survey data on the land-use and land-cover state [@dandrimont_harmonised_2020], while the Geo-Wiki project used crowdsourcing to confirm land-use and land-cover types using high resolution remote sensing imagery [@fritz_global_2017]. Other products use in house databases using similar approaches [@Friedl2010]. In this example I will rely on the freely available crowdsourced (Geo-Wiki) dataset [@fritz_global_2017]. These validation labels which differ slightly from the International Geosphere-Biosphere Programme (IGBP) classes used in the MCD12Q1 product, but the general principles are the same. 
+
+```{r eval = FALSE}
+# Read the validation sites from
+# Fritz et al. 2017 straight from
+# Zenodo.org
+validation_sites <- readr::read_csv(
+  "https://zenodo.org/record/6572482/files/Global%20LULC%20reference%20data%20.csv?download=1"
+)
+```
+
+In the example I will restrict the number of validation sites to a manageable number of 150 random locations for each land-use or land-cover class, limited to high quality locations on the northern hemisphere (as we will apply our analysis regionally to Switzerland). The training data in @fritz_global_2017 contains various crowdsourcing competition of which nr. 1 refers to land-use and nr. 4 to land-cover classes. The below routine shows how to gather 150 random locations for each land-use or land-cover class from @fritz_global_2017. This data will be used to train and test the supervised machine learning algorithm.
+
+```{r eval = FALSE}
+# filter out data by competition,
+# coverage percentage and latitude
+# (use round brackets to enclose complex
+# logical statements in a filter call!)
+validation_selection <- validation_sites |>
+    dplyr::filter(
+      (competition == 4 | competition == 1),
+      perc1 > 80,
+      lat > 0
+    )
+
+# the above selection includes all data
+# but we now subsample to 150 random locations
+# per (group_by()) land cover class (LC1)
+# set a seed for reproducibilty
+set.seed(0)
+
+validation_selection <- validation_selection |>
+    dplyr::slice_sample(n = 150, by = LC1)
+
+# split validation selection
+# by land cover type into a nested
+# list, for easier processing
+# later on
+validation_selection <- validation_selection |>
+    dplyr::group_by(LC1) |>
+    dplyr::group_split()
+```
+
+::: callout-note
+### Note
+The samples are generated randomly, although a random seed ensures some reproducibility it is wise to save your site selection on file.
+:::
+
+### Multi-spectral training data
+
+As with our k-means clustering example we need data to inform our supervised classification. For this example, and in the interest of time, we gather MODIS data for various spectral bands (1 to 7) from the MCD43A4 data product, a subset of what is used in the formal MCD12Q1 LULC product. The MCD43A4 data product provides multi-spectral data corrected for (geometric) view angle effects between the satellite and the sun. These data are delivered as daily values.
+
+The required MCD43A4 data is not readily available using the {MODISTools} R package as previously introduced and I will therefore rely on the [{appears} R package](https://bluegreen-labs.github.io/appeears) [REFERENCE] to query and download training data. 
+The {appears} package relies on the NASA AppEEARS service which provides easy access to remote sensing data subsets similar to the ORNL DAAC service, as used by {MODISTools}. The provided data covers more data products, but does require a login (API key) limiting ad-hoc accessibility.
+
+::: callout-warning
+### Warning
+I refer to the {appears} documentation for the [setup and use of an API key](https://bluegreen-labs.github.io/appeears/articles/appeears_vignette.html). The instructions below assume you have registered and have a working key installed in your R session.
+:::
+
+```{r eval = FALSE}
+# for every row download the data for this
+# location and the specified reflectance
+# bands
+task_nbar <- lapply(validation_selection, function(x){
+  
+  # loop over all list items (i.e. land cover classes)
+  base_query <- x |>
+    dplyr::rowwise() |>
+    do({
+      data.frame(
+        task = paste0("nbar_lc_",.$LC1),
+        subtask = as.character(.$pixelID),
+        latitude = .$lat,
+        longitude = .$lon,
+        start = "2012-01-01",
+        end = "2012-12-31",
+        product = "MCD43A4.061",
+        layer = paste0("Nadir_Reflectance_Band", 1:7)
+      )
+    }) |>
+    dplyr::ungroup()
+  
+  # build a task JSON string 
+  task <- rs_build_task(
+    df = base_query
+  )
+  
+  # return task
+  return(task)
+})
+
+# Query the appeears API and process
+# data in batches - this function
+# requires an active API session/login
+rs_request_batch(
+  request = task_nbar,
+  workers = 10,
+  user = "your_api_id",
+  path = tempdir(),
+  verbose = TRUE,
+  time_out = 28800
+)
+```
+
+With both training and model validation data downloaded we can now train a supervised machine learning model! For convenience we do have to wrangle the data into a format that is acceptable for machine learning tools. In particular we need to convert the data from a long format to a wide format (see @sec-tidy-pivots), where every row is a feature vector. A new package, {vroom}, is introduced to efficiently read in a large amount of similar CSV files into a large dataframe using a single list of files.
+
+```{r eval = FALSE}
+# list all MCD43A4 files, note that
+# that list.files() uses regular
+# expressions when using wildcards
+# such as *, you can convert general
+# wildcard use to regular expressions
+# with glob2rx()
+files <- list.files(
+  tempdir(),
+  glob2rx("*MCD43A4-061-results*"),
+  recursive = TRUE,
+  full.names = TRUE
+)
+
+# read in the data (very fast)
+# with {vroom} and set all
+# fill values (>=32767) to NA
+nbar <- vroom::vroom(files)
+nbar[nbar >= 32767] <- NA
+
+# retain the required data only
+# and convert to a wide format
+nbar_wide <- nbar |>
+  dplyr::select(
+    Category,
+    ID,
+    Date,
+    Latitude,
+    Longitude,
+    starts_with("MCD43A4_061_Nadir")
+  ) |>
+  tidyr::pivot_wider(
+    values_from = starts_with("MCD43A4_061_Nadir"),
+    names_from = Date
+  )
+
+# split out only the site name,
+# and land cover class from the
+# selection of validation sites
+# (this is a nested list so we
+# bind_rows across the list)
+sites <- validation_selection |>
+  dplyr::bind_rows() |>
+  dplyr::select(
+    pixelID,
+    LC1
+  ) |>
+  dplyr::rename(
+    Category = "pixelID"
+  )
+
+# combine the NBAR and land-use
+# land-cover labels by location
+# id (Category)
+ml_df <- left_join(nbar_wide, sites)
+```
+
+### Model training
+
+This example will try to follow the original MODIS MCD12Q1 workflow closely and therefore calls for a boosted regression classification approach [@Friedl2010]. This is a method allows for the use of a combination of weak learners [fractional models with limited predictive power across the whole domain but good performance in a specific part of the domain] to be combined into a single robust classification model [ADD REFERENCES]. The in depth discussion of the algorithm is beyond the scope of this course and I refer to specialized literature [REFERENCES] for more details. Some notes will be included as reminders though.
+
+To properly evaluate or model we need to split our data in a true training dataset, and a test dataset. The test dataset will be used in model evaluation, where samples are independent of those contained within the training dataset.
+
+```{r eval = FALSE}
+# select packages
+# avoiding tidy catch alls
+library(rsample)
+
+# create a data split across
+# land cover classes
+ml_df_split <- rsample::initial_split(
+  strata = ml_df$LC1,
+  prop = 0.8
+)
+
+# select training and testing
+# data based on this split
+train <- rsample::training(ml_df_split)
+test <- rsample::testing(ml_df_split)
+```
+
+With both a true training and testing dataset in place we can start to implement our supervised machine learning model. In this example I will use a "tidy" machine learning  modelling approach. Similar to the data management practices described in @sec-basic-R, a tidy modelling approach relies on sentence like commands using a pipe (|>) and workflows (recipes). This makes formulating models and their evaluation more intuitive for many. For an in depth discussion on tidy modelling in R I refer to [REFERENCE]. So, let's get started.
+
+#### Model structure
+
+To specify our model I will use the {parsnip} R package which goal it is "... to provide a tidy, unified interface to models that can be used to try a range of models without getting bogged down in the syntactical minutiae of the underlying packages". Parsnip therefore will remove some of the complexity of using a package such as {xgboost} might present. It also allows you to switch between different model structures with ease, by only swapping a few arguments. Parsnip will take care of making sure that model parameters are correctly populated and forwarded.
+
+Following [@Friedl2010] we will implement a boosted regression (classification) regression tree using the {xgboost} R package, via the convenient {parsnip} R package interface. The model allows for a number of hyperparameters, i.e. parameters which do not define the base {xgboost} algorithm but the implementation and structure of it. In this example hyperparameters for the number of trees is fixed at 50, while the tree depth is flexible (tuned, see below).
+
+::: callout-note
+### Note
+There are many more hyperparameters. For the sake of brevity and speed these are kept at a minimum. However, model performance might increase when tuning hyperparameters more extensively.
+:::
+
+```{r eval = FALSE}
+# load the parsnip package
+# for tidy machine learning
+# modelling
+library(parsnip)
+
+# specify our model structure
+# the model to be used and the
+# type of task we want to evaluate
+# In this case we want:
+# - the xgboost algorithm
+# - for a classification
+# - with 50 decision trees
+# - where the tree_depth is tuned
+model_settings <- parsnip::boost_tree(
+  trees = 50,
+  tree_depth = tune(),
+  # min_n = tune(),
+  # loss_reduction = tune(),
+  # learn_rate = tune()
+  ) |>
+  set_engine("xgboost") |>
+  set_mode("classification")
+```
+
+#### Hyperparameter tuning
+
+
+
+```{r eval = FALSE}
+
+library(dials)
+library(dplyr)
+library(workflows)
+library(tune)
+hyperparameter_grid <- dials::grid_latin_hypercube(
+  tree_depth(),
+  #min_n(),
+  #loss_reduction(),
+  #learn_rate(),
+  size = 5
+)
+```
+
+#### The workflow
+
+```{r eval = FALSE}
+xgb_wf <- workflows::workflow() |>
+  add_formula(as.factor(LC1) ~ .) |>
+  add_model(xgb_spec)
+
+```
+
+#### Cross validation and model selection
+
+```{r eval = FALSE}
+folds <- rsample::vfold_cv(train, v = 3)
+xgb_res <- tune::tune_grid(
+  xgb_wf,
+  resamples = folds,
+  grid = xgb_grid,
+  control = tune::control_grid(save_pred=T)
+)
+
+best_auc <- tune::select_best(
+  xgb_res,
+  "roc_auc"
+  )
+
+final_xgb <- tune::finalize_workflow(
+  xgb_wf,
+  best_auc
+)
+
+last_fit <- fit(final_xgb, train)
+```
+
+### Model scaling
+
+The training data for our land-cover mapping exercise will rely on multi-spectral band data, mainly bands 1 through 7. We first define a regions of interest covering an area similar to the previous exercises, roughly spanning the canton of Bern, Switzerland, covering a wide variety of land-cover types. 
+
+```{r eval = FALSE}
+
+files <- list.files(
+  "data/lulc/raster",
+  "*Reflectance*",
+  recursive = TRUE,
+  full.names = TRUE
+)
+
+# select only the desired bands as in the training data
+files <- files[grepl("Band1|Band2|Band3|Band4", files)]
+r <- terra::rast(files)
+
+# the model only works when variable names are consistent
+n <- data.frame(
+  name = names(r)
+) |>
+  mutate(
+    date = as.Date(substr(name, 40, 46), format = "%Y%j"),
+    name = paste(substr(name, 1, 35), date, sep = "_"),
+    name = gsub("\\.","_", name)
+  )
+names(r) <- n$name
+
+# return probabilities
+probs_r <- terra::predict(r, last_fit, type = "prob")
+#terra::writeRaster(probs_r, "data/xgboost_spatial_probabilities.tif")
+
+# generate the map by selecting maximum probabilities
+# from the model output
+lulc_map <- terra::app(probs_r, which.max)
+```
+
+
+
+```{r eval = FALSE}
+modis_lulc <- readRDS("data/land-cover_2012.rds") |>
+  dplyr::mutate_at(vars(matches("value")),
+            function(x) case_when(
+              x <= 5  ~ 1,
+              (x >= 6 & x <= 9) ~ 2,
+              x == 10 ~ 3,
+              x == 11 ~ 6,
+              x == 12 ~ 4,
+              x == 13 ~ 7,
+              x == 14 ~ 5,
+              x == 15 ~ 8,
+              x == 16 ~ 9,
+              x == 17 ~ 10
+            )) |>
+  mt_to_terra()
+
+classes <- c(
+    "Tree Cover",
+    "Shrub Cover",
+    "Herbaceous Vegetation / Grassland",
+    "Cultivated and Managed",
+    "Mosaic: Cultivated and Managed / Natural Vegetation",
+    "Regularly Flooded / Wetland",
+    "Urban / Built Up",
+    "Snow and Ice",
+    "Barren",
+    "Open Water"
+  )
+
+# set te colour scale manually
+palcol <- colorFactor(
+  c(
+    "#05450a",
+    "#78d203",
+    "#009900",
+    "#c24f44",
+    "#ff6d4c",
+    "#27ff87",
+    "#a5a5a5",
+    "#69fff8",
+    "#f9ffa4",
+    "#1c0dff"
+    ),
+  domain = 1:10
+)
+
+# build the leaflet map
+leaflet() |> 
+  addProviderTiles(providers$Esri.WorldImagery, group = "World Imagery") |>
+  addProviderTiles(providers$Esri.WorldTopoMap, group = "World Topo") |>
+  addRasterImage(
+    lulc_map,
+    colors = palcol,
+    opacity = 0.8,
+    method = "ngb",
+    group = "LULC"
+  ) |>
+  addRasterImage(
+    modis_lulc,
+    colors = palcol,
+    opacity = 0.8,
+    method = "ngb",
+    group = "LULC MODIS"
+  ) |>
+  addLayersControl(
+    baseGroups = c("World Imagery","World Topo"),
+    position = "topleft",
+    options = layersControlOptions(collapsed = FALSE),
+    overlayGroups = c("LULC", "LULC MODIS")
+  ) |>
+  addLegend(
+    colors = palcol(1:10),
+    values = 1:10,
+    labels = classes,
+    title = "LULC"
+  )
+
+
+```
+
