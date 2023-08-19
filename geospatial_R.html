@@ -673,6 +673,15 @@ time        : 2022-01-01 12:00:00 UTC </code></pre>
 </div>
 </div>
 </section>
+<section id="extracting-data" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="extracting-data">Extracting data</h4>
+<p>A common operation on geospatial data is the extraction of data for a given (point) location.</p>
+</section>
+<section id="transformations" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="transformations">Transformations</h4>
+<p>All geospatial raster data is defined by a coordinate reference system and a resolution defining its grid. Both the spatial resolution and projection are not always constant among datasets. However, combining two datasets requires that they share a common grid (to execute band math or other operations). It is therefore often required to resample data to a different resolution and/or reproject the data if they do not share the same coordinate reference system.</p>
+<p>It is common to find data which generated for a particular region to contain regional projections, rather than intuitive geographic (latitude / longitude) projection. Many data with a European extent is provided in the XYZ projection. To align these data with a dataset with geographic coordinates the data needs to be resampled and reprojected.</p>
+</section>
 </section>
 <section id="sec-sf" class="level3" data-number="3.1.2">
 <h3 data-number="3.1.2" class="anchored" data-anchor-id="sec-sf"><span class="header-section-number">3.1.2</span> The sf package</h3>
