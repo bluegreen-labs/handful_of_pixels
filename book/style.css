@@ -13,6 +13,8 @@ pre code {
   white-space: inherit;
 }
 
-.info.legend.leaflet-control i {
+div.info.legend.leaflet-control i {
   float: left;
 }
+
+div.info.legend.leaflet-control br {clear: both;}
