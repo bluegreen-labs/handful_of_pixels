@@ -6,3 +6,7 @@ $link-color: #2696c3;
   
 // Code blocks
 $code-block-bg-alpha: -.8;
+
+.info.legend.leaflet-control i {
+  float: left;
+}

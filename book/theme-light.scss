@@ -1,3 +1,7 @@
 /*-- scss:defaults --*/
 // Base document colors
 $link-color: #2696c3;
+
+.info.legend.leaflet-control i {
+  float: left;
+}
