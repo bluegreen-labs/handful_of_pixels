@@ -498,11 +498,6 @@ library(workflows)
 # specify our model structure
 # the model to be used and the
 # type of task we want to evaluate
-# In this case we want:
-# - the xgboost algorithm
-# - for a classification
-# - with 50 decision trees
-# - where the tree_depth is tuned
 model_settings <- parsnip::boost_tree(
   trees = 50,
   tree_depth = tune(),
@@ -518,37 +513,36 @@ model_settings <- parsnip::boost_tree(
 xgb_workflow <- workflows::workflow() |>
   add_formula(as.factor(LC1) ~ .) |>
   add_model(model_settings)
+
+print(xgb_workflow)
 ```
 
 #### Hyperparameter settings  {.unnumbered}
 
-To optimize our model we need to configure (tune) the hyper-parameters which were left variable in the model settings. How we select these hyper-parameters is determined by sampling a parameter space, defined in our example by [latin hypercube sampling](https://en.wikipedia.org/wiki/Latin_hypercube_sampling). The {dials} R package provides a "tidymodels" compatible functions to support building latin hypercubes.
+To optimize our model we need to configure (tune) the hyper-parameters which were left variable in the model settings. How we select these hyper-parameters is determined by sampling a parameter space, defined in our example by [latin hypercube sampling](https://en.wikipedia.org/wiki/Latin_hypercube_sampling). The {dials} R package provides a "tidymodels" compatible functions to support building latin hypercubes. In this example, I use the `extract_param_set_dials()` function to automatically populate the latin hypercube sampling settings. However, these can be specified manually when needed.
 
 ```{r eval = FALSE}
 # load the dials package
 # responsible for (hyper) parameter
 # sampling schemes to tune
-# parameters
+# parameters (as extracted)
+# from the model specifications
+library(tune)
 library(dials)
 
 hp_settings <- dials::grid_latin_hypercube(
-  tree_depth(),
-  # learn_rate = tune(),
+  tune::extract_param_set_dials(xgb_workflow)
   size = 3
 )
+
+print(hp_settings)
 ```
 
 #### Parameter estimation and cross-validation {.unnumbered}
 
-With the above settings we can move on to the actual model calibration. To ensure robustness of our model (hyper-) parameters across the training dataset the code below also implements a [cross-validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics)) to rotate through our training data using different subsets. The below code tunes the model parameters across the cross-validation folds and returns all the results. 
+With the above settings we can move on to the actual model calibration. To ensure robustness of our model (hyper-) parameters across the training dataset the code below also implements a [cross-validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics)) to rotate through our training data using different subsets. The below code tunes the model parameters across the cross-validation folds and returns all these results.
 
 ```{r eval = FALSE}
-# load the tune library
-# which deals with tuning
-# model (hyper) parameters
-# across grids (see dials)
-library(tune)
-
 # set the folds (division into different)
 # cross-validation training datasets
 folds <- rsample::vfold_cv(train, v = 3)
@@ -566,11 +560,21 @@ xgb_results <- tune::tune_grid(
   control = tune::control_grid(save_pred = TRUE)
 )
 
+print(xgb_results)
+```
+
+When the model is tuned across folds and parameters the results show varied model performance. In order to select the best model, according to a set metric, you can use the `select_best()` function (for a specific metric). This will extract the best model parameters. However, the returned object does not specify the model structure. To combine both the model structure (workflow) using the optimal parameters we need to combine both. In short, we need to `finalize_workflow()` which combines the model workflow with the model parameters into a final functional model which can take input data and return the desired results.
+
+```{r include = FALSE}
+xgb_best_model <- readRDS(here::here("data/xgboost_model.rds"))
+```
+
+```{r eval = FALSE}
 # select the best model based upon
 # the root mean squared error
 xgb_best <- tune::select_best(
   xgb_results,
-  metric = "rmse"
+  metric = "roc_auc"
   )
 
 # cook up a model using finalize_workflow
@@ -581,18 +585,18 @@ xgb_best_model <- tune::finalize_workflow(
   xgb_workflow,
   xgb_best
 )
+
+print(xgb_best_model)
 ```
+
+Note that the resulting model (workflow) does not contain any tunable (`tune()`) fields as shown above! The selected model, given our provided constrains on the hyperparamters, has 50 trees, has minimum 11 data points in a node (min_n) and a tree depth of 5.
 
 ### Model evaluation
 
 In the case of land-use and land-cover mapping classifications results are often reported as an error matrix and their associated metrics, and the Kappa coefficient. The error matrix tells us something about accuracy, while the Kappa coefficient allows us the compare the accuracy (across maps).
 
-```{r include = FALSE}
-xgb_model <- readRDS(here::here("data/xgboost_model.rds"))
-```
-
 ```{r eval = FALSE}
-test_fit <- fit(xgb_model, test)
+test_fit <- fit(xgb_best_model, test)
 table(test$LC1, test_fit)
 ```
 

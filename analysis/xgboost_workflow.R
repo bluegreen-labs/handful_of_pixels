@@ -1,14 +1,6 @@
 library(terra)
-#library(tidymodels)
-#library(tidyverse)
-
-# select packages
-# avoiding tidy catch alls
-library(parsnip)
-library(workflows)
-library(rsample)
-library(tune)
-library(dplyr)
+library(tidymodels)
+library(tidyverse)
 
 ml_df <- readRDS("data/training_data.rds") |>
   dplyr::select(
@@ -29,31 +21,40 @@ ml_df <- rsample::initial_split(
 
 # select training and testing
 # data based on this split
-train <- rsample::training(parts)
-test <- rsample::testing(parts)
+train <- rsample::training(ml_df)
+test <- rsample::testing(ml_df)
 
 ## Tune and train model.
 xgb_spec <- parsnip::boost_tree(
   trees = 50,
+  min_n = tune(),
   tree_depth = tune(),
-  # min_n = tune(),
-  # loss_reduction = tune(),
-  # learn_rate = tune()
-  ) |>
+  #learn_rate = tune(), 
+  #loss_reduction = tune()
+) |>
   set_engine("xgboost") |>
   set_mode("classification")
 
-xgb_grid <- dials::grid_latin_hypercube(
-  tree_depth(),
-  #min_n(),
-  #loss_reduction(),
-  #learn_rate(),
-  size = 5
-)
+# xgb_grid <- dials::grid_latin_hypercube(
+#   tree_depth(),
+#   min_n(),
+#   loss_reduction(),
+#   sample_size = sample_prop(),
+#   finalize(
+#     mtry(),
+#     select(train, -LC1)),
+#   learn_rate(),
+#   size = 5
+# )
 
 xgb_wf <- workflows::workflow() |>
   add_formula(as.factor(LC1) ~ .) |>
   add_model(xgb_spec)
+
+xgb_grid <- dials::grid_latin_hypercube(
+  tune::extract_parameter_set_dials(xgb_wf),
+  size = 3
+)
 
 folds <- rsample::vfold_cv(train, v = 3)
 
@@ -61,7 +62,7 @@ xgb_res <- tune::tune_grid(
   xgb_wf,
   resamples = folds,
   grid = xgb_grid,
-  control = tune::control_grid(save_pred=T)
+  control = tune::control_grid(save_pred = TRUE)
 )
 
 best_auc <- tune::select_best(
@@ -102,8 +103,9 @@ names(r) <- n$name
 
 # return probabilities
 probs_r <- terra::predict(r, last_fit, type = "prob")
-#terra::writeRaster(probs_r, "data/xgboost_spatial_probabilities.tif")
 
 # generate the map by selecting maximum probabilities
 # from the model output
 lulc_map <- terra::app(probs_r, which.max)
+
+plot(lulc_map)
