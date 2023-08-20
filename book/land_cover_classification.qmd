@@ -1,11 +1,8 @@
 # Land-Cover classification {#sec-land-cover}
 
-::: callout-warning
-### Warning
-Under development...
-:::
+In previous sections I have explained how seasonality in vegetation canopy density (leaf area index, or LAI) or phenology can be detected, and how it varies depending on the geography of the region. I introduced how this ties to the exchange of carbon and water between the biosphere and the atmosphere (@sec-phenology-trends). A small, first principles, example was provided on how to write your own phenology detection algorithm (@sec-algorithms) and model phenology based upon environmental drivers (@sec-phenology-modelling). 
 
-In previous sections I've explained how seasonality in vegetation canopy density (leaf area inxed, or LAI) or phenology can be detected, and how it varies depending on the geography of the region, and its ties to the exchange of carbon (C) and water between the biosphere and the atmosphere (@sec-phenology-trends). A small, first principles, example was provided on how to write your own phenology detection algorithm (@sec-algorithms).
+...
 
 However, many satellite platforms provide information in various spectral bands (and not only one product in the temporal domain). One can say the data are multi-dimensional, having both a temporal, spatial and spectral component (see @fig-spectral-bands). These various bands, or locations in the spectral domain, provide key insights into the state of the land surface (throughout the year).
 
@@ -271,7 +268,7 @@ Note that k-means clustering provides a clustered output only and not a model wh
 
 In contrast to k-means, one can use supervised classification of data where reference data is used as a benchmark on which to train a machine learning algorithm. A supervised machine learning algorithm will try to minimize the classification error on a known training or validation dataset. The methodology, model complexity and parameters are dependent on the provided data, the complexity of the problem and at times the available computational resources.
 
-For example the MODIS land-cover and land-use product (MCD12Q2) use >1500 validation locations, three years of temporal data and multiple spectral bands, as well as ancillary data (topography, view angle geometry) to train their boosted classification tree [@Friedl2002, @Friedl2010]. In the below example I will try to recreate a reduced part of the MCD12Q2 LULC workflow (red boxes, @fig-classification-workflow). A full introduction to machine learning is beyond the scope of this course and I refer to @boehmke_hands-machine_2020 and @stocker_applied_2023 for an introduction in machine learning using R.
+For example the MODIS land-cover and land-use product (MCD12Q2) use >1500 validation locations, three years of temporal data and multiple spectral bands, as well as ancillary data (topography, view angle geometry) to train their boosted classification tree [@Friedl2002, @Friedl2010]. In the below example I will try to recreate a reduced part of the MCD12Q2 LULC workflow (red boxes, @fig-classification-workflow). A full introduction to machine learning is beyond the scope of this course and I refer to @boehmke_hands-machine_2020, @kuhn_tidy_2022 and @stocker_applied_2023 for an introduction in machine learning using R.
 
 ```{r}
 #| label: fig-classification-workflow
@@ -338,7 +335,7 @@ The samples are generated randomly, although a random seed ensures some reproduc
 
 As with our k-means clustering example we need data to inform our supervised classification. For this example, and in the interest of time, we gather MODIS data for various spectral bands (1 to 7) from the MCD43A4 data product, a subset of what is used in the formal MCD12Q1 LULC product. The MCD43A4 data product provides multi-spectral data corrected for (geometric) view angle effects between the satellite and the sun. These data are delivered as daily values.
 
-The required MCD43A4 data is not readily available using the {MODISTools} R package as previously introduced and I will therefore rely on the [{appears} R package](https://bluegreen-labs.github.io/appeears) [REFERENCE] to query and download training data. 
+The required MCD43A4 data is not readily available using the {MODISTools} R package as previously introduced and I will therefore rely on the [{appears} R package](https://bluegreen-labs.github.io/appeears) [@hufkens_bluegreen-labsappeears_2023] to query and download training data. 
 The {appears} package relies on the NASA AppEEARS service which provides easy access to remote sensing data subsets similar to the ORNL DAAC service, as used by {MODISTools}. The provided data covers more data products, but does require a login (API key) limiting ad-hoc accessibility.
 
 ::: callout-warning
@@ -390,6 +387,12 @@ rs_request_batch(
   time_out = 28800
 )
 ```
+
+
+::: callout-note
+### Note
+AppEEARS downloads might take a while! In the code above the default directory is also set to the temporary directory. To use the above code make sure to change the path where to download the data to a more permenant one.
+:::
 
 With both training and model validation data downloaded we can now train a supervised machine learning model! For convenience we do have to wrangle the data into a format that is acceptable for machine learning tools. In particular we need to convert the data from a long format to a wide format (see @sec-tidy-pivots), where every row is a feature vector. A new package, {vroom}, is introduced to efficiently read in a large amount of similar CSV files into a large dataframe using a single list of files.
 
@@ -452,9 +455,7 @@ ml_df <- left_join(nbar_wide, sites)
 
 ### Model training
 
-This example will try to follow the original MODIS MCD12Q1 workflow closely and therefore calls for a boosted regression classification approach [@Friedl2010]. This is a method allows for the use of a combination of weak learners [fractional models with limited predictive power across the whole domain but good performance in a specific part of the domain] to be combined into a single robust classification model [REFERENCES]. The in depth discussion of the algorithm is beyond the scope of this course and I refer to specialized literature [REFERENCES] for more details. Some notes will be included as reminders though.
-
-To properly evaluate or model we need to split our data in a true training dataset, and a test dataset. The test dataset will be used in model evaluation, where samples are independent of those contained within the training dataset.
+This example will try to follow the original MODIS MCD12Q1 workflow closely and therefore calls for a boosted regression classification approach [@Friedl2010]. This is a method allows for the use of a [combination of weak learners](https://en.wikipedia.org/wiki/Boosting_(machine_learning)) to be combined into a single robust ensemble classification models. The in depth discussion of the algorithm is beyond the scope of this course and I refer to specialized literature for more details. To properly evaluate or model we need to split our data in a true training dataset, and a test dataset. The test dataset will be used in model evaluation, where samples are independent of those contained within the training dataset [@boehmke_hands-machine_2020].
 
 ```{r eval = FALSE}
 # select packages
@@ -463,8 +464,9 @@ library(rsample)
 
 # create a data split across
 # land cover classes
-ml_df_split <- rsample::initial_split(
-  strata = ml_df$LC1,
+ml_df_split <- ml_df |>
+  rsample::initial_split(
+  strata = LC1,
   prop = 0.8
 )
 
@@ -474,11 +476,11 @@ train <- rsample::training(ml_df_split)
 test <- rsample::testing(ml_df_split)
 ```
 
-With both a true training and testing dataset in place we can start to implement our supervised machine learning model. In this example I will use a "tidy" machine learning  modelling approach. Similar to the data management practices described in @sec-basic-r, a tidy modelling approach relies on sentence like commands using a pipe (|>) and workflows (recipes). This makes formulating models and their evaluation more intuitive for many. For an in depth discussion on tidy modelling in R I refer to [REFERENCES]. So, let's get started.
+With both a true training and testing dataset in place we can start to implement our supervised machine learning model. In this example I will use a "tidy" machine learning modelling approach. Similar to the data management practices described in @sec-basic-r, a tidy modelling approach relies on sentence like commands using a pipe (|>) and workflows (recipes). This makes formulating models and their evaluation more intuitive for many. For an in depth discussion on [tidy modelling](https://www.tmwr.org/) in R I refer to @kuhn_tidy_2022. So, let's get started.
 
 #### Model structure and workflow {.unnumbered}
 
-To specify our model I will use the {parsnip} R package which goal it is "... to provide a tidy, unified interface to models that can be used to try a range of models without getting bogged down in the syntactical minutiae of the underlying packages". Parsnip therefore will remove some of the complexity of using a package such as {xgboost} might present. It also allows you to switch between different model structures with ease, by only swapping a few arguments. Parsnip will take care of making sure that model parameters are correctly populated and forwarded.
+To specify our model I will use the [{parsnip} R package](https://parsnip.tidymodels.org/) which goal it is "... to provide a tidy, unified interface to models that can be used to try a range of models without getting bogged down in the syntactical minutiae of the underlying packages". Parsnip therefore will remove some of the complexity of using a package such as [{xgboost}](https://xgboost.readthedocs.io/en/stable/R-package/xgboostPresentation.html) might present. It also allows you to switch between different model structures with ease, by only swapping a few arguments. Parsnip will take care of making sure that model parameters are correctly populated and forwarded.
 
 Following [@Friedl2010] we will implement a boosted regression (classification) regression tree using the {xgboost} R package, via the convenient {parsnip} R package interface. The model allows for a number of hyper-parameters, i.e. parameters which do not define the base {xgboost} algorithm but the implementation and structure of it. In this example hyper-parameters for the number of trees is fixed at 50, while the tree depth is flexible (tuned, see below).
 
@@ -487,7 +489,7 @@ Following [@Friedl2010] we will implement a boosted regression (classification) 
 There are many more hyper-parameters. For the sake of brevity and speed these are kept at a minimum. However, model performance might increase when tuning hyper-parameters more extensively.
 :::
 
-```{r eval = FALSE}
+```{r}
 # load the parsnip package
 # for tidy machine learning
 # modelling and workflows
@@ -500,6 +502,7 @@ library(workflows)
 # type of task we want to evaluate
 model_settings <- parsnip::boost_tree(
   trees = 50,
+  min_n = tune(),
   tree_depth = tune(),
   # learn_rate = tune()
   ) |>
@@ -521,7 +524,7 @@ print(xgb_workflow)
 
 To optimize our model we need to configure (tune) the hyper-parameters which were left variable in the model settings. How we select these hyper-parameters is determined by sampling a parameter space, defined in our example by [latin hypercube sampling](https://en.wikipedia.org/wiki/Latin_hypercube_sampling). The {dials} R package provides a "tidymodels" compatible functions to support building latin hypercubes. In this example, I use the `extract_param_set_dials()` function to automatically populate the latin hypercube sampling settings. However, these can be specified manually when needed.
 
-```{r eval = FALSE}
+```{r warning=FALSE, message=FALSE}
 # load the dials package
 # responsible for (hyper) parameter
 # sampling schemes to tune
@@ -531,7 +534,7 @@ library(tune)
 library(dials)
 
 hp_settings <- dials::grid_latin_hypercube(
-  tune::extract_param_set_dials(xgb_workflow)
+  tune::extract_parameter_set_dials(xgb_workflow),
   size = 3
 )
 
@@ -559,17 +562,16 @@ xgb_results <- tune::tune_grid(
   grid = hp_settings,
   control = tune::control_grid(save_pred = TRUE)
 )
-
-print(xgb_results)
 ```
 
-When the model is tuned across folds and parameters the results show varied model performance. In order to select the best model, according to a set metric, you can use the `select_best()` function (for a specific metric). This will extract the best model parameters. However, the returned object does not specify the model structure. To combine both the model structure (workflow) using the optimal parameters we need to combine both. In short, we need to `finalize_workflow()` which combines the model workflow with the model parameters into a final functional model which can take input data and return the desired results.
+When the model is tuned across folds and parameters the results show varied model performance. In order to select the best model, according to a set metric, you can use the `select_best()` function (for a specific metric). This will extract the best model parameters.
 
 ```{r include = FALSE}
 xgb_best_model <- readRDS(here::here("data/xgboost_model.rds"))
+xgb_results <- readRDS(here::here("data/xgboost_grid_results.rds"))
 ```
 
-```{r eval = FALSE}
+```{r}
 # select the best model based upon
 # the root mean squared error
 xgb_best <- tune::select_best(
@@ -589,7 +591,8 @@ xgb_best_model <- tune::finalize_workflow(
 print(xgb_best_model)
 ```
 
-Note that the resulting model (workflow) does not contain any tunable (`tune()`) fields as shown above! The selected model, given our provided constrains on the hyperparamters, has 50 trees, has minimum 11 data points in a node (min_n) and a tree depth of 5.
+However, the returned object does not specify the model structure. To combine both the model structure (workflow) using the optimal parameters we need to combine both. In short, we need to `finalize_workflow()` which combines the model workflow with the model parameters into a final functional model which can take input data and return the desired results. Note that the resulting model (workflow) does not contain any tunable (`tune()`) fields as shown above! The selected model, given our provided constrains on the hyperparamters, has 50 trees, has minimum 11 data points in a node (min_n) and a tree depth of 5.
+
 
 ### Model evaluation
 
@@ -602,9 +605,11 @@ table(test$LC1, test_fit)
 
 ### Model scaling
 
+In order to scale our new model to other locations, or regions we need to download additional data. In this last section I will demonstrate how to download geospatial data, rather tahn point data used during training, using the {appeears} R package. This data will then be used to run our previously optimized model, and the results will be presented as a map. Since our workflow followed the original MODIS MCD12Q1 LULC map protocol I will compare both maps (although remapping some of the values from MODIS IGBP land-use and land-cover classes).
+
 #### Data download {.unnumbered}
 
-The training data for our land-cover mapping exercise will rely on multi-spectral band data, mainly bands 1 through 7. We first define a regions of interest covering an area similar to the previous exercises, roughly spanning the canton of Bern, Switzerland, covering a wide variety of land-cover types.
+To scale our analysis spatially we need to download matching data, i.e. MODIS MCD43A4 NBAR data for bands 1 through 4, for a geographic regions. The {appeears} R package has an `roi` parameter which can take `SpatRaster` data as input. This will match the extent of the AppEEARS query with the provided `SpatRaster` data. I will use the map generated during our k-means clustering exercise as the input for building an API task.
 
 ```{r eval = FALSE}
 # We can define an appeears
@@ -642,7 +647,14 @@ rs_request(
 )
 ```
 
+::: callout-note
+### Note
+AppEEARS downloads might take a while! In the code above the default directory is also set to the temporary directory. To use the above code make sure to change the path where to download the data to a more permenant one.
+:::
+
 #### Model execution {.unnumbered}
+
+The downloaded data (by default in `tempdir()`) are a collection of geotiff files of NBAR reflectance bands and their matching quality control data. In this demonstration I will not process the more nuanced quality control flags. Therefore, I only list the reflectance files, and read in this list of geotiffs into a stack by calling `rast()`.
 
 ```{r eval = FALSE}
 files <- list.files(
@@ -655,7 +667,11 @@ files <- list.files(
 # load this spatial data to run the model
 # spatially
 swiss_multispec_data <- terra::rast(files)
+```
 
+The model we created is specific when it comes to naming variables, i.e. the naming of the bands in our spatial data matters and has to match those of the model. Due to inconsistencies in the AppEEARS API one has to rename the band names ever so slightly.
+
+```{r eval = FALSE}
 # the model only works when variable names
 # are consistent we therefore rename them
 band_names <- data.frame(
@@ -669,7 +685,11 @@ band_names <- data.frame(
 
 # reassign the names of the terra image stack
 names(swiss_multispec_data) <- band_names$name
+```
 
+With all band names in line with the expected variables in our model we can now scale it by using `terra::predict()`. This function is the {terra} R package equivalent of the `predict()` function you might have used in a classic statistical modelling setting. This function allows you to call a compatible model for `SpatRaster` data, by running it along the time axis of the raster stack. In this case I ask for the model probabilities to be returned as this gives a more granular overview of the model results (see `type` argument, @fig-classification-probs).
+
+```{r eval = FALSE}
 # return probabilities, where each class is
 # associated with a layer in an image stack
 # and the probabilities reflect the probabilities
@@ -706,7 +726,7 @@ modis_lulc <- readRDS(here::here("data/land-cover_2012.rds")) |>
 ```{r warning = FALSE}
 #| code-fold: true
 #| label: fig-classification-probs
-#| fig-cap: "Classification probabilities"
+#| fig-cap: "Classification probabilities, as generated for all 10 land-use and land-cover (LULC) classes within our xgboost algorithm, for the year 2012 across a Swiss spatial subset."
 #| fig-align: "center"
 #| out-width: "100%"
 
@@ -725,7 +745,7 @@ ggplot() +
   facet_wrap(~lyr)
 ```
 
-Reducing the probabilities to classes.
+One can create a formal land-use and land-cover map by reducing this dataset by returning the layer for which the probability is highest, using `which.max`. As seen in @sec-geospatial, you can apply a function to all layers across pixels using the `app()` function. The returned data is a land-use and land-cover map with classes 1 to 10, as shown below (@fig-spatial-lulc).
 
 ```{r}
 # generate the map by selecting maximum probabilities
@@ -736,7 +756,7 @@ lulc_map <- terra::app(lulc_probabilities, which.max)
 ```{r}
 #| code-fold: true
 #| label: fig-spatial-lulc
-#| fig-cap: ""
+#| fig-cap: "A supervised machine learning based Land-Use and Land-Cover (LULC) map, based upon four MODIS MCD43A4 bands (1-4) using a boosted regression tree classification (xgboost). LULC classes were defined by Fritz et al. 2017. For comparison MODIS MCD12Q1 LULC (IGBP) data was remapped to the LULC classes of Fritz et al. 2017."
 #| fig-align: "center"
 #| out-width: "100%"
 
@@ -780,26 +800,27 @@ leaflet() |>
     colors = palcol,
     opacity = 0.8,
     method = "ngb",
-    group = "LULC"
+    group = "XGBOOST"
   ) |>
   addRasterImage(
     modis_lulc,
     colors = palcol,
     opacity = 0.8,
     method = "ngb",
-    group = "LULC MODIS"
+    group = "MODIS MCD12Q1"
   ) |>
   addLayersControl(
     baseGroups = c("World Imagery","World Topo"),
     position = "topleft",
     options = layersControlOptions(collapsed = FALSE),
-    overlayGroups = c("LULC", "LULC MODIS")
+    overlayGroups = c("XGBOOST", "MODIS MCD12Q1")
   ) |>
+  hideGroup("MODIS MCD12Q1") |>
   addLegend(
     colors = palcol(1:10),
     values = 1:10,
     labels = classes,
-    title = "LULC"
+    title = "land-use and land-cover class"
   )
 ```
 
