@@ -17,6 +17,7 @@ lc_r <- readRDS(here::here("data/land-cover_2012.rds")) |>
 
 snow <- readRDS(here::here("data/snow_lai_profile.rds"))
 dbf <- readRDS(here::here("data/dbf_lai_profile.rds"))
+ml_df <- readRDS(here::here("data/training_data.rds"))
 ```
 
 In previous sections I have explained how seasonality in vegetation canopy density (leaf area index, or LAI) or phenology can be detected, and how it varies depending on the geography of the region. I introduced how this ties to the exchange of carbon and water between the biosphere and the atmosphere (@sec-phenology-trends). A small, first principles, example was provided on how to write your own phenology detection algorithm (@sec-algorithms) and model phenology based upon environmental drivers (@sec-phenology-modelling). In this section I will cover land-use and land-cover classification and explain how all these concepts relate.
@@ -381,14 +382,18 @@ sites <- validation_selection |>
 # combine the NBAR and land-use
 # land-cover labels by location
 # id (Category)
-ml_df <- left_join(nbar_wide, sites)
+ml_df <- left_join(nbar_wide, sites) |>
+    dplyr::select(
+    LC1,
+    contains("band")
+  )
 ```
 
 ### Model training
 
 This example will try to follow the original MODIS MCD12Q1 workflow closely and therefore calls for a boosted regression classification approach [@Friedl2010]. This is a method allows for the use of a [combination of weak learners](https://en.wikipedia.org/wiki/Boosting_(machine_learning)) to be combined into a single robust ensemble classification models. The in depth discussion of the algorithm is beyond the scope of this course and I refer to specialized literature for more details. To properly evaluate or model we need to split our data in a true training dataset, and a test dataset. The test dataset will be used in model evaluation, where samples are independent of those contained within the training dataset [@boehmke_hands-machine_2020].
 
-```{r eval = FALSE}
+```{r}
 # select packages
 # avoiding tidy catch alls
 library(rsample)
@@ -524,14 +529,46 @@ print(xgb_best_model)
 
 However, the returned object does not specify the model structure. To combine both the model structure (workflow) using the optimal parameters we need to combine both. In short, we need to `finalize_workflow()` which combines the model workflow with the model parameters into a final functional model which can take input data and return the desired results. Note that the resulting model (workflow) does not contain any tunable (`tune()`) fields as shown above! The selected model, given our provided constrains on the hyperparamters, has 50 trees, has minimum 11 data points in a node (min_n) and a tree depth of 5.
 
-
 ### Model evaluation
 
-In the case of land-use and land-cover mapping classifications results are often reported as an error matrix and their associated metrics, and the Kappa coefficient. The error matrix tells us something about accuracy, while the Kappa coefficient allows us the compare the accuracy (across maps).
+In machine learning model evaluation can be achieved in various ways and the standard exploration of the accuracy and variables of importance (and their relative contributions) to the model strength are beyond the scope of this example. In this example I will only focus on the standard methodology and terminology as used in remote sensing and GIS fields.
 
-```{r eval = FALSE}
-test_fit <- fit(xgb_best_model, test)
-table(test$LC1, test_fit)
+#### Confusion matrix and metrics {.unnumbered}
+
+In the case of land-use and land-cover mapping classifications results are often reported as an confusion matrix and their associated metrics. The confusion matrix tells us something about accuracy (as perceived by users or producers), while the overall accuracy and Kappa coefficient allows us the compare the accuracy across modelled (map) results. Below, in (@tbl-confusion-matrix) a three class confusion matrix is shown with the model output along the top-bottom axis and the reference dataset shown along the left-right axis. In addition the user and producer accuracy is shown. The user accuracy is the fraction of correctly classified classes with respect to the false positives (Type I) errors for a given class. For example, for a set of reference data (classes) the classified image commit false labels for class one (1) to classes two and three (2,3). These false positives are therefore also called commission errors. Similarly, the producer accuracy is the fraction of correctly classified classes with respect to the false negative (Type II) errors for a given class. For example, when the reference data identifies the data as class 1, but the classified image identifies it also as class 2 and 3. Values are omitted from the correct class and also called omission errors. In short, in remote sensing, the Type I and II errors are rephrased as the perspective taken during the assessment, either the user or the producer. In a strict machine learning context the user and producer accuracy would be called precision and recall, respectively.
+
+|   | 1  |  2 | 3  | total | User accuracy (Type I) | Kappa  |
+|---|---|---|---|---|---|---|
+| *1*  | 49  |  4 | 4  |  57 |  0.89 |   |
+| *2*  |  2 | 40  | 2  |  44 |  0.90 |   |
+| *3*  |  3 | 3  |  59 | 65  |  0.90 |   |
+| *total*  |  54 |  47 |  65 |  166 |   |   |
+| *Producer accuracy (Type II)*  |  0.90 |  0.85 |  0.90 |   |  *0.89* |   |
+| *Kappa*  |   |   |   |   |   |  *0.84* |
+
+: Confusion matrix with classification results from top to bottom, reference results from left to right. Results show the labels (1-3) and their respective false positive and negative results. {#tbl-confusion-matrix}
+
+Simple confusion matrices can be calculated using R using the `table` function comparing the true reference labels with the predicted values for our model.
+
+```{r include = FALSE}
+xgb_best_model <- readRDS(here::here("data/xgboost_model.rds"))
+```
+
+```{r}
+# run the model on our test data
+# using predict()
+test_results <- predict(xgb_best_model, test)
+
+# load the caret library to
+# access confusionMatrix functionality
+library(caret)
+
+# use caret's confusionMatrix function to get
+# a full overview of metrics
+caret::confusionMatrix(
+  reference = as.factor(test$LC1), 
+  data = as.factor(test_results$.pred_class)
+  )
 ```
 
 ### Model scaling
