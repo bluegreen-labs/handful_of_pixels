@@ -6,6 +6,7 @@ library(tidyterra)
 library(ggplot2)
 library(terra)
 library(sf)
+library(xgboost)
 set.seed(131)
 
 # read data from file
