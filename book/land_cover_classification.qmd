@@ -1,15 +1,5 @@
 # Land-Cover classification {#sec-land-cover}
 
-In previous sections I have explained how seasonality in vegetation canopy density (leaf area index, or LAI) or phenology can be detected, and how it varies depending on the geography of the region. I introduced how this ties to the exchange of carbon and water between the biosphere and the atmosphere (@sec-phenology-trends). A small, first principles, example was provided on how to write your own phenology detection algorithm (@sec-algorithms) and model phenology based upon environmental drivers (@sec-phenology-modelling). 
-
-...
-
-However, many satellite platforms provide information in various spectral bands (and not only one product in the temporal domain). One can say the data are multi-dimensional, having both a temporal, spatial and spectral component (see @fig-spectral-bands). These various bands, or locations in the spectral domain, provide key insights into the state of the land surface (throughout the year).
-
-For example the combination of information in the red and near-infrared bands (spectral domains) provides key information to calculate the Normalized Difference Vegetation Index (NDVI) [@Huete2002]. Other band combinations and or models lead to other indices with varying properties, tailored to specific ecological, geo-morphological or other purposes [@zeng_optical_2022].
-
-When we plot a time series of a deciduous forest you note the steady seasonal changes when switching between winter, with low LAI values, and summer with high LAI values. However, different vegetation and land-use and land-cover types have different temporal NDVI signals. For example, a glacier will have permanent snow and no seasonal LAI signal. We can therefore discriminate between non-vegetative locations and vegetation based upon the combine spectral and temporal profile of a location.
-
 ```{r include = FALSE}
 library(terra)
 library(dplyr)
@@ -25,74 +15,13 @@ set.seed(0)
 lc_r <- readRDS(here::here("data/land-cover_2012.rds")) |>
   mt_to_terra(reproject = TRUE)
 
-# lc <- readRDS(here::here("data/land-cover_2012.rds")) |>
-#   mutate(
-#     date = as.Date(calendar_date),
-#     year = as.numeric(format(date, "%Y"))
-#   ) |>
-#   rename(
-#     lc = "value"
-#   ) |>
-#   select(
-#     pixel,
-#     year,
-#     lc
-#   )
-# 
-# # # read in LAI
-# lai <- readRDS(here::here("data/lai_2012.rds")) |>
-#   mutate(
-#     date = as.Date(calendar_date),
-#     year = as.numeric(format(date, "%Y")),
-#     value = value * as.numeric(scale),
-#     value = ifelse(value >= 25, NA, value)
-#   ) |>
-#   rename(
-#     lai = "value"
-#   ) |>
-#   select(
-#     pixel,
-#     date,
-#     year,
-#     lai
-#   )
-# 
-# # merge by pixel and date
-# df <- left_join(lai, lc, by = c("pixel", "year"))
-# 
-# # get mean and sd for dbf locations
-# dbf <- df |>
-#   filter(lc == 4) |>
-#   group_by(date) |>
-#   summarize(
-#     mean = mean(lai, na.rm = TRUE),
-#     sd = sd(lai, na.rm = TRUE)
-#     )
-# 
-# saveRDS(
-#   dbf,
-#   here::here("data/dbf_lai_profile.rds"),
-#   compress = "xz"
-#   )
-# 
-# # get mean and sd for barren locations
-# snow <- df |>
-#   filter(lc == 15) |>
-#   group_by(date) |>
-#   summarize(
-#     mean = mean(lai, na.rm = TRUE),
-#     sd = sd(lai, na.rm = TRUE)
-#     )
-# 
-# saveRDS(
-#   snow,
-#   here::here("data/snow_lai_profile.rds"),
-#   compress = "xz"
-#   )
-
 snow <- readRDS(here::here("data/snow_lai_profile.rds"))
 dbf <- readRDS(here::here("data/dbf_lai_profile.rds"))
 ```
+
+In previous sections I have explained how seasonality in vegetation canopy density (leaf area index, or LAI) or phenology can be detected, and how it varies depending on the geography of the region. I introduced how this ties to the exchange of carbon and water between the biosphere and the atmosphere (@sec-phenology-trends). A small, first principles, example was provided on how to write your own phenology detection algorithm (@sec-algorithms) and model phenology based upon environmental drivers (@sec-phenology-modelling). In this section I will cover land-use and land-cover classification and explain how all these concepts relate.
+
+As shown previously, when we plot a time series of a deciduous forest you note the steady seasonal changes when switching between winter, with low LAI values, and summer with high LAI values. However, different vegetation (and land-use and land-cover types) have different temporal LAI profiles. For example, a glacier will have permanent snow and limited to no seasonal LAI signal. We can therefore discriminate (visually) between non-vegetative locations and vegetation based upon the combine spectral and temporal profile of a location (@fig-lai-dbf-snow).
 
 ```{r}
 #| label: fig-lai-dbf-snow
@@ -155,27 +84,25 @@ p + p2 +
     )
 ```
 
+We can use this concept, of differential temporal and spectral responses to map where certain land-use and land-cover types are dominant. In the above example I used LAI, a derived index. However, satellite platforms provide information in various spectral bands. One can say the data are multi-dimensional, having both a temporal, spatial and spectral component (see @fig-spectral-bands). These various bands, or locations in the spectral domain, provide key insights into the state of the land surface (throughout the year). For example the combination of information in the red and near-infrared bands (spectral domains) provides key information to calculate the Normalized Difference Vegetation Index (NDVI) [@Huete2002] an indicator of plant health and density. Other band combinations and or models lead to other indices, e.g. the LAI data previously used, with varying properties tailored to specific ecological, geo-morphological or other purposes [@zeng_optical_2022]. All this spectral temporal data combined with machine learning (clustering) approaches allows us to map the land surface in great detail. In this section I will discuss both unsupervised and supervised machine learning approaches to land-use and land-cover mapping.
+
 ::: callout-note
 ### Note
 
-Land-Use and Land-Cover (LULC) mapping is often mentioned as one concept. However, it is important to note the difference between Land-Use and Land-Cover. Land-Use is determined by human activities, while Land-Cover is the consequence of the natural biotic and abiotic environment. Although in an age of climate change (and global rising CO^2 levels and temperatures) few places are truly free of human influence this nuance remains noteworthy. In this chapter I will focus mostly on the Land-Cover aspect (the natural environment).
+Land-Use and Land-Cover (LULC) mapping is often mentioned as one concept. However, it is important to note the difference between Land-Use and Land-Cover. Land-Use is determined by human activities, while Land-Cover is the consequence of the natural biotic and abiotic environment. Although in an age of climate change (and global rising CO~2~ levels and temperatures) few places are truly free of human influence this nuance remains noteworthy. In this chapter I will focus mostly on the Land-Cover aspect (the natural environment).
 
 :::
 
 ## Unsupervised machine learning
 
-As such, we can use this (temporal) information across vegetation types to classify the Swiss alpine scene into locations which have little seasonality and those which have some (e.g. @fig-lai-dbf-snow). For example you can calculate the mean and standard deviation of a full year and see how much variability you see across a year. Regions with a low NDVI signal with little variability are most likely not associated with vegetation (e.g. glaciers, see @fig-lai-dbf-snow).
-
-Classification of data in different classes (or clustering) can be accomplished using various methods. Clustering can either be unsupervised, where clustering is only defined by the number of classes one wants to divide the (multi-dimensional) dataset into.
-
-We can use an unsupervised machine learning approach such as k-means clustering to divide the dataset into two or more classes. These classes are clustered in a way which minimizes within-cluster variances, i.e. it ensures that pixels will look similar to eachother (given a target number of clusters `k` to divide the dataset into).
+Working of the concept as demonstrated in @fig-lai-dbf-snow we can use the spectral and temporal information across the landscape to classify the Swiss alpine scene into locations which have little seasonality and those which have some. For example you can calculate the mean and standard deviation of a full year and see how much variability you see across a year. Regions with a low LAI signal with little variability are most likely not associated with vegetation (e.g. glaciers, see @fig-lai-dbf-snow). Classification of data in different classes (or clustering) can be accomplished using various methods. Clustering can either be unsupervised, where clustering is only defined by the number of classes one wants to divide the (multi-dimensional) dataset into, with no reference data to compare the results to. We can use an unsupervised machine learning approach, such as k-means clustering, to divide the dataset into two or more classes. These classes are clustered in a way which minimizes within-cluster variances, i.e. it ensures that pixels will look similar to each other (given a target number of clusters `k` to divide the dataset into).
 
 ```{r include = FALSE}
 # load buffered data, not shown in render
 r <- terra::rast(here::here("data/LAI.tiff"))
 ```
 
-Here we can use the `lai_2012` dataset we previously downloaded, but we'll use the raster representation as a starting point (as most data will come in multi-layer raster formats).
+Here we can use the `lai_2012` dataset we previously downloaded, but we'll use the raster representation as a starting point (as most geospatial data will come in multi-layer raster formats).
 
 ```{r eval = FALSE}
 # conversion from tidy data to a raster format
@@ -186,7 +113,7 @@ r <- MODISTools::mt_to_terra(
   )
 ```
 
-As a first step I will convert this raster object back into a dataframe. However, this time it will be a wide data frame, where every pixel location is a row and every column a value for a given date. Alternatively, I could have converted the original `lai_2012` data frame from a long format into a wide format using `tidyr::pivot_wider()`. Every row, representing a year for a given location, is a [feature (vector)](https://en.wikipedia.org/wiki/Feature_(machine_learning)) which contains the information on which the clustering algorithm will operate.
+As a first step (ironically) I will convert this raster object back into a dataframe. However, this time it will be a wide data frame, where every pixel location is a row and every column a value for a given date. Alternatively, I could have converted the original `lai_2012` data frame from a long format into a wide format using `tidyr::pivot_wider()`. Every row, representing a year for a given location, is a [feature (vector)](https://en.wikipedia.org/wiki/Feature_(machine_learning)) which contains the information on which the k-means clustering algorithm will operate.
 
 ```{r}
 # convert a multi-layer raster image
@@ -206,7 +133,11 @@ clusters <- kmeans(
   df[,-1],
   centers = 2
 )
+```
 
+Finally, we map the cell values back onto those of the original extent of the LAI data (to retain their respective geographic position).
+
+```{r}
 # use the original raster layout as
 # a template for the new map (only
 # using a single layer)
@@ -260,9 +191,9 @@ leaflet() |>
     )
 ```
 
-As this is an unsupervised classification we do not know what land cover types are included in this map. The model that we generate is therefore purely data informed. However, a quick visual inspection shows that for a `k` of 2 the split between the clusters divides vegetation from glaciers, water bodies, and urban areas (@fig-kmeans-map). The (seasonal) differences in LAI were used in the k-means analysis to minimize the (seasonal) variance between pixels. In particular, our analysis with two classes separates areas with a seasonal dynamic from those without one.
+As this is an unsupervised classification we do not know what land cover types are included in this map. The model that we generate is therefore purely data informed, and not validated against external known land-use and land-cover locations. However, a quick visual inspection shows that for a `k` of 2 the split between the clusters divides vegetation from glaciers, water bodies, and urban areas (@fig-kmeans-map). The (seasonal) differences in LAI were used in the k-means analysis to minimize the (seasonal) variance between pixels. In particular, our analysis with two classes separates areas with a seasonal dynamic from those without one. Although the k-means algorithm is fast it only has one parameter which can shape the outcome of algorithm (i.e. `k`). The model is therefore too inflexible for more complex classification tasks. The k-means model is therefore rarely used as a scalable solution to generate maps based upon **in-situ** validation data (see below).
 
-Note that k-means clustering provides a clustered output only and not a model which can be scaled to other locations. The representation of k-means clustering is therefore dependent on the dataset. Furthermore, a simple index as the NDVI or LAI alone does not provide sufficient information to distinguish between more subtle land-use or land-cover classes (e.g. evergreen forests and or mixed forest types). In short, we need more data and a more sophisticated model approach to create an informed model which scales easily to different land cover types and new locations.
+In this example I used an index, i.e. LAI, which does not provide sufficient information to distinguish between more subtle land-use or land-cover classes (e.g. evergreen forests and or mixed forest types). In short, a better approach would use more data and a more sophisticated model approach to create an informed model which scales easily to different land cover types and new locations.
 
 ## supervised machine learning
 

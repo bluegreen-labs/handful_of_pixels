@@ -80,3 +80,24 @@ Plot the global phenology maps, and its various iterations in the R markdown not
 All information for this exercise can be found in @sec-geospatial and @sec-algorithms. As before, additional meta-data will need to be consulted online to provide context or data conversion instructions in some cases.
 
 :::
+
+## Phenology modelling
+
+- How can you improve the model used to regionally scale the results in @sec-phenology-modelling? 
+  - Provide at least three (3) ways to improve the model used.
+- Implement at least one of these methods
+- Statistically compare the results with the MODIS MCD12Q2 phenology product
+
+## Land-Use and Land-Cover modelling
+
+- How can you improve the model used to map LULC? 
+  - Provide at least three (4) ways to improve the model used.
+- Implement at least two of these methods
+- Demonstrate improved model skill across the two generated maps
+
+::: {.callout-note}
+## Note
+
+Use the appropriate APIs to download the required data.
+
+:::
