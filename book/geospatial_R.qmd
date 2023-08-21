@@ -46,11 +46,13 @@ library(terra)
 
 # read data from file
 r <- terra::rast("demo_data.nc")
-
-# the demo data can be downloaded from
-# https://github.com/geco-bern/handfull_of_pixels/raw/main/data/demo_data.nc
-
 ```
+
+:::callout-note
+### Note
+
+The demo data can be downloaded from [from this link](https://github.com/khufkens/handfull_of_pixels/raw/main/data/demo_data.nc)!
+:::
 
 We can inspect the meta data by calling the object:
 
@@ -289,18 +291,110 @@ head(df)
 
 #### Extracting data {.unnumbered}
 
-A common operation on geospatial data is the extraction of data for a given (point) location.
+A common operation on geospatial data is the extraction of data for a given (point) location. This operation is as simple as providing a two column dataframe with longitude and latitude coordinates (or those matching the map projection). The data will be returned as an indexed dataframe. Alternatively you can also use an `sf` object with point, lines or polygons.
 
+```{r}
+# set the longitude and latitude
+# to extract
+locations <- data.frame(
+  lon = c(8,8),
+  lat = c(46, 47)
+)
+
+# extract the values for a coordinate
+# pair in the same projection as
+# the map layout
+values <- terra::extract(
+  r_c,
+  locations
+)
+
+print(values)
+```
+
+You can also return the cell number, or coordinates (xy) with this call.
+
+```{r}
+# return the locations together with the
+# extracted data
+values <- terra::extract(
+  r_c,
+  locations,
+  xy = TRUE,
+  cell = TRUE
+)
+
+print(values)
+```
 
 #### Transformations {.unnumbered}
 
-All geospatial raster data is defined by a coordinate reference system and a resolution defining its grid. Both the spatial resolution and projection are not always constant among datasets. However, combining two datasets requires that they share a common grid (to execute band math or other operations). It is therefore often required to resample data to a different resolution and/or reproject the data if they do not share the same coordinate reference system.
+All geospatial raster data is defined by a coordinate reference system and a resolution defining its grid. Both the spatial resolution and projection are not always constant between datasets. However, combining two datasets requires that they share a common grid (to execute band math or other operations). It is therefore often required to **resample** data to a **different resolution** and/or **reproject** the data if they do not share the same coordinate reference system.
 
-It is common to find data which generated for a particular region to contain regional projections, rather than intuitive geographic (latitude / longitude) projection. Many data with a European extent is provided in the XYZ projection. To align these data with a dataset with geographic coordinates the data needs to be resampled and reprojected.
+It is common to find data which generated for a particular region to contain regional projections, rather than intuitive geographic (latitude / longitude) projection. To align these data with a dataset with geographic coordinates the data needs to be resampled and reprojected. For example, data with a European extent can use the Albers equal area projection for representing data truthfully area wise.
+
+These map projections are often referred to by either their colloquial name, but most commonly in using their Coordinate Reference System (CRS) and EPSG code. You can search for projections on various websites, such as [epsg.io](https://epsg.io), which list all the  most common projections. For example, I can transform the temperature data into a projection which is conformal and maintains angles (i.e. shapes, but not distance and area) by using an [UTM 32N projection](https://epsg.io/23032) or EPSG:23032. For an in depth discussion on reference systems I refer to specialized courses in Geographic Information Systems (GIS).
 
 ```{r}
-
+r_c_utm <- terra::project(r_c, crs("EPSG:23032"))
 ```
+
+```{r message=FALSE, warning=FALSE}
+#| code-fold: true
+#| label: fig-reproject
+#| fig-cap: "Temperature in Celsius (C) across layers"
+#| fig-align: "center"
+#| out-width: "100%"
+#| fig-width: 5
+#| fig-height: 4
+
+ggplot() +
+  tidyterra::geom_spatraster(data = r_c_utm) +
+  scale_fill_viridis_c(
+    na.value = NA,
+    name = "Temperature (deg. C) \n"
+    ) +
+  theme_bw() +
+  theme(
+    legend.position = "bottom"
+    )
+```
+
+Resampling data always needs both a source and a target raster object (i.e. two SpatRaster maps). In this operation using the `resample()` function you will need to specify a method on how you will approach this resampling operation. Downsampling to a coarse resolution might need a bilinear interpolation for continuous variables. However, resampling land cover maps with discrete factors (classes) might need a nearest neighbour method.
+
+In the small worked example below I will first aggregate the temperature data by a factor of two (2) using the `aggregate()` function. This new coarse resolution map wil then serve as a target for the resample routine.
+
+```{r}
+# aggregate the original data by a factor of two (2)
+# using default settings
+r_c_2x <- terra::aggregate(r_c, fact = 2)
+
+# resample the original data using the new aggregated grid size
+# and the minimum value across the coarser grid size
+r_resampled <- terra::resample(r_c, r_c_2x, method = "min")
+```
+
+```{r message=FALSE, warning=FALSE}
+#| code-fold: true
+#| label: fig-resampled
+#| fig-cap: "Temperature in Celsius (C) across layers"
+#| fig-align: "center"
+#| out-width: "100%"
+#| fig-width: 5
+#| fig-height: 4
+
+ggplot() +
+  tidyterra::geom_spatraster(data = r_resampled) +
+  scale_fill_viridis_c(
+    na.value = NA,
+    name = "Temperature (deg. C) \n"
+    ) +
+  theme_bw() +
+  theme(
+    legend.position = "bottom"
+    )
+```
+
 
 ### The sf package {#sec-sf}
 
