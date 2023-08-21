@@ -448,7 +448,7 @@ time        : 2022-01-01 12:00:00 UTC </code></pre>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># set te colour scale manually</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># set the colour scale manually</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>pal <span class="ot">&lt;-</span> <span class="fu">colorNumeric</span>(</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"magma"</span>,</span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">values</span>(r),</span>
@@ -1050,7 +1050,7 @@ First 10 features:
 <section id="other-noteworthy-packages" class="level3" data-number="3.1.4">
 <h3 data-number="3.1.4" class="anchored" data-anchor-id="other-noteworthy-packages"><span class="header-section-number">3.1.4</span> Other noteworthy packages</h3>
 <p>Other critical packages are <a href="https://cirrus.ucsd.edu/~pierce/ncdf/"><code>ncdf4</code></a> which will be installed by default, but the included functions allow for the manipulation (reading and writing) of the common netCDF format. The <a href="https://brazil-data-cube.github.io/rstac/"><code>rstac</code> package</a> which provides a convenient way to browse Spatio-Temporal Asset Catalogues (STAC), a format commonly used to organize remote sensing images online. The <a href="https://e-sensing.github.io/sitsbook/"><code>sits</code> package</a> was created by the Brazilian National Institute for Space Research (INPE) and provides tools for machine learning on data cubes.</p>
-<p>Note that R (or Python) is infinitely flexible, and many packages exist to address niche problems within the context of geospatial data manipulation. While they most often tap into the the GDAL framework, these packages can be very powerful for certain applications which are outside the scope of this basic introduction. For more in-depth discussion, the reader is referred to the list of resources at the end of this book.</p>
+<p>Note that R (or Python) is infinitely flexible, and many packages exist to address niche problems within the context of geospatial data manipulation. While they most often tap into the the GDAL framework, these packages can be very powerful for certain applications which are outside the scope of this basic introduction. For more in-depth discussion, the reader is referred to the list of resources in the references at the end of this book.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">

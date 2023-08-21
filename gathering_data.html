@@ -332,7 +332,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>where to find data, what are common sources</li>
 <li>how to download the data</li>
-<li>how to read in the data once downloaded <!-- - how to interpret the data (domain knowledge) XXX this is not related to 'accessing data' --></li>
+<li>how to read in the data once downloaded</li>
+<li>how to interpret the data (domain knowledge), and verify content</li>
 </ul>
 <section id="sec-trust-data" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="sec-trust-data"><span class="header-section-number">2.1</span> Finding open trustworthy data</h2>
@@ -516,7 +517,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Below, we provide an example of using the <code>GET</code> command to download data from the <a href="https://daac.ornl.gov/cgi-bin/dsviewer.pl?ds_id=1247">Regridded Harmonized World Soil Database (v1.2)</a> as hosted on the Oak Ridge National Laboratory computer infrastructure. In this case we download a subset of a global map of topsoil sand content (<code>T_SAND</code>, %).</p>
+<p>Below, we provide an example of using the <code>GET</code> command to download data from the <a href="https://daac.ornl.gov/cgi-bin/dsviewer.pl?ds_id=1247">Regridded Harmonized World Soil Database (v1.2)</a> as hosted on the Oak Ridge National Laboratory computer infrastructure. In this case we download a subset of a global map of topsoil sand content (<code>T_SAND</code>, %), or other paramters as listed on the <a href="https://daac.ornl.gov/cgi-bin/dsviewer.pl?ds_id=1247">ORNL DAAC data portal</a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set API URL endpoint</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># for the total sand content</span></span>
