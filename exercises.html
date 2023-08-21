@@ -280,6 +280,8 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#temporal-and-spatial-anomalies" id="toc-temporal-and-spatial-anomalies" class="nav-link" data-scroll-target="#temporal-and-spatial-anomalies"><span class="header-section-number">8.1.2</span> Temporal and spatial anomalies</a></li>
   <li><a href="#scaling-the-calculation-of-phenology-metrics" id="toc-scaling-the-calculation-of-phenology-metrics" class="nav-link" data-scroll-target="#scaling-the-calculation-of-phenology-metrics"><span class="header-section-number">8.1.3</span> Scaling the calculation of phenology metrics</a></li>
   </ul></li>
+  <li><a href="#phenology-modelling" id="toc-phenology-modelling" class="nav-link" data-scroll-target="#phenology-modelling"><span class="header-section-number">8.2</span> Phenology modelling</a></li>
+  <li><a href="#land-use-and-land-cover-modelling" id="toc-land-use-and-land-cover-modelling" class="nav-link" data-scroll-target="#land-use-and-land-cover-modelling"><span class="header-section-number">8.3</span> Land-Use and Land-Cover modelling</a></li>
   </ul>
 </nav>
     </div>
@@ -326,8 +328,8 @@ ul.task-list li input[type="checkbox"] {
 <div class="cell" data-layout-align="center">
 <div id="fig-leaflet-adirondacks" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
-<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-de319a9a25c777e4e781" style="width:100%;height:288px;"></div>
-<script type="application/json" data-for="htmlwidget-de319a9a25c777e4e781">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[43.5,-74.5],6,[]],"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[43.5,-74.5,null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},"Adirondacks",null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[43.5,43.5],"lng":[-74.5,-74.5]}},"evals":[],"jsHooks":[]}</script>
+<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-e12faa8fbea1b071f4a3" style="width:100%;height:288px;"></div>
+<script type="application/json" data-for="htmlwidget-e12faa8fbea1b071f4a3">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[43.5,-74.5],6,[]],"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[43.5,-74.5,null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},"Adirondacks",null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[43.5,43.5],"lng":[-74.5,-74.5]}},"evals":[],"jsHooks":[]}</script>
 <figcaption class="figure-caption">Figure&nbsp;8.1: The location of the Adirondack mountains in the North-Eastern United States</figcaption>
 </figure>
 </div>
@@ -382,9 +384,44 @@ Note
 <p>All information for this exercise can be found in <a href="geospatial_R.html"><span>Chapter&nbsp;3</span></a> and <a href="phenology_algorithms.html"><span>Chapter&nbsp;5</span></a>. As before, additional meta-data will need to be consulted online to provide context or data conversion instructions in some cases.</p>
 </div>
 </div>
-
-
 </section>
+</section>
+<section id="phenology-modelling" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="phenology-modelling"><span class="header-section-number">8.2</span> Phenology modelling</h2>
+<ul>
+<li>How can you improve the model used to regionally scale the results in <a href="phenology_modelling.html"><span>Chapter&nbsp;6</span></a>?
+<ul>
+<li>Provide at least three (3) ways to improve the model used.</li>
+</ul></li>
+<li>Implement at least one of these methods</li>
+<li>Statistically compare the results with the MODIS MCD12Q2 phenology product</li>
+</ul>
+</section>
+<section id="land-use-and-land-cover-modelling" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="land-use-and-land-cover-modelling"><span class="header-section-number">8.3</span> Land-Use and Land-Cover modelling</h2>
+<ul>
+<li>How can you improve the model used to map LULC?
+<ul>
+<li>Provide at least three (4) ways to improve the model used.</li>
+</ul></li>
+<li>Implement at least two of these methods</li>
+<li>Demonstrate improved model skill across the two generated maps</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Use the appropriate APIs to download the required data.</p>
+</div>
+</div>
+
+
 </section>
 
 </main> <!-- /main -->
