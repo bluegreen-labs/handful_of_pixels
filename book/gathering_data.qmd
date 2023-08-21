@@ -7,7 +7,7 @@ In general you have to know:
 - where to find data, what are common sources
 - how to download the data
 - how to read in the data once downloaded
-<!-- - how to interpret the data (domain knowledge) XXX this is not related to 'accessing data' -->
+- how to interpret the data (domain knowledge), and verify content
 
 ## Finding open trustworthy data {#sec-trust-data}
 
@@ -156,7 +156,7 @@ status <- httr::GET(
 )
 ```
 
-Below, we provide an example of using the `GET` command to download data from the [Regridded Harmonized World Soil Database (v1.2)](https://daac.ornl.gov/cgi-bin/dsviewer.pl?ds_id=1247) as hosted on the Oak Ridge National Laboratory computer infrastructure. In this case we download a subset of a global map of topsoil sand content (`T_SAND`, %).
+Below, we provide an example of using the `GET` command to download data from the [Regridded Harmonized World Soil Database (v1.2)](https://daac.ornl.gov/cgi-bin/dsviewer.pl?ds_id=1247) as hosted on the Oak Ridge National Laboratory computer infrastructure. In this case we download a subset of a global map of topsoil sand content (`T_SAND`, %), or other paramters as listed on the [ORNL DAAC data portal](https://daac.ornl.gov/cgi-bin/dsviewer.pl?ds_id=1247).
 
 ```{r eval = TRUE, warning=FALSE, message=FALSE}
 # set API URL endpoint

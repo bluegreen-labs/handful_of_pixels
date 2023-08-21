@@ -19,7 +19,7 @@ Consequences are manyfold, such as exposing early blooming or leafing plants to 
 
 Satellite remote sensing data products provide these insights for almost four decades [@Zhang2003; @Hufkens2012e]. Remote sensing products of land surface phenology provide wall-to-wall coverage with a relatively high level of data consistency across space and time and well-studied known (methodological) biases. This chapter covers several aspects of developing a small research project using remote sensing data of surface phenology, gathered for a small set of locations (a handfull of pixels). 
 
-This chapter (@sec-phenology-trends) highlights how to detect landscape-wide trends in phenology and how they relate to topography (elevation, aspect) and land cover type. This knowledge can then be used to infer some general properties of vegetation phenology. Chapter @sec-algorithms demonstrates how you can detect phenological dates (timing of leaf-unfolding) from vegetation time series yourself, using a simple algorithm, and scale this regionally and globally.
+This chapter (@sec-phenology-trends) highlights how to detect landscape-wide trends in phenology and how they relate to topography (elevation, aspect) and land cover type. This knowledge can then be used to infer some general properties of vegetation phenology. Chapter @sec-algorithms demonstrates how you can detect phenological dates (timing of leaf-unfolding) from vegetation time series yourself, using a simple algorithm, and scale this regionally and globally. Note that throughout the phenology chapters I use phenology and leaf-out interchangeably (depending on the context).
 
 Now, let's get started!
 
@@ -40,7 +40,7 @@ land_cover <- readRDS(here::here("data/land-cover_2012.rds"))
 
 ## Getting the required data
 
-To detect and quantify relationships between phenology and topography, we require relevant data sources. Various sources can be found online but the easiest is to use the `geodata` package which provides a way to access Shuttle Radar Topography Mission (SRTM) elevation data (digital elevation model, DEM) easily.
+To detect and quantify relationships between phenology and topography, we require relevant data sources. Various sources can be found online but the easiest is to use the `geodata` package which provides a way to access Shuttle Radar Topography Mission (SRTM) elevation data (digital elevation model, DEM) easily. The below command downloads DEM tiled data from the larger Bern area, as specified by a latitude and longitude.
 
 ```{r eval = FALSE}
 # load libraries

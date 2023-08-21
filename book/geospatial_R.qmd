@@ -92,7 +92,7 @@ ggplot() +
 #| out-width: "100%"
 library(leaflet)
 
-# set te colour scale manually
+# set the colour scale manually
 pal <- colorNumeric(
   "magma",
   values(r),
@@ -581,4 +581,4 @@ Some other distinctions should be made, such as the fast summarizing of raster d
 
 Other critical packages are [`ncdf4`](https://cirrus.ucsd.edu/~pierce/ncdf/) which will be installed by default, but the included functions allow for the manipulation (reading and writing) of the common netCDF format. The [`rstac` package](https://brazil-data-cube.github.io/rstac/) which provides a convenient way to browse Spatio-Temporal Asset Catalogues (STAC), a format commonly used to organize remote sensing images online. The [`sits` package](https://e-sensing.github.io/sitsbook/) was created by the Brazilian National Institute for Space Research (INPE) and provides tools for machine learning on data cubes.
 
-Note that R (or Python) is infinitely flexible, and many packages exist to address niche problems within the context of geospatial data manipulation. While they most often tap into the the GDAL framework, these packages can be very powerful for certain applications which are outside the scope of this basic introduction. For more in-depth discussion, the reader is referred to the list of resources at the end of this book.
+Note that R (or Python) is infinitely flexible, and many packages exist to address niche problems within the context of geospatial data manipulation. While they most often tap into the the GDAL framework, these packages can be very powerful for certain applications which are outside the scope of this basic introduction. For more in-depth discussion, the reader is referred to the list of resources in the references at the end of this book.

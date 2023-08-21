@@ -31,7 +31,7 @@ These methods are mostly applied to various vegetation indices, which link spect
 ::: callout-note
 ### Note
 
-Given the non-continuous nature of the spectral bands used on most satellite platforms one calls these kinds of data **multi-spectral**. This in contrast to hyperspectral data which is quasi-continuous throughout a large spectral domain (@fig-spectral-bands). More on how to leverage the spectral domain characteristics to create indices will be provided in upcoming chapters where I cover band selection using densely sampled (hyper-spectral) data.
+Given the non-continuous nature of the spectral bands used on most satellite platforms one calls these kinds of data **multi-spectral**. This in contrast to hyperspectral data which is quasi-continuous throughout a large spectral domain (@fig-spectral-bands).
 
 ```{r}
 #| label: fig-spectral-bands
@@ -41,7 +41,6 @@ Given the non-continuous nature of the spectral bands used on most satellite pla
 #| echo: FALSE
 knitr::include_graphics("https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs43017-022-00298-5/MediaObjects/43017_2022_298_Fig2_HTML.png?as=webp")
 ```
-
 :::
 
 
