@@ -620,7 +620,7 @@ rs_request(
 
 ::: callout-note
 ### Note
-AppEEARS downloads might take a while! In the code above the default directory is also set to the temporary directory. To use the above code make sure to change the path where to download the data to a more permenant one.
+AppEEARS downloads might take a while! In the code above the default directory is also set to the temporary directory. To use the above code make sure to change the download path to a more permanent one.
 :::
 
 #### Model execution {.unnumbered}
@@ -658,7 +658,7 @@ band_names <- data.frame(
 names(swiss_multispec_data) <- band_names$name
 ```
 
-With all band names in line with the expected variables in our model we can now scale it by using `terra::predict()`. This function is the {terra} R package equivalent of the `predict()` function you might have used in a classic statistical modelling setting. This function allows you to call a compatible model for `SpatRaster` data, by running it along the time axis of the raster stack. In this case I ask for the model probabilities to be returned as this gives a more granular overview of the model results (see `type` argument, @fig-classification-probs).
+With all band names in line with the expected variables in our model we can now scale it by using `terra::predict()`. This function is the {terra} R package equivalent of the `predict()` function for general statistical models. This function allows you to call a compatible model for `SpatRaster` data, by running it along the time/band axis of the raster stack. I ask for the model probabilities to be returned, as this gives a more granular overview of the model results (see `type` argument, @fig-classification-probs).
 
 ```{r eval = FALSE}
 # return probabilities, where each class is
@@ -716,7 +716,7 @@ ggplot() +
   facet_wrap(~lyr)
 ```
 
-One can create a formal Land-Use and Land-Cover map by reducing this dataset by returning the layer for which the probability is highest, using `which.max`. As seen in @sec-geospatial, you can apply a function to all layers across pixels using the `app()` function. The returned data is a Land-Use and Land-Cover map with classes 1 to 10, as shown below (@fig-spatial-lulc).
+One can create a formal Land-Use and Land-Cover map by reducing this dataset by returning the layer for which the probability is highest, using `which.max`. As seen in @sec-geospatial, you can apply a function to all layers across pixels using the `terra::app()` function. The returned data is a Land-Use and Land-Cover map with classes 1 to 10, as shown below (@fig-spatial-lulc).
 
 ```{r}
 # generate the map by selecting maximum probabilities
