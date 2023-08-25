@@ -444,6 +444,64 @@ nc |>
     )
 ```
 
+#### Convert coordinates
+
+You can easily convert a list of coordinates to an {sf} object using `st_as_sf()`, while specifying the columns containing the coordinates and a particular coordinate reference system.
+
+```{r}
+# demo data frame
+df <- data.frame(
+  lat = c(40, 41),
+  lon = c(20, 10),
+  value = c(3, 5)
+  )
+
+# sf transformation of df
+# sets coordinate columns
+# and projection epsg
+df_sf <- sf::st_as_sf(
+  df,
+  coords = c("lon", "lat"),
+  crs = "epsg:4326"
+  )
+
+# print the summary of 
+# the sf object
+print(df_sf)
+```
+
+#### Reprojecting data {.unnumbered}
+
+You can reproject our point data to a different coordinate system using the `st_transform()` function. This function requires a destination CRS. I will transform our data from EPSG 4326 to a Swiss coordinate system (EPSG ), and convert the {sf} object back to an ordinary tibble (including the transformed coordinates).
+
+```{r}
+# transformation to
+# swiss coordinate system
+df_sf_swiss <- df_sf |>
+  st_transform(crs = "epsg:2056")
+
+# print the reprojected data (as sf)
+print(df_sf_swiss)
+```
+
+Note that the conversion back to a dataframe requires you the explicitly put the point coordinates into new columns using a `mutate()` call.
+
+```{r}
+# return to simple data frame
+df_swiss <- df_sf_swiss |>
+  dplyr::as_tibble() |>
+  dplyr::mutate(
+    swis_x = st_coordinates(geometry)[, "X"],
+    swiss_y = st_coordinates(geometry)[, "Y"]
+    ) |>
+  dplyr::select(
+    -geometry
+  )
+
+# print coverted (dataframe) data
+print(df_swiss)
+```
+
 #### Basic vector operations {.unnumbered}
 
 Given the tidy data approach of `sf` data we can use the same logic to filter data. For example, if we only want to retain Camden county from the data set we can use the `filter()` function as shown in @sec-tidy-data.
