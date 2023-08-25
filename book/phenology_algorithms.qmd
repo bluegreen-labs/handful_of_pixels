@@ -8,7 +8,7 @@ Many products exist, depending on the remote sensing platform or data used, and 
 
 ### Vegetation indices and time series
 
-Most phenology data products rely on a limited set of algorithms, or various iterations of them, operating on time series of [vegetation indices](https://en.wikipedia.org/wiki/Vegetation_index), which combines various spectral bands (@fig-threshold) to provide information on vegetation status. Throughout the scientific literature, we can divide most methods for detection of phenological dates used in two categories:
+Most phenology data products rely on a limited set of algorithms, or various iterations of them, operating on time series of [vegetation indices (VI)](https://en.wikipedia.org/wiki/Vegetation_index), which combines various spectral bands (@fig-threshold) to provide information on vegetation status. Throughout the scientific literature, we can divide most methods for detection of phenological dates used in two categories:
 
 - curve fitting
 - threshold-based methods
