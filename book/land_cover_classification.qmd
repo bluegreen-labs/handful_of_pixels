@@ -20,9 +20,9 @@ dbf <- readRDS(here::here("data/dbf_lai_profile.rds"))
 ml_df <- readRDS(here::here("data/training_data.rds"))
 ```
 
-In previous sections I have explained how seasonality in vegetation canopy density (leaf area index, or LAI) or phenology can be detected, and how it varies depending on the geography of the region. I introduced how this ties to the exchange of carbon and water between the biosphere and the atmosphere (@sec-phenology-trends). A small, first principles, example was provided on how to write your own phenology detection algorithm (@sec-algorithms) and model phenology based upon environmental drivers (@sec-phenology-modelling). In this section I will cover land-use and land-cover classification and explain how all these concepts relate.
+In previous sections I have explained how the timing in the development of vegetation canopy density (i.e. using the leaf area index, or LAI) can be detected, and how it varies depending on the geography of the region. I introduced how this ties to the exchange of carbon and water between the biosphere and the atmosphere (@sec-phenology-trends). A small, first principles, example was provided on how to write your own phenology detection algorithm (@sec-algorithms) and how to use such data to model phenology, based upon environmental drivers (@sec-phenology-modelling). In this section I will cover Land-Use and Land-Cover classification and explain how all these concepts relate.
 
-As shown previously, when we plot a time series of a deciduous forest you note the steady seasonal changes when switching between winter, with low LAI values, and summer with high LAI values. However, different vegetation (and land-use and land-cover types) have different temporal LAI profiles. For example, a glacier will have permanent snow and limited to no seasonal LAI signal. We can therefore discriminate (visually) between non-vegetative locations and vegetation based upon the combine spectral and temporal profile of a location (@fig-lai-dbf-snow).
+When we plot a time series of the LAI of a deciduous forest you note the steady seasonal changes when switching between winter, with low LAI values, to summer with high LAI values. However, different vegetation (and Land-Use and Land-Cover) types have different temporal LAI profiles. For example, a glacier will have permanent snow and no seasonal LAI signal. We can therefore discriminate (visually) between non-vegetative locations and vegetation based upon the combined spectral and temporal profiles across locations (@fig-lai-dbf-snow).
 
 ```{r}
 #| label: fig-lai-dbf-snow
@@ -85,7 +85,7 @@ p + p2 +
     )
 ```
 
-We can use this concept, of differential temporal and spectral responses to map where certain land-use and land-cover types are dominant. In the above example I used LAI, a derived index. However, satellite platforms provide information in various spectral bands. One can say the data are multi-dimensional, having both a temporal, spatial and spectral component (see @fig-spectral-bands). These various bands, or locations in the spectral domain, provide key insights into the state of the land surface (throughout the year). For example the combination of information in the red and near-infrared bands (spectral domains) provides key information to calculate the Normalized Difference Vegetation Index (NDVI) [@Huete2002] an indicator of plant health and density. Other band combinations and or models lead to other indices, e.g. the LAI data previously used, with varying properties tailored to specific ecological, geo-morphological or other purposes [@zeng_optical_2022]. All this spectral temporal data combined with machine learning (clustering) approaches allows us to map the land surface in great detail. In this section I will discuss both unsupervised and supervised machine learning approaches to land-use and land-cover mapping.
+We can use this concept, of differential temporal and spectral responses to map where certain Land-Use and Land-Cover types are dominant. In the above example, I used LAI which is a derived index which uses raw spectral data and an underlying model. However, satellite platforms provide raw information in various spectral bands. One can say the data are multi-dimensional, having both a temporal, spatial and spectral component (see @fig-spectral-bands). These various bands, or locations in the spectral domain, provide key insights into the state of the land surface (throughout the year). For example the combination of information in the red and near-infrared bands (spectral domains) provides key information to calculate the Normalized Difference Vegetation Index (NDVI) [@Huete2002] an indicator of plant health and density. Other band combinations and or models lead to other indices, e.g. the LAI data previously used, with varying properties tailored to specific ecological, geo-morphological or other purposes [@zeng_optical_2022]. All this spectral-temporal data combined with machine learning (clustering) approaches allows us to map the land surface in great detail. In this section I will discuss both unsupervised and supervised machine learning approaches to Land-Use and Land-Cover (LULC) mapping.
 
 ::: callout-note
 ### Note
@@ -96,14 +96,16 @@ Land-Use and Land-Cover (LULC) mapping is often mentioned as one concept. Howeve
 
 ## Unsupervised machine learning
 
-Working of the concept as demonstrated in @fig-lai-dbf-snow we can use the spectral and temporal information across the landscape to classify the Swiss alpine scene into locations which have little seasonality and those which have some. For example you can calculate the mean and standard deviation of a full year and see how much variability you see across a year. Regions with a low LAI signal with little variability are most likely not associated with vegetation (e.g. glaciers, see @fig-lai-dbf-snow). Classification of data in different classes (or clustering) can be accomplished using various methods. Clustering can either be unsupervised, where clustering is only defined by the number of classes one wants to divide the (multi-dimensional) dataset into, with no reference data to compare the results to. We can use an unsupervised machine learning approach, such as k-means clustering, to divide the dataset into two or more classes. These classes are clustered in a way which minimizes within-cluster variances, i.e. it ensures that pixels will look similar to each other (given a target number of clusters `k` to divide the dataset into).
+Working of the concept as demonstrated in @fig-lai-dbf-snow we can use the spectral and temporal information across the landscape to classify a Swiss alpine scene into locations which have little seasonality and those which have some. For example you can calculate the mean and standard deviation of a full year and see how much variability you see across a year. Regions with a low LAI signal with little variability are most likely not associated with vegetation (e.g. glaciers, see @fig-lai-dbf-snow). Classification of data in different classes (or clustering) can be accomplished using various methods. Clustering can either be unsupervised, where clustering is only defined by the number of classes one wants to divide the (multi-dimensional) dataset into, with no reference data to compare the results to. 
+
+In this example I use an unsupervised machine learning approach, called k-means clustering, to divide the dataset into two or more classes. These classes are clustered in a way which minimizes within-cluster variances, i.e. it ensures that pixels will look similar to each other (given a target number of clusters `k` to divide the dataset into).
 
 ```{r include = FALSE}
 # load buffered data, not shown in render
 r <- terra::rast(here::here("data/LAI.tiff"))
 ```
 
-Here we can use the `lai_2012` dataset we previously downloaded, but we'll use the raster representation as a starting point (as most geospatial data will come in multi-layer raster formats).
+Here, we can use the `lai_2012` dataset we previously downloaded, but we'll use the raster representation as a starting point (as most geospatial data will come in multi-layer raster formats).
 
 ```{r eval = FALSE}
 # conversion from tidy data to a raster format
@@ -114,7 +116,7 @@ r <- MODISTools::mt_to_terra(
   )
 ```
 
-As a first step (ironically) I will convert this raster object back into a dataframe. However, this time it will be a wide data frame, where every pixel location is a row and every column a value for a given date. Alternatively, I could have converted the original `lai_2012` data frame from a long format into a wide format using `tidyr::pivot_wider()`. Every row, representing a year for a given location, is a [feature (vector)](https://en.wikipedia.org/wiki/Feature_(machine_learning)) which contains the information on which the k-means clustering algorithm will operate.
+As a first step (ironically) I will convert this raster object back into a dataframe. However, this time it will be a wide data frame, where every pixel location is a row and every column a value for a given date (see @sec-basic-R). Alternatively, I could have converted the original `lai_2012` data frame from a long format into a wide format using `tidyr::pivot_wider()`. Every row, representing a year for a given location, is a [feature (vector)](https://en.wikipedia.org/wiki/Feature_(machine_learning)) which contains the information on which the k-means clustering algorithm will operate.
 
 ```{r}
 # convert a multi-layer raster image
@@ -192,7 +194,7 @@ leaflet() |>
     )
 ```
 
-As this is an unsupervised classification we do not know what land cover types are included in this map. The model that we generate is therefore purely data informed, and not validated against external known land-use and land-cover locations. However, a quick visual inspection shows that for a `k` of 2 the split between the clusters divides vegetation from glaciers, water bodies, and urban areas (@fig-kmeans-map). The (seasonal) differences in LAI were used in the k-means analysis to minimize the (seasonal) variance between pixels. In particular, our analysis with two classes separates areas with a seasonal dynamic from those without one. Although the k-means algorithm is fast it only has one parameter which can shape the outcome of algorithm (i.e. `k`). The model is therefore too inflexible for more complex classification tasks. The k-means model is therefore rarely used as a scalable solution to generate maps based upon **in-situ** validation data (see below).
+As the example uses an unsupervised classification we do not know what land cover types are included in this map. The model that we generate is therefore purely data informed, and not validated against external known Land-Use and Land-Cover locations. However, a quick visual inspection shows that for a `k` of 2 the split between the clusters divides vegetation from glaciers, water bodies, and urban areas (@fig-kmeans-map). The (seasonal) differences in LAI were used in the k-means analysis to minimize the (seasonal) variance between pixels. In particular, our analysis with two classes separates areas with a seasonal dynamic from those without one. Although the k-means algorithm is fast it only has one parameter which can shape the outcome of algorithm (i.e. `k`). The model is therefore too inflexible for more complex classification tasks. The k-means model is therefore rarely used as a scalable solution to generate maps based upon **in-situ** validation data (see below).
 
 In this example I used an index, i.e. LAI, which does not provide sufficient information to distinguish between more subtle land-use or land-cover classes (e.g. evergreen forests and or mixed forest types). In short, a better approach would use more data and a more sophisticated model approach to create an informed model which scales easily to different land cover types and new locations.
 
@@ -200,7 +202,7 @@ In this example I used an index, i.e. LAI, which does not provide sufficient inf
 
 In contrast to k-means, one can use supervised classification of data where reference data is used as a benchmark on which to train a machine learning algorithm. A supervised machine learning algorithm will try to minimize the classification error on a known training or validation dataset. The methodology, model complexity and parameters are dependent on the provided data, the complexity of the problem and at times the available computational resources.
 
-For example the MODIS land-cover and land-use product (MCD12Q2) use >1500 validation locations, three years of temporal data and multiple spectral bands, as well as ancillary data (topography, view angle geometry) to train their boosted classification tree [@Friedl2002, @Friedl2010]. In the below example I will try to recreate a reduced part of the MCD12Q2 LULC workflow (red boxes, @fig-classification-workflow). A full introduction to machine learning is beyond the scope of this course and I refer to @boehmke_hands-machine_2020, @kuhn_tidy_2022 and @stocker_applied_2023 for an introduction in machine learning using R.
+For example the MODIS land-cover and land-use product (MCD12Q2) use >1500 validation locations, three years of temporal data and a variety of multiple spectral bands, as well as ancillary data (topography, view angle geometry) to train their boosted classification tree [@Friedl2002, @Friedl2010]. In the below example I will try to recreate a part of the MCD12Q2 LULC workflow (red boxes, @fig-classification-workflow). A full introduction to machine learning is beyond the scope of this course and I refer to @boehmke_hands-machine_2020, @kuhn_tidy_2022 and @stocker_applied_2023 for an introduction in machine learning using R.
 
 ```{r}
 #| label: fig-classification-workflow
@@ -213,9 +215,9 @@ knitr::include_graphics("./images/Friedl_2010.svg")
 
 ### Validation data
 
-Critical in our exercise is the reference data we use to classify different land-use and land-cover types. Generally ground truth data is used in order to create a training dataset. This ground truth data are locations which are visually validated to belong to a particular land-use or land-cover class. These data are gathered by *in-situ* surveys, or leverage high(er) resolution data and visual interpretation to confirm the the land-use or land-cover type. 
+Critical in our exercise is the reference data we use to classify different Land-Use and Land-Cover types with. Generally ground truth data is used in order to create a training dataset. This ground truth data are locations which are visually validated to belong to a particular land-use or land-cover class. These data are gathered by *in-situ* surveys, or leverage high(er) resolution data and visual interpretation to confirm the the land-use or land-cover type. 
 
-For example, the LUCAS database of the European Commission Joint Research Center provides three-yearly survey data on the land-use and land-cover state [@dandrimont_harmonised_2020], while the Geo-Wiki project used crowdsourcing to confirm land-use and land-cover types using high resolution remote sensing imagery [@fritz_global_2017]. Other products use in house databases using similar approaches [@Friedl2010]. In this example I will rely on the freely available crowdsourced (Geo-Wiki) dataset [@fritz_global_2017]. These validation labels which differ slightly from the International Geosphere-Biosphere Programme (IGBP) classes used in the MCD12Q1 product, but the general principles are the same. 
+For example, the LUCAS database of the European Commission Joint Research Center provides three-yearly survey data on the Land-Use and Land-Cover state [@dandrimont_harmonised_2020], while the Geo-Wiki project used crowdsourcing to confirm Land-Use and Land-Cover types using high resolution remote sensing imagery [@fritz_global_2017]. Other products use in house databases using similar approaches [@Friedl2010]. In this example I will rely on the freely available crowdsourced (Geo-Wiki) dataset [@fritz_global_2017]. These validation labels which differ slightly from the International Geosphere-Biosphere Programme (IGBP) classes used in the MCD12Q1 product, but the general principles are the same. 
 
 ```{r eval = FALSE}
 # Read the validation sites from
@@ -535,7 +537,7 @@ In machine learning model evaluation can be achieved in various ways and the sta
 
 #### Confusion matrix and metrics {.unnumbered}
 
-In the case of land-use and land-cover mapping classifications results are often reported as an confusion matrix and their associated metrics. The confusion matrix tells us something about accuracy (as perceived by users or producers), while the overall accuracy and Kappa coefficient allows us the compare the accuracy across modelled (map) results. Below, in (@tbl-confusion-matrix) a three class confusion matrix is shown with the model output along the top-bottom axis and the reference dataset shown along the left-right axis. In addition the user and producer accuracy is shown. The user accuracy is the fraction of correctly classified classes with respect to the false positives (Type I) errors for a given class. For example, for a set of reference data (classes) the classified image commit false labels for class one (1) to classes two and three (2,3). These false positives are therefore also called commission errors. Similarly, the producer accuracy is the fraction of correctly classified classes with respect to the false negative (Type II) errors for a given class. For example, when the reference data identifies the data as class 1, but the classified image identifies it also as class 2 and 3. Values are omitted from the correct class and also called omission errors. In short, in remote sensing, the Type I and II errors are rephrased as the perspective taken during the assessment, either the user or the producer. In a strict machine learning context the user and producer accuracy would be called precision and recall, respectively. I refer to @boehmke_hands-machine_2020, @kuhn_tidy_2022 and @stocker_applied_2023 for an in depth discussion on machine learning model evaluation.
+In the case of Land-Use and Land-Cover mapping classifications results are often reported as an confusion matrix and their associated metrics. The confusion matrix tells us something about accuracy (as perceived by users or producers), while the overall accuracy and Kappa coefficient allows us the compare the accuracy across modelled (map) results. Below, in (@tbl-confusion-matrix) a three class confusion matrix is shown with the model output along the top-bottom axis and the reference dataset shown along the left-right axis. In addition the user and producer accuracy is shown. The user accuracy is the fraction of correctly classified classes with respect to the false positives (Type I) errors for a given class. For example, for a set of reference data (classes) the classified image commit false labels for class one (1) to classes two and three (2,3). These false positives are therefore also called commission errors. Similarly, the producer accuracy is the fraction of correctly classified classes with respect to the false negative (Type II) errors for a given class. For example, when the reference data identifies the data as class 1, but the classified image identifies it also as class 2 and 3. Values are omitted from the correct class and also called omission errors. In short, in remote sensing, the Type I and II errors are rephrased as the perspective taken during the assessment, either the user or the producer. In a strict machine learning context the user and producer accuracy would be called precision and recall, respectively. I refer to @boehmke_hands-machine_2020, @kuhn_tidy_2022 and @stocker_applied_2023 for an in depth discussion on machine learning model evaluation.
 
 |   | 1  |  2 | 3  | total | User accuracy (Type I) | Kappa  |
 |---|---|---|---|---|---|---|
@@ -573,7 +575,7 @@ caret::confusionMatrix(
 
 ### Model scaling
 
-In order to scale our new model to other locations, or regions we need to download additional data. In this last section I will demonstrate how to download geospatial data, rather tahn point data used during training, using the {appeears} R package. This data will then be used to run our previously optimized model, and the results will be presented as a map. Since our workflow followed the original MODIS MCD12Q1 LULC map protocol I will compare both maps (although remapping some of the values from MODIS IGBP land-use and land-cover classes).
+In order to scale our new model to other locations, or regions we need to download additional data. In this last section I will demonstrate how to download geospatial data, rather tahn point data used during training, using the {appeears} R package. This data will then be used to run our previously optimized model, and the results will be presented as a map. Since our workflow followed the original MODIS MCD12Q1 LULC map protocol I will compare both maps (although remapping some of the values from MODIS IGBP Land-Use and Land-Cover classes).
 
 #### Data download {.unnumbered}
 
@@ -694,7 +696,7 @@ modis_lulc <- readRDS(here::here("data/land-cover_2012.rds")) |>
 ```{r warning = FALSE}
 #| code-fold: true
 #| label: fig-classification-probs
-#| fig-cap: "Classification probabilities, as generated for all 10 land-use and land-cover (LULC) classes within our xgboost algorithm, for the year 2012 across a Swiss spatial subset."
+#| fig-cap: "Classification probabilities, as generated for all 10 Land-Use and Land-Cover (LULC) classes within our xgboost algorithm, for the year 2012 across a Swiss spatial subset."
 #| fig-align: "center"
 #| out-width: "100%"
 
@@ -713,7 +715,7 @@ ggplot() +
   facet_wrap(~lyr)
 ```
 
-One can create a formal land-use and land-cover map by reducing this dataset by returning the layer for which the probability is highest, using `which.max`. As seen in @sec-geospatial, you can apply a function to all layers across pixels using the `app()` function. The returned data is a land-use and land-cover map with classes 1 to 10, as shown below (@fig-spatial-lulc).
+One can create a formal Land-Use and Land-Cover map by reducing this dataset by returning the layer for which the probability is highest, using `which.max`. As seen in @sec-geospatial, you can apply a function to all layers across pixels using the `app()` function. The returned data is a Land-Use and Land-Cover map with classes 1 to 10, as shown below (@fig-spatial-lulc).
 
 ```{r}
 # generate the map by selecting maximum probabilities
@@ -788,7 +790,7 @@ leaflet() |>
     colors = palcol(1:10),
     values = 1:10,
     labels = classes,
-    title = "land-use and land-cover class"
+    title = "Land-Use and Land-Cover class"
   )
 ```
 
