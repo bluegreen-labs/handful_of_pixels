@@ -501,7 +501,7 @@ xgb_results <- tune::tune_grid(
 )
 ```
 
-When the model is tuned across folds the results show varied model performance. In order to select the best model, according to a set metric, you can use the `select_best()` function (for a specific metric). This will extract the model parameters for the best model.
+When the model is tuned across folds the results show varied model performance. In order to select the best model, according to a set metric, you can use the `select_best()` function (for a specific metric). This will extract the model hyperparameters for model training.
 
 ```{r include = FALSE}
 xgb_best_model <- readRDS(here::here("data/xgboost_model.rds"))
@@ -519,16 +519,22 @@ xgb_best <- tune::select_best(
 # cook up a model using finalize_workflow
 # which takes workflow (model) specifications
 # and combines it with optimal model
-# parameters into a functional model
-xgb_best_model <- tune::finalize_workflow(
+# parameters into a model workflow
+xgb_best_hp <- tune::finalize_workflow(
   xgb_workflow,
   xgb_best
 )
 
-print(xgb_best_model)
+print(xgb_best_hp)
 ```
 
-However, the returned object does not specify the model structure. To combine both the model structure (workflow) with the optimal parameters we need to combine both. In short, we need to `finalize_workflow()` which combines the model workflow with the model parameters into a final functional model which can take input data and return the desired (classification) results. Note that the resulting model (workflow) does not contain any tunable (`tune()`) fields as shown above! The selected model, given our provided constrains on the hyperparamters, has 50 trees, has minimum 11 data points in a node (min_n) and a tree depth of 5.
+However, the returned object does not specify the model structure. To combine both the model structure (workflow) with the optimal parameters we need to combine both. In short, we need to `finalize_workflow()` which combines the model workflow with the model parameters into a final functional model workflow with optimal hyper-parameters. Note that the resulting model workflow does not contain any tunable (`tune()`) fields as shown above! The selected model workflow, given our provided constrains on the hyperparamters, has 50 trees, has minimum 11 data points in a node (min_n) and a tree depth of 5. We will use this workflow to fit a final training run (`fit()`) with optimal hyper-parameters, which returns a model which provides the desired (classification) results!
+
+```{r eval = FALSE}
+# train a final (best) model with optimal
+# hyper-parameters
+xgb_best_model <- fit(xgb_best_hp, train)
+```
 
 ### Model evaluation
 
