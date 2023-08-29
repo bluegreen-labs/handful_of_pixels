@@ -66,7 +66,7 @@ With all data downloaded:
 - Assess the performance of the algorithm across the globe and discuss its consistency. 
   - Where does it fail? How does it fail? 
   - Where necessary, inspect point locations to explore potential issues.
-  - If possible, address any issues by altering the original algorithm. 
+  - If possible, address any issues by altering the original algorithm.
 
 - Could you scale this globally?
   - How long would it take?
@@ -91,13 +91,17 @@ All information for this exercise can be found in @sec-geospatial and @sec-algor
 ## Land-Use and Land-Cover modelling
 
 - How can you improve the model used to map LULC? 
-  - Provide at least three (4) ways to improve the model used.
-- Implement at least two of these methods
-- Demonstrate improved model skill across the two generated maps
+  - Provide at least four (4) ways to improve the model used.
+- Implement at least two of these methods yourself
+- Demonstrate improved model skill by submitting your model results to our internal leaderboard
+  - the leaderboard requires you to submit a CSV file with labels
+    - training data can be downloaded [here]()
+    - unlabelled out-of-sample test data can be downloaded [here]()
+    - submissions should be made as a **pull request** to the [AGDS2 course repository](https://github.com/geco-bern/agds2_course)
+    - your CSV file with labels should be stored in `data/leaderboard/fall_2023`
+    - the file should be named `xyz_results.csv` (replace xyz with your github handle)
 
 ::: {.callout-note}
 ## Note
-
 Use the appropriate APIs to download the required data.
-
 :::
