@@ -16,7 +16,7 @@ ml_df <- readRDS("data/training_data.rds") |>
 ml_df <- rsample::initial_split(
   data = ml_df,
   strata = LC1,
-  prop = 0.8
+  prop = 0.5
 )
 
 # select training and testing
@@ -28,7 +28,7 @@ test <- rsample::testing(ml_df)
 xgb_spec <- parsnip::boost_tree(
   trees = 50,
   min_n = tune(),
-  tree_depth = tune(),
+  #tree_depth = tune(),
   #learn_rate = tune(), 
   #loss_reduction = tune()
 ) |>
@@ -103,6 +103,11 @@ names(r) <- n$name
 
 # return probabilities
 probs_r <- terra::predict(r, last_fit, type = "prob")
+terra::writeRaster(
+  probs_r,
+  "data/xgboost_spatial_probabilities.tif",
+  overwrite = TRUE
+  )
 
 # generate the map by selecting maximum probabilities
 # from the model output
