@@ -394,7 +394,7 @@ ml_df <- left_join(nbar_wide, sites) |>
 
 This example will try to follow the original MODIS MCD12Q1 workflow closely which calls for a boosted regression classification approach [@Friedl2010]. This method allows for the use of a [combination of weak learners](https://en.wikipedia.org/wiki/Boosting_(machine_learning)) to be combined into a single robust ensemble classification models. The in depth discussion of the algorithm is beyond the scope of this course and I refer to specialized literature for more details. To properly evaluate or model we need to split our data in a true training dataset, and a test dataset. The test dataset will be used in the final model evaluation, where samples are independent of those contained within the training dataset [@boehmke_hands-machine_2020].
 
-```{r}
+```{r eval = FALSE}
 # select packages
 # avoiding tidy catch alls
 library(rsample)
@@ -561,6 +561,30 @@ Simple confusion matrices can be calculated using R using the `table` function c
 
 ```{r include = FALSE}
 xgb_best_model <- readRDS(here::here("data/xgboost_model.rds"))
+
+library(stringr)
+
+# check if on github
+ON_GIT <- ifelse(
+  Sys.getenv("GITHUB_ACTION") == "",
+  FALSE,
+  TRUE
+)
+
+# read test data (without labels)
+test <- readRDS(here::here("data/test_data.rds"))
+
+# if on git read the test labels from
+# environmental variable (these are the same
+# as for the competition!!)
+if(ON_GIT) {
+  LC1 <- Sys.getenv("LULC")
+  LC1 <- as.numeric(unlist(strsplit(LC1, "\r\n")))
+  test$LC1 <- LC1
+} else {
+  test$LC1 <- sample(1:10, nrow(test), replace = TRUE)
+}
+
 ```
 
 ```{r}
@@ -575,7 +599,7 @@ library(caret)
 # use caret's confusionMatrix function to get
 # a full overview of metrics
 caret::confusionMatrix(
-  reference = as.factor(test$LC1), 
+  reference = as.factor(test$LC1),
   data = as.factor(test_results$.pred_class)
   )
 ```
