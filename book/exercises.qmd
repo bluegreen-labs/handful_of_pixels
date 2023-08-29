@@ -95,8 +95,8 @@ All information for this exercise can be found in @sec-geospatial and @sec-algor
 - Implement at least two of these methods yourself
 - Demonstrate improved model skill by submitting your model results to our internal leaderboard
   - the leaderboard requires you to submit a CSV file with labels
-    - training data can be downloaded [here]()
-    - unlabelled out-of-sample test data can be downloaded [here]()
+    - training data can be downloaded [from a zenodo archive](https://zenodo.org/record/8298491)
+    - unlabelled out-of-sample test data can be downloaded [from a zenodo archive](https://zenodo.org/record/8298491)
     - submissions should be made as a **pull request** to the [AGDS2 course repository](https://github.com/geco-bern/agds2_course)
     - your CSV file with labels should be stored in `data/leaderboard/fall_2023`
     - the file should be named `xyz_results.csv` (replace xyz with your github handle)
