@@ -231,16 +231,21 @@ validation_sites <- readr::read_csv(
 I will restrict the number of validation sites to a manageable number of 150 random locations for each Land-Use or Land-Cover class, limited to high quality locations on the northern hemisphere (as we will apply our analysis regionally to Switzerland). The training data in @fritz_global_2017 contains various crowdsourcing competitions of which nr. 1 refers to land-use and nr. 4 to land-cover classes. The below routine shows how to gather 150 random locations for each Land-Use or Land-Cover class from @fritz_global_2017. The locations of this data will be used to train and test the supervised machine learning algorithm.
 
 ```{r eval = FALSE}
-# filter out data by competition,
-# coverage percentage and latitude
+# filter out data by competition
 # (use round brackets to enclose complex
 # logical statements in a filter call!)
+# combine multiple observations (by 
+# several users) by majority vote
 validation_selection <- validation_sites |>
-    dplyr::filter(
-      (competition == 4 | competition == 1),
-      perc1 > 80,
-      lat > 0
-    )
+  dplyr::filter(
+    (competition == 4 | competition == 1)
+  ) |> 
+  group_by(pixelID) |>
+  summarize(
+    LC1 = as.numeric(names(which.max(table(LC1)))),
+    lat = lat[1],
+    lon = lon[1]
+  )
 
 # the above selection includes all data
 # but we now subsample to 150 random locations
@@ -267,7 +272,7 @@ The samples are generated randomly, although a random seed ensures some reproduc
 
 ### Multi-spectral training data
 
-As with our k-means clustering example we need data to inform our supervised classification. In the interest of time, we gather MODIS data for only four spectral bands (1 to 7) from the MCD43A4 data product. This is a subset of what is used in the formal MCD12Q1 LULC product. The MCD43A4 data product provides daily multi-spectral data corrected for (geometric) view angle effects between the satellite and the sun.
+As with our k-means clustering example we need data to inform our supervised classification. In the interest of time, we gather MODIS data for only four spectral bands (1 to 4) from the MCD43A4 data product. This is a subset of what is used in the formal MCD12Q1 LULC product. The MCD43A4 data product provides daily multi-spectral data corrected for (geometric) view angle effects between the satellite and the sun.
 
 The required MCD43A4 data is not readily available using the {MODISTools} R package, as previously introduced, and I will therefore rely on the [{appears} R package](https://bluegreen-labs.github.io/appeears) [@hufkens_bluegreen-labsappeears_2023] to query and download training data. The {appears} package relies on the NASA AppEEARS API service which provides easy access to remote sensing data subsets similar to the ORNL DAAC service, as used by {MODISTools}. The provided data covers more data products, but does require a login (API key) limiting ad-hoc accessibility.
 
@@ -356,13 +361,14 @@ nbar_wide <- nbar |>
     Category,
     ID,
     Date,
-    Latitude,
-    Longitude,
     starts_with("MCD43A4_061_Nadir")
   ) |>
   tidyr::pivot_wider(
     values_from = starts_with("MCD43A4_061_Nadir"),
     names_from = Date
+  ) |>
+  dplyr::rename(
+    pixelID = Category
   )
 
 # split out only the site name,
@@ -375,9 +381,6 @@ sites <- validation_selection |>
   dplyr::select(
     pixelID,
     LC1
-  ) |>
-  dplyr::rename(
-    Category = "pixelID"
   )
 
 # combine the NBAR and land-use
