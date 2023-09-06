@@ -431,8 +431,7 @@ optim_par = GenSA::GenSA(
 )$par
 ```
 
-After an optimization routine (calling the cost function 4000 times) the optimal parameters were determined to be `r optim_par` for the temperature threshold and number of accumulation days respectively. We can now plug these values back into our model and run it across all available years. When looking at this small dataset for Harvard forest, we see a reasonable agreement between observed and predicted values (@fig-phenology-model). Obviously, including more sites and years would increase the model performance.
-
+After an optimization routine (calling the cost function 4000 times) the optimal parameters were determined to be `r optim_par` for the temperature threshold and number of accumulation days respectively. We can now plug these values back into our model and run it across all available years. When looking at this small dataset for Harvard forest, we see a reasonable agreement between observed and predicted values (@fig-phenology-model). Obviously, including more sites and years would increase the model robustness.
 
 ```{r}
 # run the model for all years
@@ -526,7 +525,7 @@ r <- terra::project(
   "+init=epsg:4326"
 )
 
-# subset to first 180 days
+# subset to first 180 days (layers)
 ma_nh_temp <- terra::subset(
   r,
   1:180
