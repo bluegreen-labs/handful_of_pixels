@@ -37,7 +37,7 @@ book:
   sharing: [twitter, facebook]
   navbar:
     title: " "
-    logo: ""
+    logo: "https://bluegreenlabs.org/img/logo_text_small.png"
     background: "#0b2735"
     search: true
     right:
