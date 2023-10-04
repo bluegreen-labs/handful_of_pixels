@@ -39,7 +39,7 @@ Given the non-continuous nature of the spectral bands used on most satellite pla
 #| fig-align: "center"
 #| out-width: "100%"
 #| echo: FALSE
-knitr::include_graphics("https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs43017-022-00298-5/MediaObjects/43017_2022_298_Fig2_HTML.png?as=webp")
+knitr::include_graphics("https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs43017-022-00298-5/MediaObjects/43017_2022_298_Fig2_HTML.png")
 ```
 :::
 
