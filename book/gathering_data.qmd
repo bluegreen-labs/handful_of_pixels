@@ -42,7 +42,7 @@ download.file(
 )
 ```
 
-## Gathering a handfull of pixels
+## Gathering a handful of pixels
 
 The sections above (@sec-trust-data) assume that you download data locally, on disk in a particular format. However, many of the data sources described in previous section are warehoused in large cloud facilities. These services allow you to access the underlying (original) data using an Application Programming Interfaces (APIs), hence programmatically, using code. Mastering the use of these services has become key in gathering research data sets. Given the scope of this book I will focus on ways to gather small approximately analysis ready geospatial datasets using APIs. 
 
