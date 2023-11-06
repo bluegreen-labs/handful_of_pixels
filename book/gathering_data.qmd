@@ -31,7 +31,7 @@ Below you find a list of useful data sources:
 
 This list is not extensive and many other sources exist. However, I will source mostly from these data sources in the book. Some familiarity with the names of these data sources is therefore helpful. Depending on where data is hosted you can simply download data through your web browser or use the internal `download.file()` function to grab data to store it locally.
 
-```{r}
+```{r eval = FALSE}
 # Downloading a time series of mean CO2 levels from NOAA
 # and storing it in a temporary file
 url <- "https://gml.noaa.gov/webdata/ccgg/trends/co2/co2_annmean_mlo.csv"
