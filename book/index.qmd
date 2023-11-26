@@ -10,4 +10,4 @@ Not only does this allow you to experiment with geo-spatial data on limited comp
 
 This book is proudly GPT free, mistakes are my own.
 
-![](https://https://licensebuttons.net/l/by-nc-nd/4.0/88x31.png)
+![](https://licensebuttons.net/l/by-nc-nd/4.0/88x31.png)
