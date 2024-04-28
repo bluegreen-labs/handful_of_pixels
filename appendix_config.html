@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -83,7 +83,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -92,6 +98,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -108,9 +115,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
     <img src="https://bluegreenlabs.org/img/logo_text_small.png" alt="" class="navbar-logo">
     </a>
@@ -125,15 +132,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" rel="" target="" aria-current="page">
- <span class="menu-text">Home</span></a>
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools tools-wide">
-    <a href="https://github.com/khufkens/handfull_of_pixels/" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools tools-wide">
+    <a href="https://github.com/khufkens/handfull_of_pixels/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
     <div class="dropdown">
       <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share"><i class="bi bi-share"></i></a>
-      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
           <li>
             <a class="dropdown-item quarto-navbar-tools-item" href="https://twitter.com/intent/tweet?url=|url|">
               <i class="bi bi-bi-twitter pe-1"></i>
@@ -150,32 +158,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </div>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
-          </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./appendix_setup.html">Appendices</a></li><li class="breadcrumb-item"><a href="./appendix_config.html"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Book configuration</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
-        <i class="bi bi-search"></i>
-      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./appendix_setup.html">Appendices</a></li><li class="breadcrumb-item"><a href="./appendix_config.html"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Book configuration</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
     </div>
   </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
-        <div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Search"></div>
-        </div>
-        </div>
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
@@ -292,7 +291,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
@@ -300,7 +299,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./appendix_setup.html">Appendices</a></li><li class="breadcrumb-item"><a href="./appendix_config.html"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Book configuration</span></a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title"><span id="sec-bookinfo" class="quarto-section-identifier">Appendix C — Book configuration</span></h1>
 </div>
@@ -315,19 +314,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
+
 
 <p>The book was rendered on github using the following package configuration:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">diagnostics</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Diagnostics Report [renv 0.17.3]
-================================
+<pre><code>Diagnostics Report [renv 1.0.7]
+===============================
 
-# Session Info =======================
-R version 4.3.2 (2023-10-31)
+# Session Info ---------------------------------------------------------------
+R version 4.3.3 (2024-02-29)
 Platform: x86_64-pc-linux-gnu (64-bit)
-Running under: Ubuntu 22.04.3 LTS
+Running under: Ubuntu 22.04.4 LTS
 
 Matrix products: default
 BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
@@ -346,258 +347,260 @@ attached base packages:
 [1] stats     graphics  grDevices datasets  utils     methods   base     
 
 loaded via a namespace (and not attached):
- [1] htmlwidgets_1.6.2 compiler_4.3.2    fastmap_1.1.1     cli_3.6.1        
- [5] htmltools_0.5.5   tools_4.3.2       rmarkdown_2.21    knitr_1.42       
- [9] jsonlite_1.8.4    xfun_0.39         digest_0.6.31     rlang_1.1.1      
-[13] renv_0.17.3       evaluate_0.20    
+ [1] htmlwidgets_1.6.2 compiler_4.3.3    fastmap_1.1.1     cli_3.6.1        
+ [5] htmltools_0.5.5   tools_4.3.3       yaml_2.3.7        rmarkdown_2.21   
+ [9] knitr_1.42        jsonlite_1.8.4    xfun_0.39         digest_0.6.31    
+[13] rlang_1.1.1       renv_1.0.7        evaluate_0.20    
 
-# Project ============================
+# Project --------------------------------------------------------------------
 Project path: "~/work/handful_of_pixels/handful_of_pixels"
 
-# Status =============================
-* The project is already synchronized with the lockfile.
+# Status ---------------------------------------------------------------------
+No issues found -- the project is in a consistent state.
 
-# Packages ===========================
-                     Library Source   Lockfile Source Path Dependency
-DBI                    1.1.3   RSPM      1.1.3   CRAN  [1]   indirect
-DiceDesign               1.9   RSPM        1.9   CRAN  [1]   indirect
-GPfit                  1.0-8   RSPM      1.0-8   CRAN  [1]   indirect
-GenSA                  1.1.9   RSPM      1.1.9   CRAN  [1]     direct
-KernSmooth           2.23-22   CRAN    2.23-22   CRAN  [2]   indirect
-MASS                  7.3-60   CRAN     7.3-60   CRAN  [2]   indirect
-MODISTools             1.1.4   RSPM      1.1.4   CRAN  [1]     direct
-Matrix                 1.6-0   RSPM      1.6-0   CRAN  [1]   indirect
-ModelMetrics         1.2.2.2   RSPM    1.2.2.2   CRAN  [1]   indirect
-R6                     2.5.1   RSPM      2.5.1   CRAN  [1]   indirect
-RColorBrewer           1.1-3   RSPM      1.1-3   CRAN  [1]   indirect
-Rcpp                  1.0.10   RSPM     1.0.10   CRAN  [1]   indirect
-SQUAREM               2021.1   RSPM     2021.1   CRAN  [1]   indirect
-V8                     4.3.0   RSPM      4.3.0   CRAN  [1]   indirect
-appeears                 1.1 GitHub        1.1 GitHub  [1]     direct
-askpass                  1.1   RSPM        1.1   CRAN  [1]   indirect
-assertthat             0.2.1   RSPM      0.2.1   CRAN  [1]   indirect
-backports              1.4.1   RSPM      1.4.1   CRAN  [1]   indirect
-base64enc              0.1-3   RSPM      0.1-3   CRAN  [1]   indirect
-bit                    4.0.5   RSPM      4.0.5   CRAN  [1]   indirect
-bit64                  4.0.5   RSPM      4.0.5   CRAN  [1]   indirect
-blob                   1.2.4   RSPM      1.2.4   CRAN  [1]   indirect
-boot                1.3-28.1   CRAN       &lt;NA&gt;   &lt;NA&gt;  [2]       &lt;NA&gt;
-broom                  1.0.5   RSPM      1.0.5   CRAN  [1]   indirect
-bslib                  0.4.2   RSPM      0.4.2   CRAN  [1]   indirect
-cachem                 1.0.8   RSPM      1.0.8   CRAN  [1]   indirect
-callr                  3.7.3   RSPM      3.7.3   CRAN  [1]   indirect
-caret                 6.0-94   RSPM     6.0-94   CRAN  [1]     direct
-cellranger             1.1.0   RSPM      1.1.0   CRAN  [1]   indirect
-class                 7.3-22   CRAN     7.3-22   CRAN  [2]   indirect
-classInt               0.4-9   RSPM      0.4-9   CRAN  [1]   indirect
-cli                    3.6.1   RSPM      3.6.1   CRAN  [1]   indirect
-clipr                  0.8.0   RSPM      0.8.0   CRAN  [1]   indirect
-clock                  0.7.0   RSPM      0.7.0   CRAN  [1]   indirect
-cluster                2.1.4   CRAN       &lt;NA&gt;   &lt;NA&gt;  [2]       &lt;NA&gt;
-codetools             0.2-19   CRAN     0.2-19   CRAN  [2]   indirect
-colorspace             2.1-0   RSPM      2.1-0   CRAN  [1]   indirect
-compiler                &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;  [2]   indirect
-conflicted             1.2.0   RSPM      1.2.0   CRAN  [1]   indirect
-cpp11                  0.4.3   RSPM      0.4.3   CRAN  [1]   indirect
-crayon                 1.5.2   RSPM      1.5.2   CRAN  [1]   indirect
-crosstalk              1.2.0   RSPM      1.2.0   CRAN  [1]   indirect
-crul                   1.4.0   RSPM      1.4.0   CRAN  [1]   indirect
-curl                   5.0.0   RSPM      5.0.0   CRAN  [1]   indirect
-data.table            1.14.8   RSPM     1.14.8   CRAN  [1]   indirect
-daymetr                  1.7   RSPM        1.7   CRAN  [1]     direct
-dbplyr                 2.3.3   RSPM      2.3.3   CRAN  [1]   indirect
-diagram                1.6.5   RSPM      1.6.5   CRAN  [1]   indirect
-dials                  1.2.0   RSPM      1.2.0   CRAN  [1]     direct
-digest                0.6.31   RSPM     0.6.31   CRAN  [1]   indirect
-dplyr                  1.1.2   RSPM      1.1.2   CRAN  [1]     direct
-dtplyr                 1.3.1   RSPM      1.3.1   CRAN  [1]   indirect
-e1071                 1.7-13   RSPM     1.7-13   CRAN  [1]   indirect
-ellipsis               0.3.2   RSPM      0.3.2   CRAN  [1]   indirect
-evaluate                0.20   RSPM       0.20   CRAN  [1]   indirect
-fansi                  1.0.4   RSPM      1.0.4   CRAN  [1]   indirect
-farver                 2.1.1   RSPM      2.1.1   CRAN  [1]   indirect
-fastmap                1.1.1   RSPM      1.1.1   CRAN  [1]   indirect
-filelock               1.0.2   RSPM      1.0.2   CRAN  [1]   indirect
-fontawesome            0.5.1   RSPM      0.5.1   CRAN  [1]   indirect
-forcats                1.0.0   RSPM      1.0.0   CRAN  [1]   indirect
-foreach                1.5.2   RSPM      1.5.2   CRAN  [1]   indirect
-foreign               0.8-85   CRAN       &lt;NA&gt;   &lt;NA&gt;  [2]       &lt;NA&gt;
-fs                     1.6.2   RSPM      1.6.2   CRAN  [1]   indirect
-furrr                  0.3.1   RSPM      0.3.1   CRAN  [1]   indirect
-future                1.33.0   RSPM     1.33.0   CRAN  [1]   indirect
-future.apply          1.11.0   RSPM     1.11.0   CRAN  [1]   indirect
-gargle                 1.5.2   RSPM      1.5.2   CRAN  [1]   indirect
-generics               0.1.3   RSPM      0.1.3   CRAN  [1]   indirect
-geodata                0.5-8   RSPM      0.5-8   CRAN  [1]     direct
-geojson                0.3.4   RSPM      0.3.4   CRAN  [1]   indirect
-geojsonio             0.11.1   RSPM     0.11.1   CRAN  [1]   indirect
-geojsonsf              2.0.3   RSPM      2.0.3   CRAN  [1]   indirect
-geometries             0.2.2   RSPM      0.2.2   CRAN  [1]   indirect
-getPass                0.2-2   RSPM      0.2-2   CRAN  [1]   indirect
-ggplot2                3.4.2   RSPM      3.4.2   CRAN  [1]     direct
-globals               0.16.2   RSPM     0.16.2   CRAN  [1]   indirect
-glue                   1.6.2   RSPM      1.6.2   CRAN  [1]   indirect
-googledrive            2.1.1   RSPM      2.1.1   CRAN  [1]   indirect
-googlesheets4          1.1.1   RSPM      1.1.1   CRAN  [1]   indirect
-gower                  1.0.1   RSPM      1.0.1   CRAN  [1]   indirect
-grDevices               &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;  [2]   indirect
-graphics                &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;  [2]   indirect
-grid                    &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;  [2]   indirect
-gridExtra                2.3   RSPM        2.3   CRAN  [1]   indirect
-gtable                 0.3.3   RSPM      0.3.3   CRAN  [1]   indirect
-hardhat                1.3.0   RSPM      1.3.0   CRAN  [1]   indirect
-haven                  2.5.3   RSPM      2.5.3   CRAN  [1]   indirect
-here                   1.0.1   RSPM      1.0.1   CRAN  [1]     direct
-hexbin                1.28.3   RSPM     1.28.3   CRAN  [1]     direct
-highr                   0.10   RSPM       0.10   CRAN  [1]   indirect
-hms                    1.1.3   RSPM      1.1.3   CRAN  [1]   indirect
-htmltools              0.5.5   RSPM      0.5.5   CRAN  [1]   indirect
-htmlwidgets            1.6.2   RSPM      1.6.2   CRAN  [1]   indirect
-httpcode               0.3.0   RSPM      0.3.0   CRAN  [1]   indirect
-httr                   1.4.5   RSPM      1.4.5   CRAN  [1]     direct
-ids                    1.0.1   RSPM      1.0.1   CRAN  [1]   indirect
-infer                  1.0.4   RSPM      1.0.4   CRAN  [1]   indirect
-ipred                 0.9-14   RSPM     0.9-14   CRAN  [1]   indirect
-isoband                0.2.7   RSPM      0.2.7   CRAN  [1]   indirect
-iterators             1.0.14   RSPM     1.0.14   CRAN  [1]   indirect
-jqr                    1.2.3   RSPM      1.2.3   CRAN  [1]   indirect
-jquerylib              0.1.4   RSPM      0.1.4   CRAN  [1]   indirect
-jsonify                1.2.2   RSPM      1.2.2   CRAN  [1]   indirect
-jsonlite               1.8.4   RSPM      1.8.4   CRAN  [1]   indirect
-keyring                1.3.1   RSPM      1.3.1   CRAN  [1]   indirect
-knitr                   1.42   RSPM       1.42   CRAN  [1]     direct
-labeling               0.4.2   RSPM      0.4.2   CRAN  [1]   indirect
-lattice               0.21-8   RSPM     0.21-8   CRAN  [1]   indirect
-lava                 1.7.2.1   RSPM    1.7.2.1   CRAN  [1]   indirect
-lazyeval               0.2.2   RSPM      0.2.2   CRAN  [1]   indirect
-leaflet           2.1.2.9000 GitHub 2.1.2.9000 GitHub  [1]     direct
-leaflet.providers      1.9.0   RSPM      1.9.0   CRAN  [1]   indirect
-lhs                    1.1.6   RSPM      1.1.6   CRAN  [1]   indirect
-lifecycle              1.0.3   RSPM      1.0.3   CRAN  [1]   indirect
-listenv                0.9.0   RSPM      0.9.0   CRAN  [1]   indirect
-lubridate              1.9.2   RSPM      1.9.2   CRAN  [1]   indirect
-magrittr               2.0.3   RSPM      2.0.3   CRAN  [1]   indirect
-memoise                2.0.1   RSPM      2.0.1   CRAN  [1]   indirect
-methods                 &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;  [2]   indirect
-mgcv                   1.9-0   CRAN      1.9-0   CRAN  [2]   indirect
-mime                    0.12   RSPM       0.12   CRAN  [1]   indirect
-modeldata              1.2.0   RSPM      1.2.0   CRAN  [1]   indirect
-modelenv               0.1.1   RSPM      0.1.1   CRAN  [1]   indirect
-modelr                0.1.11   RSPM     0.1.11   CRAN  [1]   indirect
-munsell                0.5.0   RSPM      0.5.0   CRAN  [1]   indirect
-ncdf4                   1.21   RSPM       1.21   CRAN  [1]   indirect
-nlme                 3.1-162   RSPM    3.1-162   CRAN  [1]   indirect
-nnet                  7.3-19   CRAN     7.3-19   CRAN  [2]   indirect
-numDeriv          2016.8-1.1   RSPM 2016.8-1.1   CRAN  [1]   indirect
-openssl                2.0.6   RSPM      2.0.6   CRAN  [1]   indirect
-pROC                  1.18.4   RSPM     1.18.4   CRAN  [1]   indirect
-parallel                &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;  [2]   indirect
-parallelly            1.36.0   RSPM     1.36.0   CRAN  [1]   indirect
-parsnip                1.1.1   RSPM      1.1.1   CRAN  [1]     direct
-patchwork              1.1.2   RSPM      1.1.2   CRAN  [1]     direct
-pillar                 1.9.0   RSPM      1.9.0   CRAN  [1]   indirect
-pkgconfig              2.0.3   RSPM      2.0.3   CRAN  [1]   indirect
-plyr                   1.8.8   RSPM      1.8.8   CRAN  [1]   indirect
-png                    0.1-8   RSPM      0.1-8   CRAN  [1]   indirect
-prettyunits            1.1.1   RSPM      1.1.1   CRAN  [1]   indirect
-processx               3.8.2   RSPM      3.8.2   CRAN  [1]   indirect
-prodlim           2023.03.31   RSPM 2023.03.31   CRAN  [1]   indirect
-progress               1.2.2   RSPM      1.2.2   CRAN  [1]   indirect
-progressr             0.13.0   RSPM     0.13.0   CRAN  [1]   indirect
-protolite              2.2.0   RSPM      2.2.0   CRAN  [1]   indirect
-proxy                 0.4-27   RSPM     0.4-27   CRAN  [1]   indirect
-ps                     1.7.5   RSPM      1.7.5   CRAN  [1]   indirect
-purrr                  1.0.1   RSPM      1.0.1   CRAN  [1]     direct
-ragg                   1.2.5   RSPM      1.2.5   CRAN  [1]   indirect
-rapidjsonr             1.2.0   RSPM      1.2.0   CRAN  [1]   indirect
-rappdirs               0.3.3   RSPM      0.3.3   CRAN  [1]   indirect
-raster                3.6-20   RSPM     3.6-20   CRAN  [1]   indirect
-readr                  2.1.4   RSPM      2.1.4   CRAN  [1]     direct
-readxl                 1.4.3   RSPM      1.4.3   CRAN  [1]   indirect
-recipes                1.0.6   RSPM      1.0.6   CRAN  [1]   indirect
-rematch                1.0.1   RSPM      1.0.1   CRAN  [1]   indirect
-rematch2               2.1.2   RSPM      2.1.2   CRAN  [1]   indirect
-renv                  0.17.3   RSPM     0.17.3   CRAN  [1]     direct
-reprex                 2.0.2   RSPM      2.0.2   CRAN  [1]   indirect
-reshape2               1.4.4   RSPM      1.4.4   CRAN  [1]   indirect
-rlang                  1.1.1   RSPM      1.1.1   CRAN  [1]   indirect
-rmarkdown               2.21   RSPM       2.21   CRAN  [1]     direct
-rpart                 4.1.19   RSPM     4.1.19   CRAN  [1]   indirect
-rprojroot              2.0.3   RSPM      2.0.3   CRAN  [1]   indirect
-rsample                1.1.1   RSPM      1.1.1   CRAN  [1]     direct
-rstudioapi              0.14   RSPM       0.14   CRAN  [1]   indirect
-rvest                  1.0.3   RSPM      1.0.3   CRAN  [1]   indirect
-s2                     1.1.3   RSPM      1.1.3   CRAN  [1]   indirect
-sass                   0.4.6   RSPM      0.4.6   CRAN  [1]   indirect
-scales                 1.2.1   RSPM      1.2.1   CRAN  [1]     direct
-selectr                0.4-2   RSPM      0.4-2   CRAN  [1]   indirect
-sf                    1.0-12   RSPM     1.0-12   CRAN  [1]     direct
-sfheaders              0.4.2   RSPM      0.4.2   CRAN  [1]   indirect
-shape                  1.4.6   RSPM      1.4.6   CRAN  [1]   indirect
-signal                 0.7-7   RSPM      0.7-7   CRAN  [1]     direct
-slider                 0.3.0   RSPM      0.3.0   CRAN  [1]   indirect
-sodium                 1.2.1   RSPM      1.2.1   CRAN  [1]   indirect
-sp                     1.6-0   RSPM      1.6-0   CRAN  [1]   indirect
-spatial               7.3-17   CRAN       &lt;NA&gt;   &lt;NA&gt;  [2]       &lt;NA&gt;
-splines                 &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;  [2]   indirect
-stats                   &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;  [2]   indirect
-stats4                  &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;  [2]   indirect
-stringi               1.7.12   RSPM     1.7.12   CRAN  [1]   indirect
-stringr                1.5.0   RSPM      1.5.0   CRAN  [1]     direct
-survival               3.5-5   RSPM      3.5-5   CRAN  [1]   indirect
-sys                    3.4.1   RSPM      3.4.1   CRAN  [1]   indirect
-systemfonts            1.0.4   RSPM      1.0.4   CRAN  [1]   indirect
-terra                 1.7-29   RSPM     1.7-29   CRAN  [1]     direct
-textshaping            0.3.6   RSPM      0.3.6   CRAN  [1]   indirect
-tibble                 3.2.1   RSPM      3.2.1   CRAN  [1]   indirect
-tidymodels             1.1.0   RSPM      1.1.0   CRAN  [1]     direct
-tidyr                  1.3.0   RSPM      1.3.0   CRAN  [1]     direct
-tidyselect             1.2.0   RSPM      1.2.0   CRAN  [1]   indirect
-tidyterra              0.4.0   RSPM      0.4.0   CRAN  [1]     direct
-tidyverse              2.0.0   RSPM      2.0.0   CRAN  [1]     direct
-timeDate            4022.108   RSPM   4022.108   CRAN  [1]   indirect
-timechange             0.2.0   RSPM      0.2.0   CRAN  [1]   indirect
-tinytex                 0.45   RSPM       0.45   CRAN  [1]   indirect
-tools                   &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;  [2]   indirect
-triebeard              0.4.1   RSPM      0.4.1   CRAN  [1]   indirect
-tune                   1.1.1   RSPM      1.1.1   CRAN  [1]     direct
-tzdb                   0.4.0   RSPM      0.4.0   CRAN  [1]   indirect
-units                  0.8-2   RSPM      0.8-2   CRAN  [1]   indirect
-urltools               1.7.3   RSPM      1.7.3   CRAN  [1]   indirect
-utf8                   1.2.3   RSPM      1.2.3   CRAN  [1]   indirect
-utils                   &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;  [2]   indirect
-uuid                   1.1-1   RSPM      1.1-1   CRAN  [1]   indirect
-vctrs                  0.6.2   RSPM      0.6.2   CRAN  [1]   indirect
-viridis                0.6.3   RSPM      0.6.3   CRAN  [1]   indirect
-viridisLite            0.4.2   RSPM      0.4.2   CRAN  [1]   indirect
-vroom                  1.6.3   RSPM      1.6.3   CRAN  [1]     direct
-warp                   0.2.0   RSPM      0.2.0   CRAN  [1]   indirect
-withr                  2.5.0   RSPM      2.5.0   CRAN  [1]   indirect
-wk                     0.7.2   RSPM      0.7.2   CRAN  [1]   indirect
-workflows              1.1.3   RSPM      1.1.3   CRAN  [1]     direct
-workflowsets           1.0.1   RSPM      1.0.1   CRAN  [1]   indirect
-xfun                    0.39   RSPM       0.39   CRAN  [1]   indirect
-xgboost              1.7.5.1   RSPM    1.7.5.1   CRAN  [1]     direct
-xml2                   1.3.5   RSPM      1.3.5   CRAN  [1]   indirect
-yaml                   2.3.7   RSPM      2.3.7   CRAN  [1]   indirect
-yardstick              1.2.0   RSPM      1.2.0   CRAN  [1]   indirect
+# Packages -------------------------------------------------------------------
+                     Library Source   Lockfile     Source Path Dependency
+DBI                    1.1.3   RSPM      1.1.3       CRAN  [1]   indirect
+DiceDesign               1.9   RSPM        1.9       CRAN  [1]   indirect
+GPfit                  1.0-8   RSPM      1.0-8       CRAN  [1]   indirect
+GenSA                  1.1.9   RSPM      1.1.9       CRAN  [1]     direct
+KernSmooth           2.23-22   CRAN    2.23-22       CRAN  [2]   indirect
+MASS                  7.3-60   RSPM     7.3-60       CRAN  [1]   indirect
+MODISTools             1.1.4   RSPM      1.1.4       CRAN  [1]     direct
+Matrix                 1.6-0   RSPM      1.6-0       CRAN  [1]   indirect
+ModelMetrics         1.2.2.2   RSPM    1.2.2.2       CRAN  [1]   indirect
+R6                     2.5.1   RSPM      2.5.1       CRAN  [1]   indirect
+RColorBrewer           1.1-3   RSPM      1.1-3       CRAN  [1]   indirect
+Rcpp                  1.0.10   RSPM     1.0.10       CRAN  [1]   indirect
+SQUAREM               2021.1   RSPM     2021.1       CRAN  [1]   indirect
+V8                     4.3.0   RSPM      4.3.0       CRAN  [1]   indirect
+appeears                 1.1 GitHub        1.1     GitHub  [1]     direct
+askpass                  1.1   RSPM        1.1       CRAN  [1]   indirect
+assertthat             0.2.1   RSPM      0.2.1       CRAN  [1]   indirect
+backports              1.4.1   RSPM      1.4.1       CRAN  [1]   indirect
+base64enc              0.1-3   RSPM      0.1-3       CRAN  [1]   indirect
+bit                    4.0.5   RSPM      4.0.5       CRAN  [1]   indirect
+bit64                  4.0.5   RSPM      4.0.5       CRAN  [1]   indirect
+blob                   1.2.4   RSPM      1.2.4       CRAN  [1]   indirect
+boot                  1.3-29   CRAN       &lt;NA&gt;       &lt;NA&gt;  [2]       &lt;NA&gt;
+broom                  1.0.5   RSPM      1.0.5       CRAN  [1]   indirect
+bslib                  0.4.2   RSPM      0.4.2       CRAN  [1]   indirect
+cachem                 1.0.8   RSPM      1.0.8       CRAN  [1]   indirect
+callr                  3.7.3   RSPM      3.7.3       CRAN  [1]   indirect
+caret                 6.0-94   RSPM     6.0-94       CRAN  [1]     direct
+cellranger             1.1.0   RSPM      1.1.0       CRAN  [1]   indirect
+class                 7.3-22   CRAN     7.3-22       CRAN  [2]   indirect
+classInt               0.4-9   RSPM      0.4-9       CRAN  [1]   indirect
+cli                    3.6.1   RSPM      3.6.1       CRAN  [1]   indirect
+clipr                  0.8.0   RSPM      0.8.0       CRAN  [1]   indirect
+clock                  0.7.0   RSPM      0.7.0       CRAN  [1]   indirect
+cluster                2.1.6   CRAN       &lt;NA&gt;       &lt;NA&gt;  [2]       &lt;NA&gt;
+codetools             0.2-19   CRAN     0.2-19       CRAN  [2]   indirect
+colorspace             2.1-0   RSPM      2.1-0       CRAN  [1]   indirect
+compiler                &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;  [2]   indirect
+conflicted             1.2.0   RSPM      1.2.0       CRAN  [1]   indirect
+cpp11                  0.4.3   RSPM      0.4.3       CRAN  [1]   indirect
+crayon                 1.5.2   RSPM      1.5.2       CRAN  [1]   indirect
+crosstalk              1.2.0   RSPM      1.2.0       CRAN  [1]   indirect
+crul                   1.4.0   RSPM      1.4.0       CRAN  [1]   indirect
+curl                   5.0.0   RSPM      5.0.0       CRAN  [1]   indirect
+data.table            1.14.8   RSPM     1.14.8       CRAN  [1]   indirect
+daymetr                  1.7   RSPM        1.7       CRAN  [1]     direct
+dbplyr                 2.3.3   RSPM      2.3.3       CRAN  [1]   indirect
+diagram                1.6.5   RSPM      1.6.5       CRAN  [1]   indirect
+dials                  1.2.0   RSPM      1.2.0       CRAN  [1]     direct
+digest                0.6.31   RSPM     0.6.31       CRAN  [1]   indirect
+dplyr                  1.1.2   RSPM      1.1.2       CRAN  [1]     direct
+dtplyr                 1.3.1   RSPM      1.3.1       CRAN  [1]   indirect
+e1071                 1.7-13   RSPM     1.7-13       CRAN  [1]   indirect
+ellipsis               0.3.2   RSPM      0.3.2       CRAN  [1]   indirect
+evaluate                0.20   RSPM       0.20       CRAN  [1]   indirect
+fansi                  1.0.4   RSPM      1.0.4       CRAN  [1]   indirect
+farver                 2.1.1   RSPM      2.1.1       CRAN  [1]   indirect
+fastmap                1.1.1   RSPM      1.1.1       CRAN  [1]   indirect
+filelock               1.0.2   RSPM      1.0.2       CRAN  [1]   indirect
+fontawesome            0.5.1   RSPM      0.5.1       CRAN  [1]   indirect
+forcats                1.0.0   RSPM      1.0.0       CRAN  [1]   indirect
+foreach                1.5.2   RSPM      1.5.2       CRAN  [1]   indirect
+foreign               0.8-86   CRAN       &lt;NA&gt;       &lt;NA&gt;  [2]       &lt;NA&gt;
+fs                     1.6.2   RSPM      1.6.2       CRAN  [1]   indirect
+furrr                  0.3.1   RSPM      0.3.1       CRAN  [1]   indirect
+future                1.33.0   RSPM     1.33.0       CRAN  [1]   indirect
+future.apply          1.11.0   RSPM     1.11.0       CRAN  [1]   indirect
+gargle                 1.5.2   RSPM      1.5.2       CRAN  [1]   indirect
+generics               0.1.3   RSPM      0.1.3       CRAN  [1]   indirect
+geodata                0.5-8   RSPM      0.5-8       CRAN  [1]     direct
+geojson                0.3.4   RSPM      0.3.4       CRAN  [1]   indirect
+geojsonio             0.11.1   RSPM     0.11.1       CRAN  [1]   indirect
+geojsonsf              2.0.3   RSPM      2.0.3       CRAN  [1]   indirect
+geometries             0.2.2   RSPM      0.2.2       CRAN  [1]   indirect
+getPass                0.2-2   RSPM      0.2-2       CRAN  [1]   indirect
+ggplot2                3.4.2   RSPM      3.4.2       CRAN  [1]     direct
+globals               0.16.2   RSPM     0.16.2       CRAN  [1]   indirect
+glue                   1.6.2   RSPM      1.6.2       CRAN  [1]   indirect
+googledrive            2.1.1   RSPM      2.1.1       CRAN  [1]   indirect
+googlesheets4          1.1.1   RSPM      1.1.1       CRAN  [1]   indirect
+gower                  1.0.1   RSPM      1.0.1       CRAN  [1]   indirect
+grDevices               &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;  [2]   indirect
+graphics                &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;  [2]   indirect
+grid                    &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;  [2]   indirect
+gridExtra                2.3   RSPM        2.3       CRAN  [1]   indirect
+gtable                 0.3.3   RSPM      0.3.3       CRAN  [1]   indirect
+hardhat                1.3.0   RSPM      1.3.0       CRAN  [1]   indirect
+haven                  2.5.3   RSPM      2.5.3       CRAN  [1]   indirect
+here                   1.0.1   RSPM      1.0.1       CRAN  [1]     direct
+hexbin                1.28.3   RSPM     1.28.3       CRAN  [1]     direct
+highr                   0.10   RSPM       0.10       CRAN  [1]   indirect
+hms                    1.1.3   RSPM      1.1.3       CRAN  [1]   indirect
+htmltools              0.5.5   RSPM      0.5.5       CRAN  [1]   indirect
+htmlwidgets            1.6.2   RSPM      1.6.2       CRAN  [1]   indirect
+httpcode               0.3.0   RSPM      0.3.0       CRAN  [1]   indirect
+httr                   1.4.5   RSPM      1.4.5       CRAN  [1]     direct
+ids                    1.0.1   RSPM      1.0.1       CRAN  [1]   indirect
+infer                  1.0.4   RSPM      1.0.4       CRAN  [1]   indirect
+ipred                 0.9-14   RSPM     0.9-14       CRAN  [1]   indirect
+isoband                0.2.7   RSPM      0.2.7       CRAN  [1]   indirect
+iterators             1.0.14   RSPM     1.0.14       CRAN  [1]   indirect
+jqr                    1.2.3   RSPM      1.2.3       CRAN  [1]   indirect
+jquerylib              0.1.4   RSPM      0.1.4       CRAN  [1]   indirect
+jsonify                1.2.2   RSPM      1.2.2       CRAN  [1]   indirect
+jsonlite               1.8.4   RSPM      1.8.4       CRAN  [1]   indirect
+keyring                1.3.1   RSPM      1.3.1       CRAN  [1]   indirect
+knitr                   1.42   RSPM       1.42       CRAN  [1]     direct
+labeling               0.4.2   RSPM      0.4.2       CRAN  [1]   indirect
+lattice               0.21-8   RSPM     0.21-8       CRAN  [1]   indirect
+lava                 1.7.2.1   RSPM    1.7.2.1       CRAN  [1]   indirect
+lazyeval               0.2.2   RSPM      0.2.2       CRAN  [1]   indirect
+leaflet           2.1.2.9000 GitHub 2.1.2.9000     GitHub  [1]     direct
+leaflet.providers      1.9.0   RSPM      1.9.0       CRAN  [1]   indirect
+lhs                    1.1.6   RSPM      1.1.6       CRAN  [1]   indirect
+lifecycle              1.0.3   RSPM      1.0.3       CRAN  [1]   indirect
+listenv                0.9.0   RSPM      0.9.0       CRAN  [1]   indirect
+lubridate              1.9.2   RSPM      1.9.2       CRAN  [1]   indirect
+magrittr               2.0.3   RSPM      2.0.3       CRAN  [1]   indirect
+memoise                2.0.1   RSPM      2.0.1       CRAN  [1]   indirect
+methods                 &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;  [2]   indirect
+mgcv                   1.9-0   RSPM      1.9-0       CRAN  [1]   indirect
+mime                    0.12   RSPM       0.12       CRAN  [1]   indirect
+modeldata              1.2.0   RSPM      1.2.0       CRAN  [1]   indirect
+modelenv               0.1.1   RSPM      0.1.1       CRAN  [1]   indirect
+modelr                0.1.11   RSPM     0.1.11       CRAN  [1]   indirect
+munsell                0.5.0   RSPM      0.5.0       CRAN  [1]   indirect
+ncdf4                   1.21   RSPM       1.21       CRAN  [1]   indirect
+nlme                 3.1-162   RSPM    3.1-162       CRAN  [1]   indirect
+nnet                  7.3-19   CRAN     7.3-19       CRAN  [2]   indirect
+numDeriv          2016.8-1.1   RSPM 2016.8-1.1       CRAN  [1]   indirect
+openssl                2.0.6   RSPM      2.0.6       CRAN  [1]   indirect
+pROC                  1.18.4   RSPM     1.18.4       CRAN  [1]   indirect
+parallel                &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;  [2]   indirect
+parallelly            1.36.0   RSPM     1.36.0       CRAN  [1]   indirect
+parsnip                1.1.1   RSPM      1.1.1       CRAN  [1]     direct
+patchwork              1.1.2   RSPM      1.1.2       CRAN  [1]     direct
+pillar                 1.9.0   RSPM      1.9.0       CRAN  [1]   indirect
+pkgconfig              2.0.3   RSPM      2.0.3       CRAN  [1]   indirect
+plyr                   1.8.8   RSPM      1.8.8       CRAN  [1]   indirect
+png                    0.1-8   RSPM      0.1-8       CRAN  [1]   indirect
+prettyunits            1.1.1   RSPM      1.1.1       CRAN  [1]   indirect
+processx               3.8.2   RSPM      3.8.2       CRAN  [1]   indirect
+prodlim           2023.03.31   RSPM 2023.03.31       CRAN  [1]   indirect
+progress               1.2.2   RSPM      1.2.2       CRAN  [1]   indirect
+progressr             0.13.0   RSPM     0.13.0       CRAN  [1]   indirect
+protolite              2.2.0   RSPM      2.2.0       CRAN  [1]   indirect
+proxy                 0.4-27   RSPM     0.4-27       CRAN  [1]   indirect
+ps                     1.7.5   RSPM      1.7.5       CRAN  [1]   indirect
+purrr                  1.0.1   RSPM      1.0.1       CRAN  [1]     direct
+ragg                   1.2.5   RSPM      1.2.5       CRAN  [1]   indirect
+rapidjsonr             1.2.0   RSPM      1.2.0       CRAN  [1]   indirect
+rappdirs               0.3.3   RSPM      0.3.3       CRAN  [1]   indirect
+raster                3.6-20   RSPM     3.6-20       CRAN  [1]   indirect
+readr                  2.1.4   RSPM      2.1.4       CRAN  [1]     direct
+readxl                 1.4.3   RSPM      1.4.3       CRAN  [1]   indirect
+recipes                1.0.6   RSPM      1.0.6       CRAN  [1]   indirect
+rematch                1.0.1   RSPM      1.0.1       CRAN  [1]   indirect
+rematch2               2.1.2   RSPM      2.1.2       CRAN  [1]   indirect
+renv                   1.0.7   CRAN      1.0.7 Repository  [1]     direct
+reprex                 2.0.2   RSPM      2.0.2       CRAN  [1]   indirect
+reshape2               1.4.4   RSPM      1.4.4       CRAN  [1]   indirect
+rlang                  1.1.1   RSPM      1.1.1       CRAN  [1]   indirect
+rmarkdown               2.21   RSPM       2.21       CRAN  [1]     direct
+rpart                 4.1.19   RSPM     4.1.19       CRAN  [1]   indirect
+rprojroot              2.0.3   RSPM      2.0.3       CRAN  [1]   indirect
+rsample                1.1.1   RSPM      1.1.1       CRAN  [1]     direct
+rstudioapi              0.14   RSPM       0.14       CRAN  [1]   indirect
+rvest                  1.0.3   RSPM      1.0.3       CRAN  [1]   indirect
+s2                     1.1.3   RSPM      1.1.3       CRAN  [1]   indirect
+sass                   0.4.6   RSPM      0.4.6       CRAN  [1]   indirect
+scales                 1.2.1   RSPM      1.2.1       CRAN  [1]     direct
+selectr                0.4-2   RSPM      0.4-2       CRAN  [1]   indirect
+sf                    1.0-12   RSPM     1.0-12       CRAN  [1]     direct
+sfheaders              0.4.2   RSPM      0.4.2       CRAN  [1]   indirect
+shape                  1.4.6   RSPM      1.4.6       CRAN  [1]   indirect
+signal                 0.7-7   RSPM      0.7-7       CRAN  [1]     direct
+slider                 0.3.0   RSPM      0.3.0       CRAN  [1]   indirect
+sodium                 1.2.1   RSPM      1.2.1       CRAN  [1]   indirect
+sp                     1.6-0   RSPM      1.6-0       CRAN  [1]   indirect
+spatial               7.3-17   CRAN       &lt;NA&gt;       &lt;NA&gt;  [2]       &lt;NA&gt;
+splines                 &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;  [2]   indirect
+stats                   &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;  [2]   indirect
+stats4                  &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;  [2]   indirect
+stringi               1.7.12   RSPM     1.7.12       CRAN  [1]   indirect
+stringr                1.5.0   RSPM      1.5.0       CRAN  [1]     direct
+survival               3.5-5   RSPM      3.5-5       CRAN  [1]   indirect
+sys                    3.4.1   RSPM      3.4.1       CRAN  [1]   indirect
+systemfonts            1.0.4   RSPM      1.0.4       CRAN  [1]   indirect
+terra                 1.7-29   RSPM     1.7-29       CRAN  [1]     direct
+textshaping            0.3.6   RSPM      0.3.6       CRAN  [1]   indirect
+tibble                 3.2.1   RSPM      3.2.1       CRAN  [1]   indirect
+tidymodels             1.1.0   RSPM      1.1.0       CRAN  [1]     direct
+tidyr                  1.3.0   RSPM      1.3.0       CRAN  [1]     direct
+tidyselect             1.2.0   RSPM      1.2.0       CRAN  [1]   indirect
+tidyterra              0.4.0   RSPM      0.4.0       CRAN  [1]     direct
+tidyverse              2.0.0   RSPM      2.0.0       CRAN  [1]     direct
+timeDate            4022.108   RSPM   4022.108       CRAN  [1]   indirect
+timechange             0.2.0   RSPM      0.2.0       CRAN  [1]   indirect
+tinytex                 0.45   RSPM       0.45       CRAN  [1]   indirect
+tools                   &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;  [2]   indirect
+triebeard              0.4.1   RSPM      0.4.1       CRAN  [1]   indirect
+tune                   1.1.1   RSPM      1.1.1       CRAN  [1]     direct
+tzdb                   0.4.0   RSPM      0.4.0       CRAN  [1]   indirect
+units                  0.8-2   RSPM      0.8-2       CRAN  [1]   indirect
+urltools               1.7.3   RSPM      1.7.3       CRAN  [1]   indirect
+utf8                   1.2.3   RSPM      1.2.3       CRAN  [1]   indirect
+utils                   &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;       &lt;NA&gt;  [2]   indirect
+uuid                   1.1-1   RSPM      1.1-1       CRAN  [1]   indirect
+vctrs                  0.6.2   RSPM      0.6.2       CRAN  [1]   indirect
+viridis                0.6.3   RSPM      0.6.3       CRAN  [1]   indirect
+viridisLite            0.4.2   RSPM      0.4.2       CRAN  [1]   indirect
+vroom                  1.6.3   RSPM      1.6.3       CRAN  [1]     direct
+warp                   0.2.0   RSPM      0.2.0       CRAN  [1]   indirect
+withr                  2.5.0   RSPM      2.5.0       CRAN  [1]   indirect
+wk                     0.7.2   RSPM      0.7.2       CRAN  [1]   indirect
+workflows              1.1.3   RSPM      1.1.3       CRAN  [1]     direct
+workflowsets           1.0.1   RSPM      1.0.1       CRAN  [1]   indirect
+xfun                    0.39   RSPM       0.39       CRAN  [1]   indirect
+xgboost              1.7.5.1   RSPM    1.7.5.1       CRAN  [1]     direct
+xml2                   1.3.5   RSPM      1.3.5       CRAN  [1]   indirect
+yaml                   2.3.7   RSPM      2.3.7       CRAN  [1]   indirect
+yardstick              1.2.0   RSPM      1.2.0       CRAN  [1]   indirect
 
 [1]: /home/runner/work/handful_of_pixels/handful_of_pixels/renv/library/R-4.3/x86_64-pc-linux-gnu
-[2]: /home/runner/.cache/R/renv/sandbox/R-4.3/x86_64-pc-linux-gnu/95f1b021                       
+[2]: /home/runner/.cache/R/renv/sandbox/R-4.3/x86_64-pc-linux-gnu/40018dbe                       
 
-# ABI ================================
-* No ABI conflicts were detected in the set of installed packages.
+# ABI ------------------------------------------------------------------------
+- No ABI problems were detected in the set of installed packages.
 
-# User Profile =======================
+# User Profile ---------------------------------------------------------------
 [1] Source  Package Require Version Dev    
 &lt;0 rows&gt; (or 0-length row.names)
 
-# Settings ===========================
-List of 11
+# Settings -------------------------------------------------------------------
+List of 13
  $ bioconductor.version     : chr(0) 
  $ external.libraries       : chr(0) 
  $ ignored.packages         : chr(0) 
  $ package.dependency.fields: chr [1:3] "Imports" "Depends" "LinkingTo"
+ $ ppm.enabled              : NULL
+ $ ppm.ignored.urls         : NULL
  $ r.version                : chr(0) 
  $ snapshot.type            : chr "implicit"
  $ use.cache                : logi TRUE
@@ -606,8 +609,8 @@ List of 11
  $ vcs.ignore.local         : logi TRUE
  $ vcs.manage.ignores       : logi TRUE
 
-# Options ============================
-List of 9
+# Options --------------------------------------------------------------------
+List of 8
  $ defaultPackages                     : chr [1:6] "datasets" "utils" "grDevices" "graphics" ...
  $ download.file.method                : NULL
  $ download.file.extra                 : NULL
@@ -616,27 +619,27 @@ List of 9
  $ repos                               : Named chr "https://cloud.r-project.org"
   ..- attr(*, "names")= chr "CRAN"
  $ renv.consent                        : logi TRUE
- $ renv.project.path                   : chr "/home/runner/work/handful_of_pixels/handful_of_pixels"
  $ renv.verbose                        : logi TRUE
 
-# Environment Variables ==============
+# Environment Variables ------------------------------------------------------
 HOME                        = /home/runner
 LANG                        = C.UTF-8
 MAKE                        = make
 R_LIBS                      = &lt;NA&gt;
-R_LIBS_SITE                 = /opt/R/4.3.2/lib/R/site-library
-R_LIBS_USER                 = /home/runner/work/handful_of_pixels/handful_of_pixels/renv/library/R-4.3/x86_64-pc-linux-gnu:/home/runner/.cache/R/renv/sandbox/R-4.3/x86_64-pc-linux-gnu/95f1b021
+R_LIBS_SITE                 = /opt/R/4.3.3/lib/R/site-library
+R_LIBS_USER                 = /home/runner/work/handful_of_pixels/handful_of_pixels/renv/library/R-4.3/x86_64-pc-linux-gnu
 RENV_CONFIG_REPOS_OVERRIDE  = https://packagemanager.posit.co/cran/__linux__/jammy/latest
 RENV_DEFAULT_R_ENVIRON      = &lt;NA&gt;
 RENV_DEFAULT_R_ENVIRON_USER = &lt;NA&gt;
 RENV_DEFAULT_R_LIBS         = &lt;NA&gt;
-RENV_DEFAULT_R_LIBS_SITE    = /opt/R/4.3.2/lib/R/site-library
+RENV_DEFAULT_R_LIBS_SITE    = /opt/R/4.3.3/lib/R/site-library
 RENV_DEFAULT_R_LIBS_USER    = /home/runner/work/_temp/Library
 RENV_DEFAULT_R_PROFILE      = &lt;NA&gt;
 RENV_DEFAULT_R_PROFILE_USER = &lt;NA&gt;
 RENV_PROJECT                = /home/runner/work/handful_of_pixels/handful_of_pixels
 
-# PATH ===============================
+# PATH -----------------------------------------------------------------------
+- /opt/hostedtoolcache/pandoc/3.1.11/x64
 - /snap/bin
 - /home/runner/.local/bin
 - /opt/pipx_bin
@@ -654,8 +657,8 @@ RENV_PROJECT                = /home/runner/work/handful_of_pixels/handful_of_pix
 - /usr/local/games
 - /snap/bin
 
-# Cache ==============================
-There are a total of 202 packages installed in the renv cache.
+# Cache ----------------------------------------------------------------------
+There are a total of 203 packages installed in the renv cache.
 Cache path: "~/.cache/R/renv/cache/v5/R-4.3/x86_64-pc-linux-gnu"</code></pre>
 </div>
 </div>
@@ -704,6 +707,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       } else {
         el.classList.add('notransition');
       }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
     }
   }
   const toggleColorMode = (alternate) => {
@@ -772,13 +802,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'default';
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -857,10 +889,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -870,8 +919,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -883,7 +941,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -927,6 +1108,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -952,6 +1134,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1013,7 +1221,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./appendix_licensing.html" class="pagination-link">
+      <a href="./appendix_licensing.html" class="pagination-link" aria-label="Licensing">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Licensing</span></span>
       </a>          
   </div>
@@ -1021,6 +1229,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
+
 
 
 

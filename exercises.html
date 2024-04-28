@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -50,7 +50,13 @@ ul.task-list li input[type="checkbox"] {
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -59,6 +65,7 @@ ul.task-list li input[type="checkbox"] {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -77,6 +84,33 @@ ul.task-list li input[type="checkbox"] {
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
 <meta name="twitter:title" content="A Handful of Pixels - 8&nbsp; Exercises">
 <meta name="twitter:description" content="">
 <meta name="twitter:card" content="summary">
@@ -86,9 +120,9 @@ ul.task-list li input[type="checkbox"] {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
     <img src="https://bluegreenlabs.org/img/logo_text_small.png" alt="" class="navbar-logo">
     </a>
@@ -103,15 +137,16 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" rel="" target="" aria-current="page">
- <span class="menu-text">Home</span></a>
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools tools-wide">
-    <a href="https://github.com/khufkens/handfull_of_pixels/" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools tools-wide">
+    <a href="https://github.com/khufkens/handfull_of_pixels/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
     <div class="dropdown">
       <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share"><i class="bi bi-share"></i></a>
-      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
           <li>
             <a class="dropdown-item quarto-navbar-tools-item" href="https://twitter.com/intent/tweet?url=|url|">
               <i class="bi bi-bi-twitter pe-1"></i>
@@ -128,32 +163,23 @@ ul.task-list li input[type="checkbox"] {
     </div>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
-          </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./exercises.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Exercises</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
-        <i class="bi bi-search"></i>
-      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./exercises.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Exercises</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
     </div>
   </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
-        <div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Search"></div>
-        </div>
-        </div>
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
@@ -270,7 +296,7 @@ ul.task-list li input[type="checkbox"] {
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -306,14 +332,16 @@ ul.task-list li input[type="checkbox"] {
   </div>
   
 
+
 </header>
+
 
 <section id="phenology-trends-and-algorithms" class="level2" data-number="8.1">
 <h2 data-number="8.1" class="anchored" data-anchor-id="phenology-trends-and-algorithms"><span class="header-section-number">8.1</span> Phenology trends and algorithms</h2>
-<p>These exercises cover all materials up to <a href="phenology_algorithms.html"><span>Chapter&nbsp;5</span></a>. A proper understanding of these chapters is required to complete these exercises. Exercises are at times formulated in long form, not simple bullet points, in order to partially mimic formal descriptions as you would find in a methods section of an academic journal, or a reference manual.</p>
+<p>These exercises cover all materials up to <a href="phenology_algorithms.html" class="quarto-xref"><span>Chapter 5</span></a>. A proper understanding of these chapters is required to complete these exercises. Exercises are at times formulated in long form, not simple bullet points, in order to partially mimic formal descriptions as you would find in a methods section of an academic journal, or a reference manual.</p>
 <section id="physical-geography-and-phenology" class="level3" data-number="8.1.1">
 <h3 data-number="8.1.1" class="anchored" data-anchor-id="physical-geography-and-phenology"><span class="header-section-number">8.1.1</span> Physical geography and phenology</h3>
-<p>Interpret the results of <a href="phenology_trends.html#sec-regression"><span>Section&nbsp;4.3</span></a> and the fit model as shown in the collapsed note at the end of the section.</p>
+<p>Interpret the results of <a href="phenology_trends.html#sec-regression" class="quarto-xref"><span>Section 4.3</span></a> and the fit model as shown in the collapsed note at the end of the section.</p>
 <ul>
 <li>What does the intercept indicate?</li>
 <li>How can you interpret the slope?</li>
@@ -325,15 +353,19 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="temporal-and-spatial-anomalies" class="level3" data-number="8.1.2">
 <h3 data-number="8.1.2" class="anchored" data-anchor-id="temporal-and-spatial-anomalies"><span class="header-section-number">8.1.2</span> Temporal and spatial anomalies</h3>
-<p>For a location near the Adirondacks in the North-Eastern United States (<a href="#fig-leaflet-adirondacks">Figure&nbsp;<span>8.1</span></a>) gather phenology data on both the greenup and maximum canopy development of a location centered on 43.5<span class="math inline">\(^\circ\)</span>N and 74.5<span class="math inline">\(^\circ\)</span>W. Gather data for all pixels 100 km around this location for years 2001 to 2010. Similarly, download land cover data for the year 2010 for the same spatial extent, and only consider IGBP broadleaf and mixed forest classes in your analysis.</p>
+<p>For a location near the Adirondacks in the North-Eastern United States (<a href="#fig-leaflet-adirondacks" class="quarto-xref">Figure&nbsp;<span>8.1</span></a>) gather phenology data on both the greenup and maximum canopy development of a location centered on 43.5<span class="math inline">\(^\circ\)</span>N and 74.5<span class="math inline">\(^\circ\)</span>W. Gather data for all pixels 100 km around this location for years 2001 to 2010. Similarly, download land cover data for the year 2010 for the same spatial extent, and only consider IGBP broadleaf and mixed forest classes in your analysis.</p>
 <p>For the years 2001 - 2009 calculate the long term mean (LTM) and standard deviation (SD) of the phenology metrics. Calculate location with an early greenup for 2010 (&lt; LTM - 1 SD) and locations with late maturity (&gt; LTM + 1 SD).</p>
 <p>Describe the observed patterns and speculate about the underlying reasons. In addition, download a digital elevation map for the United States (30s resolution), and compare differences in altitude (e.g.&nbsp;a boxplot) across locations where you do or do not see any patterns in phenology.</p>
 <div class="cell" data-layout-align="center">
-<div id="fig-leaflet-adirondacks" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-9f25246a0c9c8d078122" style="width:100%;height:288px;"></div>
-<script type="application/json" data-for="htmlwidget-9f25246a0c9c8d078122">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[43.5,-74.5],6,[]],"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[43.5,-74.5,null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},"Adirondacks",null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[43.5,43.5],"lng":[-74.5,-74.5]}},"evals":[],"jsHooks":[]}</script>
-<figcaption class="figure-caption">Figure&nbsp;8.1: The location of the Adirondack mountains in the North-Eastern United States</figcaption>
+<div id="fig-leaflet-adirondacks" class="cell-output-display quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-leaflet-adirondacks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-3d3999e6ae36056276e1" style="width:100%;height:288px;"></div>
+<script type="application/json" data-for="htmlwidget-3d3999e6ae36056276e1">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[43.5,-74.5],6,[]],"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[43.5,-74.5,null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},"Adirondacks",null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[43.5,43.5],"lng":[-74.5,-74.5]}},"evals":[],"jsHooks":[]}</script>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-leaflet-adirondacks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.1: The location of the Adirondack mountains in the North-Eastern United States
+</figcaption>
 </figure>
 </div>
 </div>
@@ -347,7 +379,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Use details in <a href="gathering_data.html"><span>Chapter&nbsp;2</span></a>, <a href="geospatial_R.html"><span>Chapter&nbsp;3</span></a> and <a href="phenology_trends.html"><span>Chapter&nbsp;4</span></a> to answer these questions, by considering all data products and methods mentioned. Additional meta-data will need to be consulted online to provide context or data conversion instructions in some cases. Where necessary consult <a href="https://scholar.google.com/">the relevant scientific literature</a>.</p>
+<p>Use details in <a href="gathering_data.html" class="quarto-xref"><span>Chapter 2</span></a>, <a href="geospatial_R.html" class="quarto-xref"><span>Chapter 3</span></a> and <a href="phenology_trends.html" class="quarto-xref"><span>Chapter 4</span></a> to answer these questions, by considering all data products and methods mentioned. Additional meta-data will need to be consulted online to provide context or data conversion instructions in some cases. Where necessary consult <a href="https://scholar.google.com/">the relevant scientific literature</a>.</p>
 </div>
 </div>
 </section>
@@ -360,7 +392,7 @@ Note
 <li>Combine all EVI data (23 layers) into a single compressed geotiff file (write to file)</li>
 <li>Read in the geotiff file to work faster from memory</li>
 <li>For a first trial crop the full dataset to 26<span class="math inline">\(^\circ\)</span>W, 20<span class="math inline">\(^\circ\)</span>E, 31<span class="math inline">\(^\circ\)</span>N, 70<span class="math inline">\(^\circ\)</span>N</li>
-<li>Apply the algorithm as outlined in <a href="phenology_algorithms.html#sec-spatial-scaling"><span>Section&nbsp;5.4.1</span></a> using a start of season greenup signal of 25% the seasonal EVI amplitude</li>
+<li>Apply the algorithm as outlined in <a href="phenology_algorithms.html#sec-spatial-scaling" class="quarto-xref"><span>Section 5.4.1</span></a> using a start of season greenup signal of 25% the seasonal EVI amplitude</li>
 <li>Assess the performance of the algorithm across the globe and discuss its consistency.
 <ul>
 <li>Where does it fail? How does it fail?</li>
@@ -384,7 +416,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>All information for this exercise can be found in <a href="geospatial_R.html"><span>Chapter&nbsp;3</span></a> and <a href="phenology_algorithms.html"><span>Chapter&nbsp;5</span></a>. As before, additional meta-data will need to be consulted online to provide context or data conversion instructions in some cases.</p>
+<p>All information for this exercise can be found in <a href="geospatial_R.html" class="quarto-xref"><span>Chapter 3</span></a> and <a href="phenology_algorithms.html" class="quarto-xref"><span>Chapter 5</span></a>. As before, additional meta-data will need to be consulted online to provide context or data conversion instructions in some cases.</p>
 </div>
 </div>
 </section>
@@ -392,7 +424,7 @@ Note
 <section id="phenology-modelling" class="level2" data-number="8.2">
 <h2 data-number="8.2" class="anchored" data-anchor-id="phenology-modelling"><span class="header-section-number">8.2</span> Phenology modelling</h2>
 <ul>
-<li>How can you improve the model used to regionally scale the results in <a href="phenology_modelling.html"><span>Chapter&nbsp;6</span></a>?
+<li>How can you improve the model used to regionally scale the results in <a href="phenology_modelling.html" class="quarto-xref"><span>Chapter 6</span></a>?
 <ul>
 <li>Provide at least three (3) ways to improve the model used.</li>
 </ul></li>
@@ -481,6 +513,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
   }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
   const toggleColorMode = (alternate) => {
     // Switch the stylesheets
     const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
@@ -547,13 +606,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'default';
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -632,10 +693,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -645,8 +723,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -658,7 +745,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -702,6 +912,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -727,6 +938,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -788,17 +1025,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./land_cover_classification.html" class="pagination-link">
+      <a href="./land_cover_classification.html" class="pagination-link" aria-label="Land-Cover classification">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Land-Cover classification</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./references.html" class="pagination-link">
+      <a href="./references.html" class="pagination-link" aria-label="References">
         <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
+
 
 
 

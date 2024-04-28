@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -58,6 +58,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -103,7 +104,13 @@ div.csl-indent {
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -112,6 +119,7 @@ div.csl-indent {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -121,17 +129,16 @@ div.csl-indent {
 
 <meta name="twitter:title" content="A Handful of Pixels - 1&nbsp; Crash course R">
 <meta name="twitter:description" content="">
-<meta name="twitter:image" content="./images/tidy_data.png">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 </head>
 
 <body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
     <img src="https://bluegreenlabs.org/img/logo_text_small.png" alt="" class="navbar-logo">
     </a>
@@ -146,15 +153,16 @@ div.csl-indent {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" rel="" target="" aria-current="page">
- <span class="menu-text">Home</span></a>
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools tools-wide">
-    <a href="https://github.com/khufkens/handfull_of_pixels/" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools tools-wide">
+    <a href="https://github.com/khufkens/handfull_of_pixels/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
     <div class="dropdown">
       <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share"><i class="bi bi-share"></i></a>
-      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
           <li>
             <a class="dropdown-item quarto-navbar-tools-item" href="https://twitter.com/intent/tweet?url=|url|">
               <i class="bi bi-bi-twitter pe-1"></i>
@@ -171,32 +179,23 @@ div.csl-indent {
     </div>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
-          </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./intro.html">Introduction</a></li><li class="breadcrumb-item"><a href="./basic_R.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Crash course R</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
-        <i class="bi bi-search"></i>
-      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./intro.html">Introduction</a></li><li class="breadcrumb-item"><a href="./basic_R.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Crash course R</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
     </div>
   </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
-        <div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Search"></div>
-        </div>
-        </div>
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
@@ -313,7 +312,7 @@ div.csl-indent {
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -346,7 +345,7 @@ div.csl-indent {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./intro.html">Introduction</a></li><li class="breadcrumb-item"><a href="./basic_R.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Crash course R</span></a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title"><span id="sec-basic-r" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Crash course R</span></span></h1>
 </div>
@@ -361,7 +360,9 @@ div.csl-indent {
   </div>
   
 
+
 </header>
+
 
 <p>This chapter will briefly summarize some of the principles which will be used throughout the book. In particular, I outline some of the best practices in managing projects and the basic data manipulations using the tidy data principles. For a thourough introduction to data science in R I refer to <a href="https://r4ds.had.co.nz/">R for data science</a> by Hadley &amp; Grolemund, while open data science practices and reproducible project management I refer to <a href="https://eliocamp.github.io/reproducibility-with-r/">Reproducibility with R</a> by Campitelli &amp; Corrales. For an in depth discussion of geocomputational concepts I refer to <a href="https://r.geocompx.org/index.html">Geocomputation with R</a> by <span class="citation" data-cites="lovelace_geocomputation_2019">Lovelace, Nowosad, and Muenchow (<a href="references.html#ref-lovelace_geocomputation_2019" role="doc-biblioref">2019</a>)</span>.</p>
 <section id="project-management" class="level2" data-number="1.1">
@@ -375,7 +376,7 @@ div.csl-indent {
 <li>data documentation (describing data sources)</li>
 <li>version control (logging progress systematically)</li>
 </ul>
-<p>When using R the easiest solution to many of these issues is to use an Integrated Development Environment (IDE, e.g.&nbsp;<a href="https://posit.co/downloads/">RStudio</a> or <a href="">VS Code</a>), version control to track code changes such as <a href="https://git-scm.com/">git</a> and its cloud based collaborative components such as <a href="https://github.com">Github</a> or <a href="https://codeberg.org">Codeberg</a>. The setup of both IDEs is described in <a href="appendix_setup.html"><span>Appendix&nbsp;A</span></a>.</p>
+<p>When using R the easiest solution to many of these issues is to use an Integrated Development Environment (IDE, e.g.&nbsp;<a href="https://posit.co/downloads/">RStudio</a> or <a href="">VS Code</a>), version control to track code changes such as <a href="https://git-scm.com/">git</a> and its cloud based collaborative components such as <a href="https://github.com">Github</a> or <a href="https://codeberg.org">Codeberg</a>. The setup of both IDEs is described in <a href="appendix_setup.html" class="quarto-xref"><span>Appendix A</span></a>.</p>
 <p>It is recommended to start a new project in the RStudio IDE and provide a consistent structure grouping similar objects in folders, e.g.&nbsp;storing data in a <code>data</code> folder, your R scripts in the <code>R</code> folder etc. You can further select the tracking of used packages using <code>renv</code> when creating a new project.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>project<span class="sc">/</span></span>
@@ -523,7 +524,7 @@ $number_2
 <pre><code>[1] 6</code></pre>
 </div>
 </div>
-<p>Be mindful of the breath of included functions in <code>R</code> or currently available packages. For example, within the <code>dplyr</code> package, which provides common data manipulation functionality, there is a function called <code>last()</code>. For the use of libraries see <a href="#sec-libraries"><span>Section&nbsp;1.3</span></a>.</p>
+<p>Be mindful of the breath of included functions in <code>R</code> or currently available packages. For example, within the <code>dplyr</code> package, which provides common data manipulation functionality, there is a function called <code>last()</code>. For the use of libraries see <a href="#sec-libraries" class="quarto-xref"><span>Section 1.3</span></a>.</p>
 </section>
 <section id="reading-data" class="level3" data-number="1.2.5">
 <h3 data-number="1.2.5" class="anchored" data-anchor-id="reading-data"><span class="header-section-number">1.2.5</span> Reading data</h3>
@@ -570,7 +571,7 @@ $number_2
 <span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>All digital data which is not represented as text characters can be considered binary data. One of the advantages of binary data is that it is an efficient representation of data, saving space. This comes at the cost of requiring a dedicated software (i.e.&nbsp;libraries), other than a text editor, to manipulate the data.</p>
-<p>In geography and environmental sciences particular (geospatial) file formats dominate the field. Some of these file formats relate to the content of the data, some of these formats are legacy formats due to the history of the field itself. Below you find a list some of the most common formats you will encounter. For the use of (geo-spatial) libraries I refer to <a href="#sec-libraries"><span>Section&nbsp;1.3</span></a> and <a href="geospatial_R.html"><span>Chapter&nbsp;3</span></a> .</p>
+<p>In geography and environmental sciences particular (geospatial) file formats dominate the field. Some of these file formats relate to the content of the data, some of these formats are legacy formats due to the history of the field itself. Below you find a list some of the most common formats you will encounter. For the use of (geo-spatial) libraries I refer to <a href="#sec-libraries" class="quarto-xref"><span>Section 1.3</span></a> and <a href="geospatial_R.html" class="quarto-xref"><span>Chapter 3</span></a> .</p>
 <table class="table">
 <thead>
 <tr class="header">
@@ -629,8 +630,8 @@ $number_2
 </section>
 <section id="sec-libraries" class="level2" data-number="1.3">
 <h2 data-number="1.3" class="anchored" data-anchor-id="sec-libraries"><span class="header-section-number">1.3</span> Libraries / packages</h2>
-<p>Not all software components are included in a basic R installation. Additional components can be installed as libraries or packages from official R archives (CRAN), or github (see below). A full list of packages used in the rendering of the book and its examples can be found in <a href="appendix_config.html"><span>Appendix&nbsp;C</span></a>, where information on the automated installation of all required packages is provided in <a href="appendix_setup.html"><span>Appendix&nbsp;A</span></a>.</p>
-<p>For example, we can extend the capabilities of base R by installing the <code>dplyr</code> package from the official CRAN archive using: <code>install.pacakges("dplyr")</code>. <code>dplyr</code> provides a set of functions to facilitate common data manipulation challenges covered in <a href="#sec-tidy-data"><span>Section&nbsp;1.4</span></a>. After a successful installation you can load packages using the <code>library()</code> function, as <code>library("dplyr")</code>. Functions as defined within <code>dplyr</code> can then be accessed in scripts or from the command line.</p>
+<p>Not all software components are included in a basic R installation. Additional components can be installed as libraries or packages from official R archives (CRAN), or github (see below). A full list of packages used in the rendering of the book and its examples can be found in <a href="appendix_config.html" class="quarto-xref"><span>Appendix C</span></a>, where information on the automated installation of all required packages is provided in <a href="appendix_setup.html" class="quarto-xref"><span>Appendix A</span></a>.</p>
+<p>For example, we can extend the capabilities of base R by installing the <code>dplyr</code> package from the official CRAN archive using: <code>install.pacakges("dplyr")</code>. <code>dplyr</code> provides a set of functions to facilitate common data manipulation challenges covered in <a href="#sec-tidy-data" class="quarto-xref"><span>Section 1.4</span></a>. After a successful installation you can load packages using the <code>library()</code> function, as <code>library("dplyr")</code>. Functions as defined within <code>dplyr</code> can then be accessed in scripts or from the command line.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load the library</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
@@ -685,21 +686,29 @@ Warning
 </ul>
 <div class="cell" data-layout-align="left">
 <div class="cell-output-display">
-<div id="fig-tidydata" class="quarto-figure quarto-figure-left anchored">
-<figure class="figure">
-<p><img src="./images/tidy_data.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;1.1: Image by Posit Software, PBC (posit.co)</figcaption>
+<div id="fig-tidydata" class="quarto-figure quarto-figure-left quarto-float anchored" data-fig-align="left">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-tidydata-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./images/tidy_data.png" class="img-fluid quarto-figure quarto-figure-left figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tidydata-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.1: Image by Posit Software, PBC (posit.co)
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>This format allows for easier grouped operations. As visually illustrated below, filtering data by observation properties is easier when data is rowwise oriented (<a href="#fig-filterrows">Figure&nbsp;<span>1.2</span></a>).</p>
+<p>This format allows for easier grouped operations. As visually illustrated below, filtering data by observation properties is easier when data is rowwise oriented (<a href="#fig-filterrows" class="quarto-xref">Figure&nbsp;<span>1.2</span></a>).</p>
 <div class="cell" data-layout-align="left">
 <div class="cell-output-display">
-<div id="fig-filterrows" class="quarto-figure quarto-figure-left anchored">
-<figure class="figure">
-<p><img src="./images/filter_data.png" class="img-fluid figure-img" style="width:30.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;1.2: Image by Posit Software, PBC (posit.co)</figcaption>
+<div id="fig-filterrows" class="quarto-figure quarto-figure-left quarto-float anchored" data-fig-align="left">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-filterrows-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./images/filter_data.png" class="img-fluid quarto-figure quarto-figure-left figure-img" style="width:30.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-filterrows-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.2: Image by Posit Software, PBC (posit.co)
+</figcaption>
 </figure>
 </div>
 </div>
@@ -719,7 +728,7 @@ Note
 </div>
 <section id="sec-tidy-pivots" class="level3" data-number="1.4.1">
 <h3 data-number="1.4.1" class="anchored" data-anchor-id="sec-tidy-pivots"><span class="header-section-number">1.4.1</span> Tidy data conversions</h3>
-<p>Although both long or wide data formats have their advantages and drawbacks, the use of long (row oriented) data allows us to use the <code>dplyr</code> library to iterate over data quickly and transparently (see <a href="#fig-filterrows">Figure&nbsp;<span>1.2</span></a>). However, large amounts of data are provided as “messy data” which is not rowwise oriented. An understanding of conversions from a wide to a long data format are therefore critical throughout this manual.</p>
+<p>Although both long or wide data formats have their advantages and drawbacks, the use of long (row oriented) data allows us to use the <code>dplyr</code> library to iterate over data quickly and transparently (see <a href="#fig-filterrows" class="quarto-xref">Figure&nbsp;<span>1.2</span></a>). However, large amounts of data are provided as “messy data” which is not rowwise oriented. An understanding of conversions from a wide to a long data format are therefore critical throughout this manual.</p>
 <p>To convert the below “messy” data frame listing “cases” by year for three countries to a long format you can use the <code>pivot_longer()</code> function from the <code>tidyr</code> library. The <code>tidyr</code> library contains a set of tools for the conversion to and cleaning of data into a tidy (not messy) data format.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># demo data frame with "cases" for</span></span>
@@ -811,13 +820,17 @@ Note
 2 FR      year_2000  1340</code></pre>
 </div>
 </div>
-<p>Filtering thus reduces the number of rows in your dataset. This can be visually represented as such (<a href="#fig-filterdata">Figure&nbsp;<span>1.3</span></a>).</p>
+<p>Filtering thus reduces the number of rows in your dataset. This can be visually represented as such (<a href="#fig-filterdata" class="quarto-xref">Figure&nbsp;<span>1.3</span></a>).</p>
 <div class="cell" data-layout-align="left">
 <div class="cell-output-display">
-<div id="fig-filterdata" class="quarto-figure quarto-figure-left anchored">
-<figure class="figure">
-<p><img src="./images/filter_data.png" class="img-fluid figure-img" style="width:20.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;1.3: Image by Posit Software, PBC (posit.co)</figcaption>
+<div id="fig-filterdata" class="quarto-figure quarto-figure-left quarto-float anchored" data-fig-align="left">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-filterdata-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./images/filter_data.png" class="img-fluid quarto-figure quarto-figure-left figure-img" style="width:20.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-filterdata-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.3: Image by Posit Software, PBC (posit.co)
+</figcaption>
 </figure>
 </div>
 </div>
@@ -850,10 +863,14 @@ Note
 <p>The output therefore has the same number of rows, but only outputs the selected columns.</p>
 <div class="cell" data-layout-align="left">
 <div class="cell-output-display">
-<div id="fig-selectdata" class="quarto-figure quarto-figure-left anchored">
-<figure class="figure">
-<p><img src="./images/select_data.png" class="img-fluid figure-img" style="width:20.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;1.4: Image by Posit Software, PBC (posit.co)</figcaption>
+<div id="fig-selectdata" class="quarto-figure quarto-figure-left quarto-float anchored" data-fig-align="left">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-selectdata-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./images/select_data.png" class="img-fluid quarto-figure quarto-figure-left figure-img" style="width:20.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-selectdata-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.4: Image by Posit Software, PBC (posit.co)
+</figcaption>
 </figure>
 </div>
 </div>
@@ -915,10 +932,14 @@ Note
 </div>
 <div class="cell" data-layout-align="left">
 <div class="cell-output-display">
-<div id="fig-groupby" class="quarto-figure quarto-figure-left anchored">
-<figure class="figure">
-<p><img src="./images/groupby_summarize.png" class="img-fluid figure-img" style="width:20.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;1.5: Image by Posit Software, PBC (posit.co)</figcaption>
+<div id="fig-groupby" class="quarto-figure quarto-figure-left quarto-float anchored" data-fig-align="left">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-groupby-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./images/groupby_summarize.png" class="img-fluid quarto-figure quarto-figure-left figure-img" style="width:20.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-groupby-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.5: Image by Posit Software, PBC (posit.co)
+</figcaption>
 </figure>
 </div>
 </div>
@@ -935,10 +956,14 @@ Note
 <p>The default settings will create an html output file. You can specify all other settings.</p>
 <div class="cell" data-layout-align="left">
 <div class="cell-output-display">
-<div id="fig-new-rmarkdown" class="quarto-figure quarto-figure-left anchored">
-<figure class="figure">
-<p><img src="https://www.uvm.edu/~tdonovan/RforFledglings/figure/08_newfile.PNG" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;1.6: Image by the University of Vermont</figcaption>
+<div id="fig-new-rmarkdown" class="quarto-figure quarto-figure-left quarto-float anchored" data-fig-align="left">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-new-rmarkdown-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://www.uvm.edu/~tdonovan/RforFledglings/figure/08_newfile.PNG" class="img-fluid quarto-figure quarto-figure-left figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-new-rmarkdown-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.6: Image by the University of Vermont
+</figcaption>
 </figure>
 </div>
 </div>
@@ -948,15 +973,19 @@ Note
 <p>All markdown files have a header which specifies the output format (html if following the above instructions).</p>
 <div class="cell" data-layout-align="left">
 <div class="cell-output-display">
-<div id="fig-rmarkdown-file" class="quarto-figure quarto-figure-left anchored">
-<figure class="figure">
-<p><img src="https://d33wubrfki0l68.cloudfront.net/aa8ef57652bb9b7d6aa18f6c38b6b45a510a8960/1d9d3/lesson-images/how-1-file.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;1.7: Image by Posit Software, PBC (posit.co)</figcaption>
+<div id="fig-rmarkdown-file" class="quarto-figure quarto-figure-left quarto-float anchored" data-fig-align="left">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rmarkdown-file-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://d33wubrfki0l68.cloudfront.net/aa8ef57652bb9b7d6aa18f6c38b6b45a510a8960/1d9d3/lesson-images/how-1-file.png" class="img-fluid quarto-figure quarto-figure-left figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rmarkdown-file-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.7: Image by Posit Software, PBC (posit.co)
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>You can write text using markdown formatting, and executable code which should be contained within code chunks, starting with “```{r}” in the above image (<a href="#fig-rmarkdown-file">Figure&nbsp;<span>1.7</span></a>). These code chunk/block can be executed using the green “play” button on the right hand side of the code block. This will let you incrementally step through a workflow (with both documentation, and code).</p>
+<p>You can write text using markdown formatting, and executable code which should be contained within code chunks, starting with “```{r}” in the above image (<a href="#fig-rmarkdown-file" class="quarto-xref">Figure&nbsp;<span>1.7</span></a>). These code chunk/block can be executed using the green “play” button on the right hand side of the code block. This will let you incrementally step through a workflow (with both documentation, and code).</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -974,10 +1003,10 @@ Note
 <section id="rendering-a-project" class="level3" data-number="1.5.2">
 <h3 data-number="1.5.2" class="anchored" data-anchor-id="rendering-a-project"><span class="header-section-number">1.5.2</span> Rendering a project</h3>
 <p>The full document can be rendered as an html file (a self-contained web page), by pushing the “knitr” or “render” button at the top of the editor panel. Running all code like this requires that all necesasry data, external code and or packages are loaded.</p>
-<p>When using online data resources, such as APIs (see <a href="gathering_data.html#sec-apis"><span>Section&nbsp;2.2.2</span></a>), it might be useful to buffer and load the data locally (while disabling the execution of the commands to get the data in the final render, the latter can be done by specifying “```{r eval = FALSE}” at the top of a code block).</p>
+<p>When using online data resources, such as APIs (see <a href="gathering_data.html#sec-apis" class="quarto-xref"><span>Section 2.2.2</span></a>), it might be useful to buffer and load the data locally (while disabling the execution of the commands to get the data in the final render, the latter can be done by specifying “```{r eval = FALSE}” at the top of a code block).</p>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-lovelace_geocomputation_2019" class="csl-entry" role="listitem">
 Lovelace, Robin, Jakub Nowosad, and Jannes Muenchow. 2019. <em>Geocomputation in <span>R</span></em>. Chapman &amp; Hall.
 </div>
@@ -1027,6 +1056,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       } else {
         el.classList.add('notransition');
       }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
     }
   }
   const toggleColorMode = (alternate) => {
@@ -1095,13 +1151,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'default';
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -1180,10 +1238,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1193,8 +1268,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1206,7 +1290,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1250,6 +1457,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1275,6 +1483,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1336,17 +1570,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./intro.html" class="pagination-link">
+      <a href="./intro.html" class="pagination-link" aria-label="Introduction">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Introduction</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./gathering_data.html" class="pagination-link">
+      <a href="./gathering_data.html" class="pagination-link" aria-label="Accessing data">
         <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Accessing data</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
+
 
 
 
